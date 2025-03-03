@@ -1,5 +1,5 @@
 {
-  "name": "@waldzellai/mcp-servers",
+  "name": "@chrisperfer/mcp-servers",
   "version": "0.0.1",
   "private": true,
   "workspaces": [
@@ -9,7 +9,7 @@
     "build": "npm run build --workspaces",
     "clean": "npm run clean --workspaces",
     "test": "npm run test --workspaces",
-    "docker": "npm run docker --workspace @waldzellai/clear-thought"
+    "docker": "npm run docker --workspace @chrisperfer/clear-thought"
   },
   "author": "waldzellai",
   "license": "MIT",
