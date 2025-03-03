@@ -11,6 +11,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 // Fixed chalk import for ESM
 import chalk from 'chalk';
+import { MentalModel, getMentalModelById, getAllMentalModelIds, formatMentalModelOutput } from './src/models/mental-models.js';
 
 // Data Interfaces
 interface ThoughtData {
@@ -43,7 +44,7 @@ interface DebuggingApproachData {
 
 // Server Classes
 class MentalModelServer {
-  private validateModelData(input: unknown): MentalModelData {
+  private validateModelData(input: unknown): { modelName: string; problem: string } {
     const data = input as Record<string, unknown>;
     
     if (!data.modelName || typeof data.modelName !== 'string') {
@@ -55,46 +56,36 @@ class MentalModelServer {
     
     return {
       modelName: data.modelName,
-      problem: data.problem,
-      steps: Array.isArray(data.steps) ? data.steps.map(String) : [],
-      reasoning: typeof data.reasoning === 'string' ? data.reasoning : '',
-      conclusion: typeof data.conclusion === 'string' ? data.conclusion : ''
+      problem: data.problem
     };
-  }
-
-  private formatModelOutput(modelData: MentalModelData): string {
-    const { modelName, problem, steps, reasoning, conclusion } = modelData;
-    const border = '─'.repeat(Math.max(modelName.length + 20, problem.length + 4));
-
-    return `
-┌${border}┐
-│ 🧠 Mental Model: ${modelName.padEnd(border.length - 16)} │
-├${border}┤
-│ Problem: ${problem.padEnd(border.length - 10)} │
-├${border}┤
-│ Steps:${' '.repeat(border.length - 7)} │
-${steps.map(step => `│ • ${step.padEnd(border.length - 4)} │`).join('\n')}
-├${border}┤
-│ Reasoning: ${reasoning.padEnd(border.length - 11)} │
-├${border}┤
-│ Conclusion: ${conclusion.padEnd(border.length - 12)} │
-└${border}┘`;
   }
 
   public processModel(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
     try {
-      const validatedInput = this.validateModelData(input);
-      const formattedOutput = this.formatModelOutput(validatedInput);
+      const { modelName, problem } = this.validateModelData(input);
+      const model = getMentalModelById(modelName);
+      
+      if (!model) {
+        throw new Error(`Mental model '${modelName}' not found`);
+      }
+
+      // Create a copy of the model with the current problem
+      const modelWithProblem: MentalModel = {
+        ...model,
+        definition: `Problem: ${problem}\n${model.definition}`
+      };
+
+      const formattedOutput = formatMentalModelOutput(modelWithProblem);
       console.error(formattedOutput);
 
       return {
         content: [{
           type: "text",
           text: JSON.stringify({
-            modelName: validatedInput.modelName,
+            modelName: model.name,
             status: 'success',
-            hasSteps: validatedInput.steps.length > 0,
-            hasConclusion: !!validatedInput.conclusion
+            hasSteps: model.steps.length > 0,
+            problem
           }, null, 2)
         }]
       };
@@ -297,12 +288,10 @@ const MENTAL_MODEL_TOOL: Tool = {
   name: "mentalmodel",
   description: `A tool for applying structured mental models to problem-solving.
 Supports various mental models including:
-- First Principles Thinking
-- Opportunity Cost Analysis
-- Error Propagation Understanding
-- Rubber Duck Debugging
-- Pareto Principle
-- Occam's Razor
+${getAllMentalModelIds().map(id => {
+  const model = getMentalModelById(id);
+  return `- ${model?.name}: ${model?.definition}`;
+}).join('\n')}
 
 Each model provides a systematic approach to breaking down and solving problems.`,
   inputSchema: {
@@ -310,22 +299,9 @@ Each model provides a systematic approach to breaking down and solving problems.
     properties: {
       modelName: {
         type: "string",
-        enum: [
-          "first_principles",
-          "opportunity_cost",
-          "error_propagation",
-          "rubber_duck",
-          "pareto_principle",
-          "occams_razor"
-        ]
+        enum: getAllMentalModelIds()
       },
-      problem: { type: "string" },
-      steps: { 
-        type: "array",
-        items: { type: "string" }
-      },
-      reasoning: { type: "string" },
-      conclusion: { type: "string" }
+      problem: { type: "string" }
     },
     required: ["modelName", "problem"]
   }

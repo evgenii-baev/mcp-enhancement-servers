@@ -1,0 +1,245 @@
+{
+  "mental_models": [
+    {
+      "id": "first_principles",
+      "name": "First Principles Thinking",
+      "definition": "Breaking a problem down to its most fundamental truths and reasoning up from there.",
+      "when_to_use": [
+        "Facing a complex or seemingly unsolvable problem",
+        "Need to innovate or challenge assumptions",
+        "When existing solutions seem inefficient or inadequate"
+      ],
+      "steps": [
+        "Identify and question every assumption",
+        "Break the problem down into its fundamental parts",
+        "Reconstruct a solution from the ground up using logic and evidence"
+      ],
+      "example": "Tesla reduced the cost of electric cars by rethinking battery production instead of accepting high costs.",
+      "pitfalls": [
+        "Overcomplicating simple problems",
+        "Getting stuck on defining fundamentals instead of making progress",
+        "Spending too much time questioning obvious truths"
+      ]
+    },
+    {
+      "id": "opportunity_cost",
+      "name": "Opportunity Cost Analysis",
+      "definition": "Evaluating the potential benefits that must be given up in order to pursue a particular action.",
+      "when_to_use": [
+        "Making decisions between multiple viable options",
+        "Resource allocation decisions",
+        "Strategic planning and prioritization"
+      ],
+      "steps": [
+        "Identify all available options",
+        "List potential benefits and costs of each option",
+        "Consider hidden or indirect costs",
+        "Compare relative value of alternatives",
+        "Account for time and resource constraints"
+      ],
+      "example": "A software team choosing between building a new feature or paying down technical debt, considering both immediate and long-term impacts.",
+      "pitfalls": [
+        "Overlooking non-monetary costs",
+        "Analysis paralysis from too many options",
+        "Failing to consider long-term implications"
+      ]
+    },
+    {
+      "id": "error_propagation",
+      "name": "Error Propagation Understanding",
+      "definition": "Analyzing how errors or issues can cascade through a system, affecting multiple components or processes.",
+      "when_to_use": [
+        "Debugging complex systems",
+        "Risk assessment",
+        "Quality control planning",
+        "System design and architecture decisions"
+      ],
+      "steps": [
+        "Identify potential sources of errors",
+        "Map dependencies between system components",
+        "Analyze how errors could propagate",
+        "Assess impact at each stage",
+        "Design containment strategies"
+      ],
+      "example": "A microservice architecture where an authentication service failure affects multiple dependent services.",
+      "pitfalls": [
+        "Missing indirect dependencies",
+        "Overestimating system resilience",
+        "Focusing only on obvious error paths"
+      ]
+    },
+    {
+      "id": "rubber_duck",
+      "name": "Rubber Duck Debugging",
+      "definition": "Explaining a problem step by step to an inanimate object (traditionally a rubber duck) to gain clarity and identify solutions.",
+      "when_to_use": [
+        "Stuck on a complex problem",
+        "Need to clarify thinking",
+        "When assumptions need challenging",
+        "Documentation writing"
+      ],
+      "steps": [
+        "State the problem clearly",
+        "Explain each component in detail",
+        "Walk through the logic step by step",
+        "Question each assumption",
+        "Listen to your own explanation for gaps"
+      ],
+      "example": "A developer explains their code line by line to a rubber duck, realizing they forgot to initialize a variable.",
+      "pitfalls": [
+        "Skipping over important details",
+        "Not being thorough enough in explanations",
+        "Rushing to conclusions"
+      ]
+    },
+    {
+      "id": "pareto_principle",
+      "name": "Pareto Principle",
+      "definition": "The observation that roughly 80% of effects come from 20% of causes (also known as the 80/20 rule).",
+      "when_to_use": [
+        "Resource allocation decisions",
+        "Performance optimization",
+        "Problem prioritization",
+        "Process improvement"
+      ],
+      "steps": [
+        "Identify and measure all factors",
+        "Rank factors by impact",
+        "Identify the vital few (20%)",
+        "Focus resources on high-impact areas",
+        "Monitor results and adjust"
+      ],
+      "example": "Finding that 80% of a system's performance issues come from 20% of the codebase.",
+      "pitfalls": [
+        "Oversimplifying complex situations",
+        "Ignoring important minority factors",
+        "Applying the principle too rigidly"
+      ]
+    },
+    {
+      "id": "occams_razor",
+      "name": "Occam's Razor",
+      "definition": "The simplest explanation is usually the correct one, all else being equal.",
+      "when_to_use": [
+        "Debugging complex issues",
+        "Choosing between multiple solutions",
+        "System design decisions",
+        "Hypothesis formation"
+      ],
+      "steps": [
+        "List all possible explanations",
+        "Identify assumptions in each explanation",
+        "Compare complexity of explanations",
+        "Test simplest explanation first",
+        "Only add complexity if necessary"
+      ],
+      "example": "When debugging, checking for simple issues like typos or configuration errors before assuming complex system failures.",
+      "pitfalls": [
+        "Oversimplifying complex problems",
+        "Ignoring valid complex explanations",
+        "Confusing simple with simplistic"
+      ]
+    },
+    {
+      "id": "hanlons_razor",
+      "name": "Hanlon's Razor",
+      "definition": "Never attribute to malice that which is adequately explained by stupidity.",
+      "when_to_use": [
+        "When evaluating human behavior and motivations",
+        "During conflict resolution",
+        "When analyzing organizational problems",
+        "Before making accusations of intentional wrongdoing"
+      ],
+      "steps": [
+        "Identify the problematic behavior or situation",
+        "List possible explanations (both malicious and non-malicious)",
+        "Consider explanations based on ignorance, incompetence, or misunderstanding",
+        "Evaluate evidence for each explanation",
+        "Choose the simplest explanation that fits the evidence"
+      ],
+      "example": "A colleague missed an important deadline - instead of assuming they deliberately sabotaged the project, consider if they might have misunderstood the timeline or were overwhelmed with other tasks.",
+      "pitfalls": [
+        "Being too naive about genuinely malicious actions",
+        "Excusing harmful behavior without accountability",
+        "Overlooking systemic issues by focusing on individual incompetence"
+      ]
+    },
+    {
+      "id": "proximate_ultimate_causation",
+      "name": "Proximate and Ultimate Causation",
+      "definition": "Distinguishing between immediate causes (proximate) and underlying fundamental causes (ultimate) of a phenomenon.",
+      "when_to_use": [
+        "Analyzing complex problems with multiple layers",
+        "Understanding root causes vs symptoms",
+        "Planning long-term solutions",
+        "Investigating system behaviors"
+      ],
+      "steps": [
+        "Identify the immediate (proximate) cause of the issue",
+        "Ask 'why' repeatedly to dig deeper",
+        "Map the chain of causation",
+        "Identify underlying (ultimate) causes",
+        "Consider both levels when designing solutions"
+      ],
+      "example": "A software crash (proximate cause: memory overflow) might ultimately be caused by poor architecture decisions made early in the project.",
+      "pitfalls": [
+        "Getting stuck at superficial causes",
+        "Oversimplifying complex causal chains",
+        "Focusing too much on one level of causation",
+        "Missing important intermediate causes"
+      ]
+    },
+    {
+      "id": "thought_experiment",
+      "name": "Thought Experiment",
+      "definition": "A structured way to explore hypothetical scenarios and their implications through careful reasoning.",
+      "when_to_use": [
+        "Testing theories without physical experiments",
+        "Exploring ethical dilemmas",
+        "Challenging assumptions",
+        "Understanding complex concepts",
+        "Planning for hypothetical scenarios"
+      ],
+      "steps": [
+        "Define the scenario clearly",
+        "Establish initial conditions and constraints",
+        "Follow logical consequences step by step",
+        "Consider edge cases and variations",
+        "Draw conclusions and insights"
+      ],
+      "example": "Considering what would happen if you could clone a running production system instantly - what implications would this have for testing and deployment?",
+      "pitfalls": [
+        "Making unrealistic assumptions",
+        "Overlooking important variables",
+        "Letting bias influence the reasoning",
+        "Drawing overly broad conclusions"
+      ]
+    },
+    {
+      "id": "systems_thinking",
+      "name": "Systems Thinking",
+      "definition": "Analyzing how different parts of a system interrelate and affect each other over time.",
+      "when_to_use": [
+        "Dealing with complex, interconnected problems",
+        "Understanding organizational dynamics",
+        "Planning large-scale changes",
+        "Identifying unintended consequences",
+        "Solving recurring problems"
+      ],
+      "steps": [
+        "Identify system components and boundaries",
+        "Map relationships and feedback loops",
+        "Identify patterns and behaviors over time",
+        "Look for leverage points",
+        "Consider delays and indirect effects"
+      ],
+      "example": "Understanding how a change in code review policy affects not just code quality, but also team morale, delivery speed, and knowledge sharing.",
+      "pitfalls": [
+        "Analysis paralysis from too much complexity",
+        "Missing important external factors",
+        "Oversimplifying feedback loops",
+        "Focusing too much on parts rather than relationships"
+      ]
+    }
+  ]
+} 
