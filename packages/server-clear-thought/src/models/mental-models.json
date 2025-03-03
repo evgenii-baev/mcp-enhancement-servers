@@ -141,104 +141,313 @@
       ]
     },
     {
-      "id": "hanlons_razor",
-      "name": "Hanlon's Razor",
-      "definition": "Never attribute to malice that which is adequately explained by stupidity.",
+      "id": "regression_to_mean",
+      "name": "Regression to the Mean",
+      "definition": "The statistical phenomenon where extreme measurements tend to be followed by more moderate ones, moving closer to the average over time.",
       "when_to_use": [
-        "When evaluating human behavior and motivations",
-        "During conflict resolution",
-        "When analyzing organizational problems",
-        "Before making accusations of intentional wrongdoing"
+        "Analyzing performance trends",
+        "Evaluating system metrics",
+        "Interpreting test results",
+        "Making predictions",
+        "Understanding variability",
+        "Assessing improvements"
       ],
       "steps": [
-        "Identify the problematic behavior or situation",
-        "List possible explanations (both malicious and non-malicious)",
-        "Consider explanations based on ignorance, incompetence, or misunderstanding",
-        "Evaluate evidence for each explanation",
-        "Choose the simplest explanation that fits the evidence"
+        "1. Identify the metric being measured",
+        "2. Determine the average or expected value",
+        "3. Look for extreme values",
+        "4. Consider natural variation",
+        "5. Account for random fluctuations",
+        "6. Make predictions based on the mean",
+        "7. Avoid overreacting to extremes"
       ],
-      "example": "A colleague missed an important deadline - instead of assuming they deliberately sabotaged the project, consider if they might have misunderstood the timeline or were overwhelmed with other tasks.",
+      "example": "After implementing performance optimizations that showed a 50% improvement in response times, subsequent measurements show only a 30% improvement. This could be regression to the mean - the initial measurement might have been unusually poor, making the improvement appear more dramatic than it actually was.",
       "pitfalls": [
-        "Being too naive about genuinely malicious actions",
-        "Excusing harmful behavior without accountability",
-        "Overlooking systemic issues by focusing on individual incompetence"
+        "Overreacting to extreme values",
+        "Ignoring the role of randomness",
+        "Misattributing causes to natural variation",
+        "Not considering long-term averages",
+        "Making decisions based on outliers",
+        "Expecting continued extreme performance"
       ]
     },
     {
-      "id": "proximate_ultimate_causation",
-      "name": "Proximate and Ultimate Causation",
-      "definition": "Distinguishing between immediate causes (proximate) and underlying fundamental causes (ultimate) of a phenomenon.",
+      "id": "confirmation_bias",
+      "name": "Confirmation Bias",
+      "definition": "The tendency to search for, interpret, favor, and recall information in a way that confirms or supports one's prior beliefs or values.",
       "when_to_use": [
-        "Analyzing complex problems with multiple layers",
-        "Understanding root causes vs symptoms",
-        "Planning long-term solutions",
-        "Investigating system behaviors"
+        "Testing hypotheses",
+        "Debugging code",
+        "Evaluating solutions",
+        "Making design decisions",
+        "Reviewing code",
+        "Analyzing user feedback"
       ],
       "steps": [
-        "Identify the immediate (proximate) cause of the issue",
-        "Ask 'why' repeatedly to dig deeper",
-        "Map the chain of causation",
-        "Identify underlying (ultimate) causes",
-        "Consider both levels when designing solutions"
+        "1. Acknowledge potential biases",
+        "2. Actively seek contradictory evidence",
+        "3. Consider alternative explanations",
+        "4. Test opposing hypotheses",
+        "5. Document evidence objectively",
+        "6. Invite diverse perspectives",
+        "7. Challenge your assumptions"
       ],
-      "example": "A software crash (proximate cause: memory overflow) might ultimately be caused by poor architecture decisions made early in the project.",
+      "example": "When debugging, a developer might focus only on evidence that supports their initial hypothesis about the bug's cause, ignoring clues that point to a different root cause. By actively seeking evidence that contradicts their initial theory, they can avoid this bias and find the true cause more quickly.",
       "pitfalls": [
-        "Getting stuck at superficial causes",
-        "Oversimplifying complex causal chains",
-        "Focusing too much on one level of causation",
-        "Missing important intermediate causes"
+        "Only looking for confirming evidence",
+        "Dismissing contradictory information",
+        "Sticking to familiar solutions",
+        "Ignoring alternative explanations",
+        "Overconfidence in initial assumptions",
+        "Selective interpretation of data"
       ]
     },
     {
-      "id": "thought_experiment",
-      "name": "Thought Experiment",
-      "definition": "A structured way to explore hypothetical scenarios and their implications through careful reasoning.",
+      "id": "normal_distribution",
+      "name": "Normal Distribution",
+      "definition": "A fundamental probability distribution that describes how data is distributed around a mean, with most observations clustering around the average and fewer observations at the extremes.",
       "when_to_use": [
-        "Testing theories without physical experiments",
-        "Exploring ethical dilemmas",
-        "Challenging assumptions",
-        "Understanding complex concepts",
-        "Planning for hypothetical scenarios"
+        "Analyzing natural variations in data",
+        "Quality control processes",
+        "Understanding measurement errors",
+        "Performance benchmarking",
+        "Risk assessment",
+        "Statistical analysis"
       ],
       "steps": [
-        "Define the scenario clearly",
-        "Establish initial conditions and constraints",
-        "Follow logical consequences step by step",
-        "Consider edge cases and variations",
-        "Draw conclusions and insights"
+        "1. Calculate the mean of your dataset",
+        "2. Determine the standard deviation",
+        "3. Plot the distribution",
+        "4. Identify outliers",
+        "5. Consider deviations from the mean",
+        "6. Make probability-based decisions",
+        "7. Account for sample size"
       ],
-      "example": "Considering what would happen if you could clone a running production system instantly - what implications would this have for testing and deployment?",
+      "example": "In software performance testing, response times often follow a normal distribution. Understanding this helps set realistic performance targets and identify anomalies that need investigation.",
       "pitfalls": [
-        "Making unrealistic assumptions",
-        "Overlooking important variables",
-        "Letting bias influence the reasoning",
-        "Drawing overly broad conclusions"
+        "Assuming all distributions are normal",
+        "Ignoring the impact of sample size",
+        "Misinterpreting outliers",
+        "Not considering context",
+        "Over-relying on averages",
+        "Neglecting underlying factors"
+      ]
+    },
+    {
+      "id": "sensitivity_analysis",
+      "name": "Sensitivity Analysis",
+      "definition": "A method to determine how different values of an independent variable affect a dependent variable under a given set of assumptions.",
+      "when_to_use": [
+        "Evaluating system robustness",
+        "Understanding parameter impacts",
+        "Risk assessment",
+        "Decision making under uncertainty",
+        "Performance optimization",
+        "System design choices"
+      ],
+      "steps": [
+        "1. Identify key variables",
+        "2. Define range of variation",
+        "3. Change one variable at a time",
+        "4. Observe impacts",
+        "5. Rank variables by sensitivity",
+        "6. Document findings",
+        "7. Make informed decisions"
+      ],
+      "example": "Testing how different cache sizes affect application performance. By varying the cache size while keeping other parameters constant, you can determine the optimal size and understand the performance sensitivity to this parameter.",
+      "pitfalls": [
+        "Not considering variable interactions",
+        "Testing unrealistic ranges",
+        "Ignoring system constraints",
+        "Overlooking indirect effects",
+        "Insufficient test coverage",
+        "Misinterpreting results"
+      ]
+    },
+    {
+      "id": "bayes_theorem",
+      "name": "Bayes' Theorem",
+      "definition": "A mathematical formula for determining conditional probability based on prior knowledge and new evidence.",
+      "when_to_use": [
+        "Updating probability estimates",
+        "Decision making under uncertainty",
+        "Risk assessment",
+        "Diagnostic testing",
+        "Pattern recognition",
+        "Machine learning applications"
+      ],
+      "steps": [
+        "1. Identify prior probability",
+        "2. Determine likelihood",
+        "3. Calculate evidence probability",
+        "4. Apply Bayes' formula",
+        "5. Interpret posterior probability",
+        "6. Update beliefs",
+        "7. Iterate with new information"
+      ],
+      "example": "In software testing, updating the probability of a bug being in a specific module based on test results. If a module historically contains 20% of bugs (prior), and a new test finds 80% of bugs in this module, Bayes' Theorem helps calculate the updated probability.",
+      "pitfalls": [
+        "Assuming independence of events",
+        "Using incorrect prior probabilities",
+        "Neglecting to update with new evidence",
+        "Misinterpreting conditional probabilities",
+        "Over-confidence in results",
+        "Ignoring base rates"
+      ]
+    },
+    {
+      "id": "survivorship_bias",
+      "name": "Survivorship Bias",
+      "definition": "The logical error of concentrating on people or things that survived a selection process while overlooking those that did not, leading to false conclusions.",
+      "when_to_use": [
+        "Analyzing success patterns",
+        "Evaluating historical data",
+        "Making strategic decisions",
+        "Assessing performance metrics",
+        "Learning from experience",
+        "Conducting post-mortems"
+      ],
+      "steps": [
+        "1. Identify the population being studied",
+        "2. Consider missing data",
+        "3. Look for selection effects",
+        "4. Account for invisible failures",
+        "5. Question success stories",
+        "6. Seek out failure data",
+        "7. Adjust conclusions based on complete data"
+      ],
+      "example": "When studying successful software projects, it's important to also examine failed projects. Looking only at successful projects might suggest that aggressive deadlines lead to success, while ignoring the many projects that failed under similar conditions.",
+      "pitfalls": [
+        "Only looking at successful cases",
+        "Ignoring failed attempts",
+        "Overemphasizing visible data",
+        "Drawing conclusions from incomplete samples",
+        "Misattributing causes of success",
+        "Neglecting the role of luck"
       ]
     },
     {
       "id": "systems_thinking",
       "name": "Systems Thinking",
-      "definition": "Analyzing how different parts of a system interrelate and affect each other over time.",
+      "definition": "A holistic approach to analysis that focuses on understanding how parts of a system interrelate, how systems work over time, and how they fit within the context of larger systems.",
       "when_to_use": [
-        "Dealing with complex, interconnected problems",
-        "Understanding organizational dynamics",
-        "Planning large-scale changes",
-        "Identifying unintended consequences",
-        "Solving recurring problems"
+        "Analyzing complex systems",
+        "Understanding interconnections",
+        "Identifying feedback loops",
+        "Solving recurring problems",
+        "Planning system changes",
+        "Predicting unintended consequences"
       ],
       "steps": [
-        "Identify system components and boundaries",
-        "Map relationships and feedback loops",
-        "Identify patterns and behaviors over time",
-        "Look for leverage points",
-        "Consider delays and indirect effects"
+        "1. Define the system boundaries",
+        "2. Identify key components",
+        "3. Map relationships and interactions",
+        "4. Identify feedback loops",
+        "5. Consider time delays",
+        "6. Look for patterns and trends",
+        "7. Analyze system behavior"
       ],
-      "example": "Understanding how a change in code review policy affects not just code quality, but also team morale, delivery speed, and knowledge sharing.",
+      "example": "When investigating a performance issue, systems thinking helps identify how caching, database queries, network latency, and user behavior interact to create bottlenecks, rather than focusing on each component in isolation.",
       "pitfalls": [
-        "Analysis paralysis from too much complexity",
-        "Missing important external factors",
-        "Oversimplifying feedback loops",
-        "Focusing too much on parts rather than relationships"
+        "Getting lost in complexity",
+        "Missing important connections",
+        "Oversimplifying relationships",
+        "Ignoring external influences",
+        "Focusing too much on details",
+        "Neglecting time dynamics"
+      ]
+    },
+    {
+      "id": "thought_experiment",
+      "name": "Thought Experiment",
+      "definition": "A structured way to explore hypothetical scenarios and their implications through careful reasoning, without actually performing physical experiments.",
+      "when_to_use": [
+        "Exploring edge cases",
+        "Testing assumptions",
+        "Evaluating potential solutions",
+        "Understanding complex concepts",
+        "Predicting outcomes",
+        "Challenging existing ideas"
+      ],
+      "steps": [
+        "1. Define the scenario clearly",
+        "2. Set up initial conditions",
+        "3. Apply logical reasoning",
+        "4. Follow implications",
+        "5. Consider alternatives",
+        "6. Challenge assumptions",
+        "7. Draw conclusions"
+      ],
+      "example": "Before implementing a new caching strategy, mentally walking through different scenarios: What happens when the cache is full? What if multiple users request the same data simultaneously? What if the cached data becomes stale?",
+      "pitfalls": [
+        "Overlooking real-world constraints",
+        "Making invalid assumptions",
+        "Confirmation bias in reasoning",
+        "Oversimplifying complex situations",
+        "Ignoring practical limitations",
+        "Not validating conclusions"
+      ]
+    },
+    {
+      "id": "hanlons_razor",
+      "name": "Hanlon's Razor",
+      "definition": "Never attribute to malice that which is adequately explained by stupidity (or incompetence, ignorance, or oversight).",
+      "when_to_use": [
+        "Investigating system failures",
+        "Analyzing user behavior",
+        "Debugging unexpected issues",
+        "Reviewing code problems",
+        "Dealing with integration issues",
+        "Investigating security incidents"
+      ],
+      "steps": [
+        "1. Identify the problematic behavior or outcome",
+        "2. List possible explanations",
+        "3. Categorize explanations (malicious vs. non-malicious)",
+        "4. Look for evidence of oversight or error",
+        "5. Consider complexity and human factors",
+        "6. Evaluate likelihood of each cause",
+        "7. Choose appropriate response based on actual cause"
+      ],
+      "example": "When a critical API endpoint stops working, instead of assuming a malicious attack, first check for recent deployments, configuration changes, or system updates that might have inadvertently caused the issue.",
+      "pitfalls": [
+        "Being too naive about security threats",
+        "Overlooking actual malicious intent",
+        "Excusing negligent behavior",
+        "Not addressing root causes",
+        "Failing to implement preventive measures",
+        "Misclassifying systematic issues as simple mistakes"
+      ]
+    },
+    {
+      "id": "proximate_ultimate_causation",
+      "name": "Proximate and Ultimate Causation",
+      "definition": "A framework for distinguishing between immediate causes (proximate) and underlying fundamental causes (ultimate) of a phenomenon.",
+      "when_to_use": [
+        "Root cause analysis",
+        "Debugging complex issues",
+        "System design decisions",
+        "Process improvement",
+        "Understanding behavioral patterns",
+        "Strategic problem solving"
+      ],
+      "steps": [
+        "1. Identify the immediate (proximate) cause",
+        "2. Question why this proximate cause occurred",
+        "3. Trace back through causal chain",
+        "4. Look for patterns and recurring themes",
+        "5. Identify fundamental (ultimate) causes",
+        "6. Evaluate multiple levels of causation",
+        "7. Determine appropriate intervention points"
+      ],
+      "example": "A system crash might have a proximate cause of memory overflow, but the ultimate cause could be poor architecture decisions that didn't account for scalability. Fixing just the memory issue (proximate) without addressing the architectural problems (ultimate) won't prevent future issues.",
+      "pitfalls": [
+        "Stopping at proximate causes",
+        "Oversimplifying causal chains",
+        "Missing interconnected causes",
+        "Assuming single root causes",
+        "Confusing correlation with causation",
+        "Not considering systemic factors"
       ]
     }
   ]
