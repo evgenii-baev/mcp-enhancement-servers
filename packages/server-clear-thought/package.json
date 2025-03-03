@@ -1,11 +1,11 @@
 {
-    "name": "@waldzellai/clear-thought",
+    "name": "@chrisperfer/clear-thought",
     "version": "0.0.2",
     "description": "MCP server for systematic thinking, mental models, debugging approaches, and memory management",
     "license": "MIT",
     "author": "Waldzell AI",
-    "homepage": "https://github.com/waldzellai/clear-thought",
-    "bugs": "https://github.com/waldzellai/clear-thought/issues",
+    "homepage": "https://github.com/chrisperfer/clear-thought",
+    "bugs": "https://github.com/chrisperfer/clear-thought/issues",
     "type": "module",
     "bin": {
         "mcp-server-clear-thought": "dist/index.js"
@@ -23,11 +23,11 @@
         "prebuild": "npm run clean",
         "prepublishOnly": "npm run build",
         "start": "node dist/index.js",
-        "docker": "docker build -t waldzellai/clear-thought ."
+        "docker": "docker build -t chrisperfer/clear-thought ."
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/waldzellai/clear-thought.git"
+        "url": "https://github.com/chrisperfer/clear-thought.git"
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "^1.5.0",
