@@ -3,6 +3,7 @@
     {
       "id": "first_principles",
       "name": "First Principles Thinking",
+      "always_consider": false,
       "definition": "Breaking a problem down to its most fundamental truths and reasoning up from there.",
       "when_to_use": [
         "Facing a complex or seemingly unsolvable problem",
@@ -24,6 +25,7 @@
     {
       "id": "opportunity_cost",
       "name": "Opportunity Cost Analysis",
+      "always_consider": false,
       "definition": "Evaluating the potential benefits that must be given up in order to pursue a particular action.",
       "when_to_use": [
         "Making decisions between multiple viable options",
@@ -47,6 +49,7 @@
     {
       "id": "error_propagation",
       "name": "Error Propagation Understanding",
+      "always_consider": false,
       "definition": "Analyzing how errors or issues can cascade through a system, affecting multiple components or processes.",
       "when_to_use": [
         "Debugging complex systems",
@@ -71,6 +74,7 @@
     {
       "id": "rubber_duck",
       "name": "Rubber Duck Debugging",
+      "always_consider": false,
       "definition": "Explaining a problem step by step to an inanimate object (traditionally a rubber duck) to gain clarity and identify solutions.",
       "when_to_use": [
         "Stuck on a complex problem",
@@ -95,6 +99,7 @@
     {
       "id": "pareto_principle",
       "name": "Pareto Principle",
+      "always_consider": false,
       "definition": "The observation that roughly 80% of effects come from 20% of causes (also known as the 80/20 rule).",
       "when_to_use": [
         "Resource allocation decisions",
@@ -119,6 +124,7 @@
     {
       "id": "occams_razor",
       "name": "Occam's Razor",
+      "always_consider": true,
       "definition": "The simplest explanation is usually the correct one, all else being equal.",
       "when_to_use": [
         "Debugging complex issues",
@@ -143,6 +149,7 @@
     {
       "id": "regression_to_mean",
       "name": "Regression to the Mean",
+      "always_consider": false,
       "definition": "The statistical phenomenon where extreme measurements tend to be followed by more moderate ones, moving closer to the average over time.",
       "when_to_use": [
         "Analyzing performance trends",
@@ -174,6 +181,7 @@
     {
       "id": "confirmation_bias",
       "name": "Confirmation Bias",
+      "always_consider": true,
       "definition": "The tendency to search for, interpret, favor, and recall information in a way that confirms or supports one's prior beliefs or values.",
       "when_to_use": [
         "Testing hypotheses",
@@ -205,6 +213,7 @@
     {
       "id": "normal_distribution",
       "name": "Normal Distribution",
+      "always_consider": false,
       "definition": "A fundamental probability distribution that describes how data is distributed around a mean, with most observations clustering around the average and fewer observations at the extremes.",
       "when_to_use": [
         "Analyzing natural variations in data",
@@ -236,6 +245,7 @@
     {
       "id": "sensitivity_analysis",
       "name": "Sensitivity Analysis",
+      "always_consider": false,
       "definition": "A method to determine how different values of an independent variable affect a dependent variable under a given set of assumptions.",
       "when_to_use": [
         "Evaluating system robustness",
@@ -267,6 +277,7 @@
     {
       "id": "bayes_theorem",
       "name": "Bayes' Theorem",
+      "always_consider": false,
       "definition": "A mathematical formula for determining conditional probability based on prior knowledge and new evidence.",
       "when_to_use": [
         "Updating probability estimates",
@@ -298,6 +309,7 @@
     {
       "id": "survivorship_bias",
       "name": "Survivorship Bias",
+      "always_consider": false,
       "definition": "The logical error of concentrating on people or things that survived a selection process while overlooking those that did not, leading to false conclusions.",
       "when_to_use": [
         "Analyzing success patterns",
@@ -329,6 +341,7 @@
     {
       "id": "systems_thinking",
       "name": "Systems Thinking",
+      "always_consider": false,
       "definition": "A holistic approach to analysis that focuses on understanding how parts of a system interrelate, how systems work over time, and how they fit within the context of larger systems.",
       "when_to_use": [
         "Analyzing complex systems",
@@ -360,6 +373,7 @@
     {
       "id": "thought_experiment",
       "name": "Thought Experiment",
+      "always_consider": false,
       "definition": "A structured way to explore hypothetical scenarios and their implications through careful reasoning, without actually performing physical experiments.",
       "when_to_use": [
         "Exploring edge cases",
@@ -391,6 +405,7 @@
     {
       "id": "hanlons_razor",
       "name": "Hanlon's Razor",
+      "always_consider": false,
       "definition": "Never attribute to malice that which is adequately explained by stupidity (or incompetence, ignorance, or oversight).",
       "when_to_use": [
         "Investigating system failures",
@@ -422,6 +437,7 @@
     {
       "id": "proximate_ultimate_causation",
       "name": "Proximate and Ultimate Causation",
+      "always_consider": true,
       "definition": "A framework for distinguishing between immediate causes (proximate) and underlying fundamental causes (ultimate) of a phenomenon.",
       "when_to_use": [
         "Root cause analysis",
@@ -453,6 +469,7 @@
     {
       "id": "zero_sum_game",
       "name": "Zero-Sum Game",
+      "always_consider": true,
       "definition": "A mathematical representation where one participant's gain is exactly balanced by another participant's loss, making the net change in total benefit zero.",
       "when_to_use": [
         "Analyzing competitive situations",
@@ -484,6 +501,7 @@
     {
       "id": "loss_aversion",
       "name": "Loss Aversion",
+      "always_consider": false,
       "definition": "A cognitive bias where the same situation is perceived as worse when framed as a loss rather than as a gain, with losses typically being treated as twice as impactful as equivalent gains.",
       "when_to_use": [
         "Decision making under uncertainty",
@@ -515,6 +533,7 @@
     {
       "id": "sunk_cost",
       "name": "Sunk Cost Fallacy",
+      "always_consider": true,
       "definition": "A cognitive bias where people consider costs that have already been incurred and cannot be recovered when making future decisions, despite these costs being irrelevant to the current decision-making process.",
       "when_to_use": [
         "Project continuation decisions",
@@ -546,6 +565,7 @@
     {
       "id": "lateral_thinking",
       "name": "Lateral Thinking",
+      "always_consider": false,
       "definition": "A manner of solving problems using an indirect and creative approach via reasoning that is not immediately obvious. It involves ideas that may not be obtainable using only traditional step-by-step logic.",
       "when_to_use": [
         "Need to break from conventional thinking patterns",
@@ -577,6 +597,7 @@
     {
       "id": "divergent_thinking",
       "name": "Divergent Thinking",
+      "always_consider": false,
       "definition": "A thought process used to generate creative ideas by exploring many possible solutions in a spontaneous, free-flowing, non-linear manner. Multiple ideas are generated in an emergent cognitive fashion, allowing unexpected connections to be drawn.",
       "when_to_use": [
         "Brainstorming sessions",
@@ -608,6 +629,7 @@
     {
       "id": "scientific_method",
       "name": "Scientific Method",
+      "always_consider": false,
       "definition": "An empirical method for acquiring knowledge through systematic observation, measurement, experimentation, and the formulation, testing, and modification of hypotheses.",
       "when_to_use": [
         "Testing assumptions and theories",
@@ -639,6 +661,7 @@
     {
       "id": "decision_tree",
       "name": "Decision Tree",
+      "always_consider": false,
       "definition": "A decision support tool that uses a tree-like model of decisions and their possible consequences, including chance event outcomes, resource costs, and utility.",
       "when_to_use": [
         "Complex decision-making scenarios",
@@ -665,6 +688,134 @@
         "Incorrect probability assessments",
         "Analysis paralysis from too many branches",
         "Failing to update the tree as conditions change"
+      ]
+    },
+    {
+      "id": "scenario_planning",
+      "name": "Scenario Planning",
+      "always_consider": false,
+      "definition": "A strategic planning method that organizations use to make flexible long-term plans by developing plausible views of different possible futures and analyzing their implications.",
+      "when_to_use": [
+        "Long-term strategic planning",
+        "Risk assessment and management",
+        "Decision making under uncertainty",
+        "Business continuity planning",
+        "Technology roadmap development",
+        "Change management preparation"
+      ],
+      "steps": [
+        "1. Identify key assumptions and drivers for change",
+        "2. Bring drivers together into a viable framework",
+        "3. Produce initial mini-scenarios",
+        "4. Reduce to 2-3 core scenarios",
+        "5. Write detailed scenario narratives",
+        "6. Identify key implications and decision points",
+        "7. Monitor and update scenarios as conditions change"
+      ],
+      "example": "A software company developing scenarios for their 5-year strategy might consider: 1) AI Revolution - rapid AI advancement transforms development, 2) Security First - increased cyber threats drive security focus, and 3) Platform Consolidation - major platforms dominate the ecosystem. Each scenario helps prepare different strategic responses.",
+      "pitfalls": [
+        "Creating too many scenarios to be practical",
+        "Focusing only on likely scenarios, missing potential disruptions",
+        "Not making scenarios distinct enough",
+        "Ignoring scenario implications for current decisions",
+        "Treating scenarios as predictions rather than possibilities",
+        "Not updating scenarios as conditions change"
+      ]
+    },
+    {
+      "id": "simulation",
+      "name": "Simulation",
+      "always_consider": false,
+      "definition": "An imitation of a real-world process, system, or situation over time that allows for analysis, prediction, and understanding of complex behaviors and outcomes.",
+      "when_to_use": [
+        "Testing systems before real-world implementation",
+        "Understanding complex system behaviors",
+        "Training and education scenarios",
+        "Risk assessment without real-world consequences",
+        "Performance optimization",
+        "Validating theoretical models"
+      ],
+      "steps": [
+        "1. Define the system boundaries and scope",
+        "2. Identify key variables and relationships",
+        "3. Create a model of the system",
+        "4. Set initial conditions and parameters",
+        "5. Run the simulation with different scenarios",
+        "6. Analyze and validate results",
+        "7. Refine the model based on findings"
+      ],
+      "example": "Before deploying a new load balancing strategy, creating a simulation of the system under various traffic patterns to understand performance characteristics, identify bottlenecks, and optimize configurations without risking production stability.",
+      "pitfalls": [
+        "Oversimplifying complex systems",
+        "Not validating simulation assumptions",
+        "Relying too heavily on simulation results",
+        "Missing critical real-world factors",
+        "Using incorrect or incomplete input data",
+        "Not accounting for edge cases"
+      ]
+    },
+    {
+      "id": "catalysis",
+      "name": "Catalysis",
+      "always_consider": false,
+      "definition": "A systematic approach to accelerating change and transformation by introducing elements that facilitate progress without being consumed in the process, enabling faster or alternative pathways to desired outcomes.",
+      "when_to_use": [
+        "Need to accelerate transformation processes",
+        "Looking for alternative paths to solutions",
+        "When direct approaches are too slow or inefficient",
+        "Facilitating organizational or system changes",
+        "Breaking down barriers to progress",
+        "Enabling sustainable long-term changes"
+      ],
+      "steps": [
+        "1. Identify the desired transformation or change",
+        "2. Analyze current barriers and rate-limiting factors",
+        "3. Find potential catalysts that can facilitate change",
+        "4. Verify catalyst sustainability and reusability",
+        "5. Implement catalytic elements strategically",
+        "6. Monitor progress and effectiveness",
+        "7. Adjust or regenerate catalysts as needed"
+      ],
+      "example": "Introducing a technical expert into a struggling team acts as a catalyst - they accelerate learning and improvement by sharing knowledge and best practices, while remaining available to help other teams afterward.",
+      "pitfalls": [
+        "Mistaking temporary fixes for true catalysts",
+        "Overreliance on catalysts without addressing fundamentals",
+        "Not ensuring catalyst sustainability",
+        "Ignoring system readiness for change",
+        "Failing to monitor catalyst effectiveness",
+        "Choosing catalysts that get consumed by the process"
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "Ecosystem",
+      "always_consider": true,
+      "definition": "A framework for understanding complex systems as interconnected networks where living components interact with non-living elements in a self-sustaining way, emphasizing relationships, energy flow, and dynamic equilibrium.",
+      "when_to_use": [
+        "Analyzing complex system interactions",
+        "Understanding organizational dynamics",
+        "Evaluating system sustainability",
+        "Planning for system resilience",
+        "Managing resource flows",
+        "Identifying feedback loops and dependencies"
+      ],
+      "steps": [
+        "1. Define system boundaries and components",
+        "2. Map interactions between components",
+        "3. Identify energy and resource flows",
+        "4. Analyze feedback loops and cycles",
+        "5. Assess system resilience and stability",
+        "6. Consider external influences and dependencies",
+        "7. Monitor system health and adaptation"
+      ],
+      "example": "In a microservices architecture, viewing each service as part of an ecosystem helps understand how services depend on each other, share resources, handle failures, and maintain overall system health - similar to how organisms in a natural ecosystem interact and adapt.",
+      "pitfalls": [
+        "Oversimplifying complex relationships",
+        "Ignoring external environmental factors",
+        "Missing important feedback loops",
+        "Not accounting for system resilience",
+        "Overlooking resource limitations",
+        "Failing to consider long-term sustainability"
       ]
     }
   ]
