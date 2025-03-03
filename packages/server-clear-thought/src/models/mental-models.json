@@ -449,6 +449,223 @@
         "Confusing correlation with causation",
         "Not considering systemic factors"
       ]
+    },
+    {
+      "id": "zero_sum_game",
+      "name": "Zero-Sum Game",
+      "definition": "A mathematical representation where one participant's gain is exactly balanced by another participant's loss, making the net change in total benefit zero.",
+      "when_to_use": [
+        "Analyzing competitive situations",
+        "Resource allocation decisions",
+        "Market share analysis",
+        "Strategic planning in competitive environments",
+        "Understanding trade-offs",
+        "Game theory applications"
+      ],
+      "steps": [
+        "1. Identify the participants or competing entities",
+        "2. Define the resources or benefits being contested",
+        "3. Calculate potential gains and losses",
+        "4. Verify that gains equal losses",
+        "5. Consider mixed strategies if applicable",
+        "6. Evaluate optimal strategies",
+        "7. Account for all possible outcomes"
+      ],
+      "example": "In a fixed-size market, when one company gains 10% market share, other companies must collectively lose 10% market share. The total market share always sums to 100%, making it a zero-sum situation.",
+      "pitfalls": [
+        "Assuming all competitions are zero-sum",
+        "Overlooking value creation opportunities",
+        "Ignoring non-zero-sum alternatives",
+        "Missing cooperative solutions",
+        "Oversimplifying complex interactions",
+        "Not considering long-term consequences"
+      ]
+    },
+    {
+      "id": "loss_aversion",
+      "name": "Loss Aversion",
+      "definition": "A cognitive bias where the same situation is perceived as worse when framed as a loss rather than as a gain, with losses typically being treated as twice as impactful as equivalent gains.",
+      "when_to_use": [
+        "Decision making under uncertainty",
+        "User interface design",
+        "Risk assessment",
+        "Product pricing strategies",
+        "Change management",
+        "Behavioral analysis"
+      ],
+      "steps": [
+        "1. Identify potential gains and losses",
+        "2. Evaluate how outcomes are framed",
+        "3. Consider reference points",
+        "4. Assess psychological impact",
+        "5. Account for risk preferences",
+        "6. Analyze decision alternatives",
+        "7. Design balanced solutions"
+      ],
+      "example": "When designing a subscription service, offering a 'free trial' that requires cancellation (avoiding loss) often has higher retention than a 'money-back guarantee' (recovering loss), even though the economic outcome is identical.",
+      "pitfalls": [
+        "Overemphasizing loss prevention",
+        "Neglecting potential gains",
+        "Misidentifying reference points",
+        "Assuming universal application",
+        "Ignoring individual differences",
+        "Over-conservative decision making"
+      ]
+    },
+    {
+      "id": "sunk_cost",
+      "name": "Sunk Cost Fallacy",
+      "definition": "A cognitive bias where people consider costs that have already been incurred and cannot be recovered when making future decisions, despite these costs being irrelevant to the current decision-making process.",
+      "when_to_use": [
+        "Project continuation decisions",
+        "Resource allocation choices",
+        "Investment decisions",
+        "Strategic planning",
+        "Product development",
+        "Legacy system evaluation"
+      ],
+      "steps": [
+        "1. Identify sunk (already incurred) costs",
+        "2. List prospective (future) costs and benefits",
+        "3. Explicitly separate past investments from future decisions",
+        "4. Evaluate only future costs and benefits",
+        "5. Consider opportunity costs",
+        "6. Make decision based on future value only",
+        "7. Document rationale to avoid emotional bias"
+      ],
+      "example": "A company has spent $30 million on a factory projected to cost $100 million total. If the projected value falls to $65 million, they should abandon the project rather than spend an additional $70 million, regardless of the $30 million already spent.",
+      "pitfalls": [
+        "Emotional attachment to past investments",
+        "Fear of appearing wasteful",
+        "Overoptimistic probability bias",
+        "Personal responsibility bias",
+        "Plan continuation bias",
+        "Failing to recognize when to cut losses"
+      ]
+    },
+    {
+      "id": "lateral_thinking",
+      "name": "Lateral Thinking",
+      "definition": "A manner of solving problems using an indirect and creative approach via reasoning that is not immediately obvious. It involves ideas that may not be obtainable using only traditional step-by-step logic.",
+      "when_to_use": [
+        "Need to break from conventional thinking patterns",
+        "Seeking innovative solutions",
+        "When vertical (traditional) thinking is insufficient",
+        "Problem-solving requiring creative approaches",
+        "Challenging status quo assumptions",
+        "Generating alternative perspectives"
+      ],
+      "steps": [
+        "1. Break from established patterns",
+        "2. Generate alternative approaches",
+        "3. Challenge current assumptions",
+        "4. Use random entry points for new ideas",
+        "5. Apply provocation techniques",
+        "6. Consider movement techniques",
+        "7. Question dominant ideas"
+      ],
+      "example": "Instead of adding more workers to increase sewing production (vertical thinking), inventing a sewing machine represents lateral thinking - an entirely different approach to solving the same problem.",
+      "pitfalls": [
+        "Getting too abstract or impractical",
+        "Ignoring valid traditional approaches",
+        "Forcing creativity when unnecessary",
+        "Overlooking simple solutions",
+        "Rejecting logical analysis entirely",
+        "Not validating novel ideas properly"
+      ]
+    },
+    {
+      "id": "divergent_thinking",
+      "name": "Divergent Thinking",
+      "definition": "A thought process used to generate creative ideas by exploring many possible solutions in a spontaneous, free-flowing, non-linear manner. Multiple ideas are generated in an emergent cognitive fashion, allowing unexpected connections to be drawn.",
+      "when_to_use": [
+        "Brainstorming sessions",
+        "Creative problem-solving",
+        "Innovation and ideation",
+        "Breaking out of conventional thinking",
+        "Exploring multiple solution paths",
+        "When quantity of ideas is important"
+      ],
+      "steps": [
+        "1. Create an open and playful mindset",
+        "2. Generate multiple ideas without judgment",
+        "3. Allow for spontaneous and non-linear connections",
+        "4. Embrace unusual or unexpected ideas",
+        "5. Build upon existing ideas to create new ones",
+        "6. Look for patterns and relationships",
+        "7. Defer evaluation until later stages"
+      ],
+      "example": "When designing a new user interface, instead of following conventional patterns, generate multiple diverse approaches: voice commands, gesture controls, brain-computer interfaces, augmented reality - without immediately judging feasibility.",
+      "pitfalls": [
+        "Premature evaluation of ideas",
+        "Getting stuck in conventional patterns",
+        "Fear of suggesting 'silly' ideas",
+        "Limiting the scope too early",
+        "Not allowing enough time for ideas to emerge",
+        "Focusing too much on practicality initially"
+      ]
+    },
+    {
+      "id": "scientific_method",
+      "name": "Scientific Method",
+      "definition": "An empirical method for acquiring knowledge through systematic observation, measurement, experimentation, and the formulation, testing, and modification of hypotheses.",
+      "when_to_use": [
+        "Testing assumptions and theories",
+        "Investigating cause-effect relationships",
+        "Developing and validating solutions",
+        "Conducting structured experiments",
+        "Evaluating competing explanations",
+        "Building reliable knowledge base"
+      ],
+      "steps": [
+        "1. Make observations about a phenomenon",
+        "2. Form a question or identify a problem",
+        "3. Create a hypothesis (proposed explanation)",
+        "4. Make a prediction based on the hypothesis",
+        "5. Test the prediction through experiments",
+        "6. Analyze results and draw conclusions",
+        "7. Communicate findings and iterate if needed"
+      ],
+      "example": "When investigating a performance bottleneck, form a hypothesis about the cause (e.g., database queries), predict specific behaviors under different conditions, conduct controlled tests measuring response times, and analyze results to validate or revise the hypothesis.",
+      "pitfalls": [
+        "Confirmation bias in experimental design",
+        "Not controlling for variables properly",
+        "Drawing conclusions from insufficient data",
+        "Ignoring contradictory evidence",
+        "Not documenting methods and results",
+        "Failing to consider alternative explanations"
+      ]
+    },
+    {
+      "id": "decision_tree",
+      "name": "Decision Tree",
+      "definition": "A decision support tool that uses a tree-like model of decisions and their possible consequences, including chance event outcomes, resource costs, and utility.",
+      "when_to_use": [
+        "Complex decision-making scenarios",
+        "Risk analysis and management",
+        "Strategic planning",
+        "Resource allocation decisions",
+        "Problem decomposition",
+        "When evaluating multiple possible outcomes"
+      ],
+      "steps": [
+        "1. Define the main decision or problem to analyze",
+        "2. Identify all possible choices at each decision point",
+        "3. Map out potential outcomes for each choice",
+        "4. Assign probabilities or weights to outcomes if applicable",
+        "5. Calculate costs and benefits for each path",
+        "6. Evaluate decision paths systematically",
+        "7. Choose optimal path based on analysis"
+      ],
+      "example": "When deciding on a caching strategy, create a decision tree with branches for different cache types (memory, disk, distributed), each leading to subsequent decisions about size, expiration policies, and backup strategies, with associated costs and performance impacts.",
+      "pitfalls": [
+        "Overlooking important decision paths",
+        "Oversimplifying complex relationships",
+        "Not considering all relevant factors",
+        "Incorrect probability assessments",
+        "Analysis paralysis from too many branches",
+        "Failing to update the tree as conditions change"
+      ]
     }
   ]
 } 
