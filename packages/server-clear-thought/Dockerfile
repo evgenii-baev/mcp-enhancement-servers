@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:current-slim
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -7,16 +7,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install dependencies
-RUN npm install
-
-# Build the project
-RUN npm run build
-
-# Remove development dependencies
-RUN npm prune --production
-
-# Set executable permissions
-RUN chmod +x dist/index.js
+RUN npm install && npm run build && npm prune --production && chmod +x dist/index.js
 
 # Run as non-root user
 USER node

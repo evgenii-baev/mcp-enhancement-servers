@@ -39,3 +39,4 @@ coverage/
 # Temporary files
 *.log
 .tmp/
+.cursor/
