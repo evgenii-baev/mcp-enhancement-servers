@@ -85,7 +85,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case "brainstorming":
                 return brainstormingServer.processBrainstorming(params)
             case "first_thought_advisor":
-                return firstThoughtAdvisorServer.processModelSelection(params)
+                return firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
             case "stochastic_algorithm":
                 return stochasticAlgorithmServer.processAlgorithm(params)
             default:

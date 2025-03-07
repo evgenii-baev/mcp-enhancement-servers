@@ -82,11 +82,11 @@ export class FirstThoughtAdvisorServer {
     }
 
     /**
-     * Process model selection request
+     * Process first thought advice request
      * @param params - Input parameters
      * @returns Recommendations and categories
      */
-    public processModelSelection(params: unknown) {
+    public processFirstThoughtAdvice(params: unknown) {
         // Validate input
         const data = this.validateInput(params);
 
