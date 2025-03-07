@@ -794,12 +794,58 @@ const MENTAL_MODEL_TOOL: Tool = {
 This tool helps analyze problems from different perspectives using systematic mental models.
 Use it for complex problems, when standard approaches fail, or when you need a fresh perspective.
 
-Available models include first principles, systems thinking, Occam's razor, and more.
+AVAILABLE MODELS:
+
+• first_principles: Breaking down problems to fundamental truths and reasoning up from there.
+  Use for: Innovation, challenging assumptions, rethinking complex systems.
+
+• systems_thinking: Analyzing how parts of a system interrelate and affect each other.
+  Use for: Complex systems, understanding feedback loops, organizational problems.
+
+• occams_razor: The simplest explanation is usually the correct one, all else being equal.
+  Use for: Troubleshooting, hypothesis evaluation, debugging complex issues.
+
+• pareto_principle: The 80/20 rule - 80% of effects come from 20% of causes.
+  Use for: Prioritization, resource allocation, optimization efforts.
+
+• lateral_thinking: Solving problems using indirect, creative approaches.
+  Use for: Breaking out of conventional thinking, innovation, creative solutions.
+
+• divergent_thinking: Generating multiple creative ideas in a free-flowing manner.
+  Use for: Brainstorming, exploring possibilities, creative problem-solving.
+
+• decision_tree: Mapping out possible decisions and their consequences.
+  Use for: Complex decisions with multiple variables, risk assessment.
+
+• scientific_method: Systematic observation, measurement, experimentation, and hypothesis testing.
+  Use for: Empirical problem-solving, testing assumptions, validation.
+
+• scenario_planning: Developing plausible views of different possible futures.
+  Use for: Strategic planning, risk management, preparing for uncertainty.
+
+• rubber_duck: Explaining a problem step by step to gain clarity.
+  Use for: Debugging, clarifying thinking, finding overlooked solutions.
+
+• bayes_theorem: Updating probability estimates as new evidence emerges.
+  Use for: Decision-making under uncertainty, risk assessment, predictive analysis.
+
+• opportunity_cost: Evaluating what must be given up to pursue a particular action.
+  Use for: Resource allocation, prioritization, strategic planning.
+
+• error_propagation: Analyzing how errors cascade through a system.
+  Use for: Quality control, system reliability, fault tolerance design.
+
+• sensitivity_analysis: Determining how different variables affect outcomes.
+  Use for: Model validation, risk assessment, identifying critical factors.
+
+• sunk_cost: Avoiding decisions based on costs that cannot be recovered.
+  Use for: Project evaluation, resource reallocation, avoiding escalation of commitment.
+
+• thought_experiment: Exploring hypothetical scenarios through reasoning.
+  Use for: Ethical dilemmas, exploring edge cases, conceptual innovation.
 
 Usage: Select a model, define your problem, and the tool will apply the model's framework.
-Example: { "modelName": "first_principles", "problem": "Our app is slow" }
-
-See documentation for full list of models and detailed usage instructions.`,
+Example: { "modelName": "first_principles", "problem": "Our app is slow" }`,
     inputSchema: {
         type: "object",
         properties: {
