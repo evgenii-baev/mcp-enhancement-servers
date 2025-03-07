@@ -7,6 +7,7 @@
 
 import { ThoughtOrchestrator } from '../core/thought-orchestrator';
 import { FeatureDiscussionAdapter } from '../adapters/feature-discussion-adapter';
+import { FeatureAnalyzer } from '../specialized/feature-analyzer';
 import { ThinkingLevel } from '../interfaces/tool-metadata';
 
 // Типы запросов к различным серверам
@@ -56,12 +57,18 @@ export class ServerBridge {
     /** Адаптер для mcp-feature-discussion */
     private featureDiscussionAdapter?: FeatureDiscussionAdapter;
 
+    /** Анализатор функций */
+    private featureAnalyzer?: FeatureAnalyzer;
+
     /**
      * Создает экземпляр моста
      * @param orchestrator Координатор мышления
      */
     constructor(orchestrator: ThoughtOrchestrator) {
         this.orchestrator = orchestrator;
+
+        // Инициализируем анализатор функций
+        this.initFeatureAnalyzer();
     }
 
     /**
@@ -75,6 +82,19 @@ export class ServerBridge {
         this.orchestrator.registerTool(
             'feature_discussion',
             this.featureDiscussionAdapter.processToolRequest.bind(this.featureDiscussionAdapter)
+        );
+    }
+
+    /**
+     * Инициализирует анализатор функций
+     */
+    public initFeatureAnalyzer(): void {
+        this.featureAnalyzer = new FeatureAnalyzer();
+
+        // Регистрируем инструмент в координаторе
+        this.orchestrator.registerTool(
+            'feature_analyzer',
+            this.featureAnalyzer.processToolRequest.bind(this.featureAnalyzer)
         );
     }
 
@@ -227,6 +247,28 @@ export class ServerBridge {
     }
 
     /**
+     * Обрабатывает запрос к анализатору функций
+     * @param request Запрос к анализатору функций
+     * @returns Результат обработки запроса
+     */
+    public async handleFeatureAnalyzerRequest(request: any): Promise<any> {
+        // Проверяем инициализацию анализатора
+        if (!this.featureAnalyzer) {
+            throw new Error('Анализатор функций не инициализирован');
+        }
+
+        // Преобразуем запрос для обработки в новой архитектуре
+        const session = await this.orchestrator.processRequest(request, {
+            forceTool: 'feature_analyzer',
+            preferredLevel: ThinkingLevel.SPECIALIZED,
+            maxSteps: 1 // Для анализа функций достаточно одного шага
+        });
+
+        // Возвращаем результат
+        return session.result;
+    }
+
+    /**
      * Общий обработчик запросов к инструментам мышления
      * @param toolName Имя инструмента
      * @param request Запрос к инструменту
@@ -344,6 +386,18 @@ export class ServerBridge {
     }
 
     /**
+     * Создает функции-обертки для анализатора функций
+     * @returns Объект с функциями-обертками
+     */
+    public createFeatureAnalyzerServer(): any {
+        return {
+            feature_analyzer: async (request: any) => {
+                return this.handleFeatureAnalyzerRequest(request);
+            }
+        };
+    }
+
+    /**
      * Создает функции-обертки для всех существующих серверов
      * @returns Объект с функциями-обертками для всех серверов
      */
@@ -355,7 +409,8 @@ export class ServerBridge {
             ...this.createDebuggingApproachServer(),
             ...this.createStochasticAlgorithmServer(),
             ...this.createFeatureDiscussionServer(),
-            ...this.createFirstThoughtAdvisorServer()
+            ...this.createFirstThoughtAdvisorServer(),
+            ...this.createFeatureAnalyzerServer()
         };
     }
 } 

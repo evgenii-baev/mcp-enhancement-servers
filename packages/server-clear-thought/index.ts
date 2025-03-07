@@ -17,6 +17,10 @@ import {
     getAllMentalModelIds,
     formatMentalModelOutput,
 } from "./src/models/mental-models.js"
+import { ServerBridge } from "./src/bridge/server-bridge"
+import { ThoughtOrchestrator } from "./src/core/thought-orchestrator"
+import { SequentialThinkingServer } from "./src/servers/sequential-thinking.js"
+import { MentalModelOutput, modelItems } from "./src/models/mental-models.js"
 
 // Data Interfaces
 interface ThoughtData {
@@ -361,11 +365,11 @@ WHEN TO USE:
 
 AVAILABLE MODELS:
 ${getAllMentalModelIds()
-    .map((id) => {
-        const model = getMentalModelById(id)
-        return `- ${model?.name}: ${model?.definition}`
-    })
-    .join("\n")}
+            .map((id) => {
+                const model = getMentalModelById(id)
+                return `- ${model?.name}: ${model?.definition}`
+            })
+            .join("\n")}
 
 HOW TO USE:
 1. Select the most appropriate mental model for your problem
@@ -702,15 +706,32 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 }))
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    switch (request.params.name) {
-        case "sequentialthinking":
-            return thinkingServer.processThought(request.params.arguments)
-        case "mentalmodel":
-            return modelServer.processModel(request.params.arguments)
-        case "debuggingapproach":
-            return debuggingServer.processApproach(request.params.arguments)
-        default:
-            throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${request.params.name}`)
+    const { name, params } = request
+    try {
+        switch (name) {
+            case "mental_model":
+                return modelServer.processModel(params)
+            case "debugging_approach":
+                return debuggingServer.processApproach(params)
+            case "sequential_thinking":
+                return thinkingServer.processThought(params)
+            case "brainstorming":
+                return brainstormingServer.processBrainstorming(params)
+            case "first_thought_advisor":
+                return firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
+            case "stochastic_algorithm":
+                return stochasticAlgorithmServer.processAlgorithm(params)
+            case "feature_analyzer":
+                const bridge = new ServerBridge(new ThoughtOrchestrator());
+                return bridge.handleFeatureAnalyzerRequest(params);
+            default:
+                throw new McpError(
+                    ErrorCode.MethodNotFound,
+                    `Unknown tool: ${name}`
+                )
+        }
+    } catch (e) {
+        throw e
     }
 })
 
