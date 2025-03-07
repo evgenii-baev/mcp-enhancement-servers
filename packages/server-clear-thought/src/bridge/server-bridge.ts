@@ -7,7 +7,7 @@
 
 import { ThoughtOrchestrator } from '../core/thought-orchestrator';
 import { FeatureDiscussionAdapter } from '../adapters/feature-discussion-adapter';
-import { FeatureAnalyzer } from '../specialized/feature-analyzer';
+import { FeatureAnalyzer, ArchitectureAdvisor } from '../specialized';
 import { ThinkingLevel } from '../interfaces/tool-metadata';
 
 // Типы запросов к различным серверам
@@ -60,6 +60,9 @@ export class ServerBridge {
     /** Анализатор функций */
     private featureAnalyzer?: FeatureAnalyzer;
 
+    /** Советник по архитектуре */
+    private architectureAdvisor?: ArchitectureAdvisor;
+
     /**
      * Создает экземпляр моста
      * @param orchestrator Координатор мышления
@@ -69,6 +72,9 @@ export class ServerBridge {
 
         // Инициализируем анализатор функций
         this.initFeatureAnalyzer();
+
+        // Инициализируем советника по архитектуре
+        this.initArchitectureAdvisor();
     }
 
     /**
@@ -95,6 +101,19 @@ export class ServerBridge {
         this.orchestrator.registerTool(
             'feature_analyzer',
             this.featureAnalyzer.processToolRequest.bind(this.featureAnalyzer)
+        );
+    }
+
+    /**
+     * Инициализирует советника по архитектуре
+     */
+    public initArchitectureAdvisor(): void {
+        this.architectureAdvisor = new ArchitectureAdvisor();
+
+        // Регистрируем инструмент в координаторе
+        this.orchestrator.registerTool(
+            'architecture_advisor',
+            this.architectureAdvisor.processToolRequest.bind(this.architectureAdvisor)
         );
     }
 
@@ -269,6 +288,28 @@ export class ServerBridge {
     }
 
     /**
+     * Обрабатывает запрос к советнику по архитектуре
+     * @param request Запрос к советнику по архитектуре
+     * @returns Результат обработки запроса
+     */
+    public async handleArchitectureAdvisorRequest(request: any): Promise<any> {
+        // Проверяем инициализацию советника
+        if (!this.architectureAdvisor) {
+            throw new Error('Советник по архитектуре не инициализирован');
+        }
+        
+        // Преобразуем запрос для обработки в новой архитектуре
+        const session = await this.orchestrator.processRequest(request, {
+            forceTool: 'architecture_advisor',
+            preferredLevel: ThinkingLevel.SPECIALIZED,
+            maxSteps: 1 // Для рекомендации архитектуры достаточно одного шага
+        });
+        
+        // Возвращаем результат
+        return session.result;
+    }
+
+    /**
      * Общий обработчик запросов к инструментам мышления
      * @param toolName Имя инструмента
      * @param request Запрос к инструменту
@@ -398,6 +439,18 @@ export class ServerBridge {
     }
 
     /**
+     * Создает функции-обертки для советника по архитектуре
+     * @returns Объект с функциями-обертками
+     */
+    public createArchitectureAdvisorServer(): any {
+        return {
+            architecture_advisor: async (request: any) => {
+                return this.handleArchitectureAdvisorRequest(request);
+            }
+        };
+    }
+
+    /**
      * Создает функции-обертки для всех существующих серверов
      * @returns Объект с функциями-обертками для всех серверов
      */
@@ -410,7 +463,8 @@ export class ServerBridge {
             ...this.createStochasticAlgorithmServer(),
             ...this.createFeatureDiscussionServer(),
             ...this.createFirstThoughtAdvisorServer(),
-            ...this.createFeatureAnalyzerServer()
+            ...this.createFeatureAnalyzerServer(),
+            ...this.createArchitectureAdvisorServer()
         };
     }
 } 

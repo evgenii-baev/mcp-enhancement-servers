@@ -5,4 +5,5 @@
  * таких как FeatureAnalyzer и ArchitectureAdvisor.
  */
 
-export * from './feature-analyzer'; 
+export * from './feature-analyzer';
+export * from './architecture-advisor'; 

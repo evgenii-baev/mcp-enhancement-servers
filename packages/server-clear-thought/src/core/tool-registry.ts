@@ -79,21 +79,92 @@ export interface IncorporationRule {
 }
 
 /**
- * Реестр инструментов мышления
+ * Регистр доступных инструментов мышления и их типов
  */
 export class ToolRegistry {
-    /** Зарегистрированные инструменты */
-    private tools: Map<string, ToolMetadata>;
+    private static instance: ToolRegistry;
+    private toolTypes: Map<string, ToolType> = new Map();
+    private toolMetadata: Map<string, ToolMetadata> = new Map();
 
-    /** Правила включения между инструментами */
-    private incorporationRules: Map<string, IncorporationRule>;
+    private constructor() {
+        this.initializeToolTypes();
+        this.initializeToolMetadata();
+    }
 
     /**
-     * Создает экземпляр реестра инструментов
+     * Получает экземпляр регистра (Singleton)
      */
-    constructor() {
-        this.tools = new Map<string, ToolMetadata>();
-        this.incorporationRules = new Map<string, IncorporationRule>();
+    public static getInstance(): ToolRegistry {
+        if (!ToolRegistry.instance) {
+            ToolRegistry.instance = new ToolRegistry();
+        }
+        return ToolRegistry.instance;
+    }
+
+    /**
+     * Инициализирует типы инструментов
+     */
+    private initializeToolTypes(): void {
+        this.registerToolType('mental_model', 'Ментальная модель', ThinkingLevel.BASIC);
+        this.registerToolType('sequential_thinking', 'Последовательное мышление', ThinkingLevel.BASIC);
+        this.registerToolType('brainstorming', 'Мозговой штурм', ThinkingLevel.BASIC);
+        this.registerToolType('debugging_approach', 'Подход к отладке', ThinkingLevel.BASIC);
+        this.registerToolType('stochastic_algorithm', 'Стохастический алгоритм', ThinkingLevel.BASIC);
+        this.registerToolType('first_thought_advisor', 'Советник по первичному мышлению', ThinkingLevel.META);
+        this.registerToolType('feature_discussion', 'Обсуждение функций', ThinkingLevel.SPECIALIZED);
+        this.registerToolType('feature_analyzer', 'Анализатор функций', ThinkingLevel.SPECIALIZED);
+        this.registerToolType('architecture_advisor', 'Советник по архитектуре', ThinkingLevel.SPECIALIZED);
+    }
+
+    /**
+     * Инициализирует метаданные инструментов
+     */
+    private initializeToolMetadata(): void {
+        // Метаданные для советника по архитектуре
+        this.registerToolMetadata({
+            name: 'architecture_advisor',
+            description: 'Инструмент для создания и оценки архитектурных решений на основе требований проекта',
+            type: 'architecture_advisor',
+            parameters: {
+                action: {
+                    type: 'string',
+                    description: 'Действие: recommend (создать рекомендацию), get (получить существующую), clear (очистить кэш)',
+                    required: true
+                },
+                featureId: {
+                    type: 'string',
+                    description: 'Идентификатор функции, для которой создается архитектура',
+                    required: true
+                },
+                requirements: {
+                    type: 'object',
+                    description: 'Требования для создания архитектуры (только для action=recommend)',
+                    required: false
+                }
+            },
+            examples: [
+                {
+                    description: 'Создание рекомендации по архитектуре',
+                    call: {
+                        action: 'recommend',
+                        featureId: 'auth-system',
+                        requirements: {
+                            performance: 'high',
+                            scalability: 'medium',
+                            security: 'critical',
+                            components: ['user-service', 'auth-service', 'token-manager']
+                        }
+                    }
+                },
+                {
+                    description: 'Получение существующей рекомендации',
+                    call: {
+                        action: 'get',
+                        featureId: 'auth-system'
+                    }
+                }
+            ]
+        });
     }
 
     /**
@@ -107,12 +178,12 @@ export class ToolRegistry {
             this.validateToolMetadata(metadata);
 
             // Проверяем, не зарегистрирован ли уже инструмент с таким именем
-            if (this.tools.has(metadata.name)) {
+            if (this.toolMetadata.has(metadata.name)) {
                 throw new Error(`Инструмент с именем ${metadata.name} уже зарегистрирован`);
             }
 
             // Регистрируем инструмент
-            this.tools.set(metadata.name, metadata);
+            this.toolMetadata.set(metadata.name, metadata);
 
             return {
                 success: true,
@@ -138,12 +209,12 @@ export class ToolRegistry {
     public updateToolMetadata(toolName: string, metadata: Partial<ToolMetadata>): ToolRegistrationResult {
         try {
             // Проверяем наличие инструмента
-            if (!this.tools.has(toolName)) {
+            if (!this.toolMetadata.has(toolName)) {
                 throw new Error(`Инструмент с именем ${toolName} не найден`);
             }
 
             // Получаем текущие метаданные
-            const currentMetadata = this.tools.get(toolName)!;
+            const currentMetadata = this.toolMetadata.get(toolName)!;
 
             // Обновляем метаданные
             const updatedMetadata = {
@@ -156,7 +227,7 @@ export class ToolRegistry {
             this.validateToolMetadata(updatedMetadata);
 
             // Обновляем инструмент
-            this.tools.set(toolName, updatedMetadata);
+            this.toolMetadata.set(toolName, updatedMetadata);
 
             return {
                 success: true,
@@ -181,12 +252,12 @@ export class ToolRegistry {
     public unregisterTool(toolName: string): ToolRegistrationResult {
         try {
             // Проверяем наличие инструмента
-            if (!this.tools.has(toolName)) {
+            if (!this.toolMetadata.has(toolName)) {
                 throw new Error(`Инструмент с именем ${toolName} не найден`);
             }
 
             // Удаляем инструмент
-            this.tools.delete(toolName);
+            this.toolMetadata.delete(toolName);
 
             // Удаляем все правила включения, связанные с этим инструментом
             this.incorporationRules.forEach((rule, key) => {
@@ -216,7 +287,7 @@ export class ToolRegistry {
      * @returns Метаданные инструмента или undefined, если инструмент не найден
      */
     public getToolMetadata(toolName: string): ToolMetadata | undefined {
-        return this.tools.get(toolName);
+        return this.toolMetadata.get(toolName);
     }
 
     /**
@@ -225,7 +296,7 @@ export class ToolRegistry {
      * @returns true, если инструмент зарегистрирован, иначе false
      */
     public hasTool(toolName: string): boolean {
-        return this.tools.has(toolName);
+        return this.toolMetadata.has(toolName);
     }
 
     /**
@@ -233,7 +304,7 @@ export class ToolRegistry {
      * @returns Массив метаданных всех зарегистрированных инструментов
      */
     public getAllTools(): ToolMetadata[] {
-        return Array.from(this.tools.values());
+        return Array.from(this.toolMetadata.values());
     }
 
     /**
@@ -324,11 +395,11 @@ export class ToolRegistry {
     ): ToolRegistrationResult {
         try {
             // Проверяем наличие инструментов
-            if (!this.tools.has(sourceToolName)) {
+            if (!this.toolMetadata.has(sourceToolName)) {
                 throw new Error(`Исходный инструмент ${sourceToolName} не найден`);
             }
 
-            if (!this.tools.has(targetToolName)) {
+            if (!this.toolMetadata.has(targetToolName)) {
                 throw new Error(`Целевой инструмент ${targetToolName} не найден`);
             }
 
@@ -343,8 +414,8 @@ export class ToolRegistry {
             });
 
             // Обновляем метаданные инструментов
-            const sourceMetadata = this.tools.get(sourceToolName)!;
-            const targetMetadata = this.tools.get(targetToolName)!;
+            const sourceMetadata = this.toolMetadata.get(sourceToolName)!;
+            const targetMetadata = this.toolMetadata.get(targetToolName)!;
 
             // Добавляем связи между инструментами
             if (!sourceMetadata.interactsWith) {

@@ -23,8 +23,19 @@ import {
     ThoughtData,
     MentalModelData,
     DebuggingApproachData,
+    StochasticAlgorithmData,
     FormattedOutput
 } from './src/interfaces/server-interfaces.js'
+import { ArchitectureAdvisor } from './src/specialized/index.js'
+
+// Импорт классов серверов
+import {
+    BrainstormingServer,
+    FirstThoughtAdvisorServer,
+    FeatureDiscussionServer,
+    FeatureAnalyzerServer,
+    StochasticAlgorithmServer
+} from './src/servers'
 
 // Server Classes
 class MentalModelServer {
@@ -337,6 +348,43 @@ ${this.wrapText(thought, border.length - 4).map((line) => `│ ${line.padEnd(bor
                 ],
                 isError: true,
             }
+        }
+    }
+}
+
+// Определяем класс-обертку для ArchitectureAdvisorServer
+class ArchitectureAdvisorServer {
+    public processRequest(request: any): FormattedOutput {
+        try {
+            // Используем мост для обработки запроса
+            const bridge = new ServerBridge(new ThoughtOrchestrator());
+            const result = bridge.handleArchitectureAdvisorRequest(request);
+
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: JSON.stringify(result, null, 2)
+                    }
+                ]
+            };
+        } catch (error) {
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: JSON.stringify(
+                            {
+                                error: error instanceof Error ? error.message : String(error),
+                                status: 'failed'
+                            },
+                            null,
+                            2
+                        )
+                    }
+                ],
+                isError: true
+            };
         }
     }
 }
@@ -675,10 +723,82 @@ BEST PRACTICES:
     },
 }
 
+// Добавляем определение инструмента архитектурного советника
+const ARCHITECTURE_ADVISOR_TOOL: Tool = {
+    name: "architecture_advisor",
+    description: `A specialized tool for creating and evaluating architecture based on project requirements.
+
+WHAT IT DOES:
+This tool creates architectural recommendations based on project requirements, evaluates
+suitable architectural patterns, and helps visualize the architecture for better understanding.
+
+WHEN TO USE:
+- When designing a new system architecture
+- When evaluating architectural decisions for a feature
+- When refactoring an existing architecture
+- When you need to visualize system components and relationships
+- When you need to ensure architectural decisions align with requirements
+
+HOW TO USE:
+1. Specify the action (recommend, get, clear)
+2. Provide a feature ID to identify the architecture recommendation
+3. For 'recommend' action, provide requirements (performance needs, scalability, security, etc.)
+4. The tool will generate an architecture recommendation with components, relationships, and patterns
+
+EXAMPLES:
+• Input: { "action": "recommend", "featureId": "auth-system", "requirements": { "performance": "high", "security": "critical" } }
+  Output: A detailed architecture recommendation with components, relationships, and suitable patterns.
+
+• Input: { "action": "get", "featureId": "auth-system" }
+  Output: Returns the existing architecture recommendation for the specified feature.
+`,
+    inputSchema: {
+        type: "object",
+        properties: {
+            action: {
+                type: "string",
+                description: "Action to perform: recommend (create a recommendation), get (retrieve existing), clear (clear cache)",
+                enum: ["recommend", "get", "clear"]
+            },
+            featureId: {
+                type: "string",
+                description: "Identifier for the feature/system architecture",
+            },
+            requirements: {
+                type: "object",
+                description: "Requirements for architecture recommendation (only for recommend action)",
+                additionalProperties: true
+            },
+        },
+        required: ["action", "featureId"],
+    },
+    parameters: {
+        type: "object",
+        properties: {
+            action: {
+                type: "string",
+                description: "Action to perform: recommend (create a recommendation), get (retrieve existing), clear (clear cache)",
+                enum: ["recommend", "get", "clear"]
+            },
+            featureId: {
+                type: "string",
+                description: "Identifier for the feature/system architecture",
+            },
+            requirements: {
+                type: "object",
+                description: "Requirements for architecture recommendation (only for recommend action)",
+                additionalProperties: true
+            },
+        },
+        required: ["action", "featureId"],
+    },
+}
+
 // Server Instances
 const modelServer = new MentalModelServer()
 const debuggingServer = new DebuggingApproachServer()
 const thinkingServer = new SequentialThinkingServer()
+const architectureServer = new ArchitectureAdvisorServer()
 
 const server = new Server(
     {
@@ -691,6 +811,7 @@ const server = new Server(
                 sequentialthinking: SEQUENTIAL_THINKING_TOOL,
                 mentalmodel: MENTAL_MODEL_TOOL,
                 debuggingapproach: DEBUGGING_APPROACH_TOOL,
+                architecture_advisor: ARCHITECTURE_ADVISOR_TOOL
             },
         },
     }
@@ -698,7 +819,12 @@ const server = new Server(
 
 // Request Handlers
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-    tools: [SEQUENTIAL_THINKING_TOOL, MENTAL_MODEL_TOOL, DEBUGGING_APPROACH_TOOL],
+    tools: [
+        SEQUENTIAL_THINKING_TOOL,
+        MENTAL_MODEL_TOOL,
+        DEBUGGING_APPROACH_TOOL,
+        ARCHITECTURE_ADVISOR_TOOL
+    ],
 }))
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -716,9 +842,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 return thinkingServer.processThought(params.arguments)
             case "feature_analyzer":
                 // Используем мост для перенаправления запроса к новой архитектуре
-                // Когда мост будет полностью готов, все инструменты будут работать через него
                 const bridge = new ServerBridge(new ThoughtOrchestrator());
                 return bridge.handleFeatureAnalyzerRequest(params.arguments);
+            case "architecture_advisor":
+                // Используем архитектурный сервер для обработки запроса
+                return architectureServer.processRequest(params.arguments);
             default:
                 throw new McpError(
                     ErrorCode.MethodNotFound,
@@ -740,3 +868,58 @@ runServer().catch((error) => {
     console.error("Fatal error running server:", error)
     process.exit(1)
 })
+
+/**
+ * Список доступных API
+ */
+export {
+    // Расширенные серверы
+    FirstThoughtAdvisorServer,
+    FeatureDiscussionServer,
+    FeatureAnalyzerServer,
+    ArchitectureAdvisorServer,
+
+    // Базовые серверы
+    MentalModelServer,
+    SequentialThinkingServer,
+    BrainstormingServer,
+    DebuggingApproachServer,
+    StochasticAlgorithmServer,
+
+    // Вспомогательные данные
+    ThoughtData,
+    MentalModelData,
+    DebuggingApproachData,
+    StochasticAlgorithmData
+}
+
+/**
+ * Создает все серверы
+ * 
+ * @returns Объект с функциями для всех серверов
+ */
+export function createAllServers() {
+    return {
+        ...createMentalModelServer(),
+        ...createSequentialThinkingServer(),
+        ...createBrainstormingServer(),
+        ...createDebuggingApproachServer(),
+        ...createStochasticAlgorithmServer(),
+        ...createFirstThoughtAdvisorServer(),
+        ...createFeatureDiscussionServer(),
+        ...createFeatureAnalyzerServer(),
+        ...createArchitectureAdvisorServer()
+    };
+}
+
+/**
+ * Создает сервер ArchitectureAdvisor
+ * 
+ * @returns Объект с функциями сервера
+ */
+export function createArchitectureAdvisorServer() {
+    const architectureAdvisor = new ArchitectureAdvisorServer();
+    return {
+        architecture_advisor: (request: any) => architectureAdvisor.processRequest(request)
+    };
+}
