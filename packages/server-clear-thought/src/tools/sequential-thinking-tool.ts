@@ -4,7 +4,7 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js";
  * Tool for dynamic and reflective problem-solving through sequential thoughts
  */
 export const SEQUENTIAL_THINKING_TOOL: Tool = {
-    name: "sequentialthinking",
+    name: "sequential_thinking",
     description: `A tool for dynamic and reflective problem-solving through sequential thoughts.
 
 This tool facilitates a flexible thinking process that mimics human cognition, allowing thoughts

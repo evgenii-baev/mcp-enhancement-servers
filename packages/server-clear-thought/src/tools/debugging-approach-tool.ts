@@ -4,7 +4,7 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js";
  * Tool for applying systematic debugging approaches to technical issues
  */
 export const DEBUGGING_APPROACH_TOOL: Tool = {
-    name: "debuggingapproach",
+    name: "debugging_approach",
     description: `A tool for applying systematic debugging approaches to technical issues.
 
 This tool provides structured methodologies for identifying and resolving technical problems.

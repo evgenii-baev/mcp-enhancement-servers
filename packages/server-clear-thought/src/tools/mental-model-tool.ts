@@ -4,7 +4,7 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js";
  * Tool for applying structured mental models to problem-solving
  */
 export const MENTAL_MODEL_TOOL: Tool = {
-    name: "mentalmodel",
+    name: "mental_model",
     description: `A tool for applying structured mental models to problem-solving.
 
 This tool helps analyze problems from different perspectives using systematic mental models.

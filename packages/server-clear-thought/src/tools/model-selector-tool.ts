@@ -4,7 +4,7 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js";
  * Tool for intelligently recommending the optimal mental model for any problem
  */
 export const MODEL_SELECTOR_TOOL: Tool = {
-    name: "modelSelector",
+    name: "model_selector",
     description: `A tool that intelligently recommends the optimal mental model for any problem.
 
 🧠 WHAT IT DOES:

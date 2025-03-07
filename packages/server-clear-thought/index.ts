@@ -45,11 +45,11 @@ const server = new Server(
     {
         capabilities: {
             tools: {
-                sequentialthinking: SEQUENTIAL_THINKING_TOOL,
-                mentalmodel: MENTAL_MODEL_TOOL,
-                debuggingapproach: DEBUGGING_APPROACH_TOOL,
-                brainstorming: BRAINSTORMING_TOOL,
-                modelSelector: MODEL_SELECTOR_TOOL,
+                "sequential_thinking": SEQUENTIAL_THINKING_TOOL,
+                "mental_model": MENTAL_MODEL_TOOL,
+                "debugging_approach": DEBUGGING_APPROACH_TOOL,
+                "brainstorming": BRAINSTORMING_TOOL,
+                "model_selector": MODEL_SELECTOR_TOOL,
             },
         },
     }
@@ -71,15 +71,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     try {
         switch (name) {
-            case "mentalmodel":
+            case "mental_model":
                 return mentalModelServer.processModel(params)
-            case "debuggingapproach":
+            case "debugging_approach":
                 return debuggingApproachServer.processApproach(params)
-            case "sequentialthinking":
+            case "sequential_thinking":
                 return sequentialThinkingServer.processThought(params)
             case "brainstorming":
                 return brainstormingServer.processBrainstorming(params)
-            case "modelSelector":
+            case "model_selector":
                 return modelSelectorServer.processModelSelection(params)
             default:
                 throw new McpError(
