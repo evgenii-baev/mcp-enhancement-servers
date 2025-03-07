@@ -409,11 +409,11 @@ WHEN TO USE:
 
 AVAILABLE MODELS:
 ${getAllMentalModelIds()
-            .map((id) => {
-                const model = getMentalModelById(id)
-                return `- ${model?.name}: ${model?.definition}`
-            })
-            .join("\n")}
+    .map((id) => {
+        const model = getMentalModelById(id)
+        return `- ${model?.name}: ${model?.definition}`
+    })
+    .join("\n")}
 
 HOW TO USE:
 1. Select the most appropriate mental model for your problem
@@ -765,7 +765,7 @@ EXAMPLES:
                 description: "Identifier for the feature/system architecture",
             },
             requirements: {
-                type: "object",
+                    type: "object",
                 description: "Requirements for architecture recommendation (only for recommend action)",
                 additionalProperties: true
             },
@@ -847,7 +847,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             case "architecture_advisor":
                 // Используем архитектурный сервер для обработки запроса
                 return architectureServer.processRequest(params.arguments);
-            default:
+        default:
                 throw new McpError(
                     ErrorCode.MethodNotFound,
                     `Unknown tool: ${name}`

@@ -82,7 +82,7 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
                 throw error;
             }
             throw new McpError(
-                ErrorCode.ServerError,
+                ErrorCode.InternalError,
                 `Error analyzing feature: ${(error as Error).message}`
             );
         }

@@ -104,7 +104,7 @@ export class FeatureDiscussionAdapter {
             return requirements;
         } catch (error) {
             throw new McpError(
-                ErrorCode.ServerError,
+                ErrorCode.InternalError,
                 `Error extracting requirements from discussion data: ${(error as Error).message}`
             );
         }
