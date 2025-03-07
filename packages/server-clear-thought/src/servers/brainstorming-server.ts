@@ -68,7 +68,7 @@ export class BrainstormingServer {
                 if (
                     ideaObj.buildUpon !== undefined &&
                     (!Array.isArray(ideaObj.buildUpon) ||
-                        !ideaObj.buildUpon.every((b) => typeof b === "string"))
+                        !ideaObj.buildUpon.every((b: unknown) => typeof b === "string"))
                 ) {
                     throw new Error(
                         `Invalid idea.buildUpon at index ${index}: must be an array of strings`
@@ -128,7 +128,9 @@ export class BrainstormingServer {
             if (
                 typeof data.currentStep !== "number" ||
                 data.currentStep < 1 ||
-                (data.totalSteps !== undefined && data.currentStep > data.totalSteps)
+                (data.totalSteps !== undefined &&
+                    typeof data.totalSteps === "number" &&
+                    data.currentStep > data.totalSteps)
             ) {
                 throw new Error("Invalid currentStep: must be a positive number not exceeding totalSteps");
             }
