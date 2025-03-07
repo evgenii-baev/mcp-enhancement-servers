@@ -77,6 +77,24 @@ enum BrainstormingPhase {
     ACTION_PLANNING = "action_planning", // Планирование действий
 }
 
+// Model Selector interfaces
+interface ModelCategory {
+    id: string;
+    name: string;
+    description: string;
+    applicableGoals: string[];
+    models: string[];
+}
+
+interface ModelSelectorData {
+    problem: string;
+    domain?: string;
+    goal?: string;
+    constraints?: string[];
+    complexity?: 'low' | 'medium' | 'high';
+    previousApproaches?: string[];
+}
+
 // Server Classes
 class MentalModelServer {
     private validateModelData(input: unknown): { modelName: string; problem: string } {
@@ -786,341 +804,525 @@ class BrainstormingServer {
     }
 }
 
-// Tool Definitions
-const MENTAL_MODEL_TOOL: Tool = {
-    name: "mentalmodel",
-    description: `A tool for applying structured mental models to problem-solving.
+// Model Selector Server for recommending appropriate mental models
+class ModelSelectorServer {
+    private modelDatabase: Map<string, MentalModel> = new Map();
+    private categories: ModelCategory[] = [];
 
-This tool helps analyze problems from different perspectives using systematic mental models.
-Use it for complex problems, when standard approaches fail, or when you need a fresh perspective.
+    constructor() {
+        // Initialize model database
+        const allModels = loadMentalModels().mental_models;
+        allModels.forEach((model: MentalModel) => this.modelDatabase.set(model.id, model));
 
-AVAILABLE MODELS:
+        // Initialize categories
+        this.categories = modelCategories;
+    }
 
-• first_principles: Breaking down problems to fundamental truths and reasoning up from there.
-  Use for: Innovation, challenging assumptions, rethinking complex systems.
+    private validateInput(input: unknown): ModelSelectorData {
+        const data = input as Record<string, unknown>;
 
-• systems_thinking: Analyzing how parts of a system interrelate and affect each other.
-  Use for: Complex systems, understanding feedback loops, organizational problems.
+        if (!data.problem || typeof data.problem !== "string") {
+            throw new Error("Invalid problem: must be a string describing your problem");
+        }
 
-• occams_razor: The simplest explanation is usually the correct one, all else being equal.
-  Use for: Troubleshooting, hypothesis evaluation, debugging complex issues.
+        const result: ModelSelectorData = {
+            problem: data.problem
+        };
 
-• pareto_principle: The 80/20 rule - 80% of effects come from 20% of causes.
-  Use for: Prioritization, resource allocation, optimization efforts.
+        // Validate optional fields
+        if (data.domain !== undefined) {
+            if (typeof data.domain !== "string") {
+                throw new Error("Invalid domain: must be a string");
+            }
+            result.domain = data.domain;
+        }
 
-• lateral_thinking: Solving problems using indirect, creative approaches.
-  Use for: Breaking out of conventional thinking, innovation, creative solutions.
+        if (data.goal !== undefined) {
+            if (typeof data.goal !== "string") {
+                throw new Error("Invalid goal: must be a string");
+            }
+            result.goal = data.goal;
+        }
 
-• divergent_thinking: Generating multiple creative ideas in a free-flowing manner.
-  Use for: Brainstorming, exploring possibilities, creative problem-solving.
+        if (data.complexity !== undefined) {
+            if (typeof data.complexity !== "string" ||
+                !["low", "medium", "high"].includes(data.complexity as string)) {
+                throw new Error("Invalid complexity: must be 'low', 'medium', or 'high'");
+            }
+            result.complexity = data.complexity as "low" | "medium" | "high";
+        }
 
-• decision_tree: Mapping out possible decisions and their consequences.
-  Use for: Complex decisions with multiple variables, risk assessment.
+        if (data.constraints !== undefined) {
+            if (!Array.isArray(data.constraints) ||
+                !data.constraints.every(c => typeof c === "string")) {
+                throw new Error("Invalid constraints: must be an array of strings");
+            }
+            result.constraints = data.constraints as string[];
+        }
 
-• scientific_method: Systematic observation, measurement, experimentation, and hypothesis testing.
-  Use for: Empirical problem-solving, testing assumptions, validation.
+        if (data.previousApproaches !== undefined) {
+            if (!Array.isArray(data.previousApproaches) ||
+                !data.previousApproaches.every(a => typeof a === "string")) {
+                throw new Error("Invalid previousApproaches: must be an array of strings");
+            }
+            result.previousApproaches = data.previousApproaches as string[];
+        }
 
-• scenario_planning: Developing plausible views of different possible futures.
-  Use for: Strategic planning, risk management, preparing for uncertainty.
+        return result;
+    }
 
-• rubber_duck: Explaining a problem step by step to gain clarity.
-  Use for: Debugging, clarifying thinking, finding overlooked solutions.
+    private recommendModels(data: ModelSelectorData): Array<{
+        modelId: string;
+        name: string;
+        score: number;
+        reason: string;
+        howToApply: string;
+    }> {
+        const recommendations: Array<{
+            modelId: string;
+            name: string;
+            score: number;
+            reason: string;
+            howToApply: string;
+        }> = [];
 
-• bayes_theorem: Updating probability estimates as new evidence emerges.
-  Use for: Decision-making under uncertainty, risk assessment, predictive analysis.
+        // Get all models
+        const allModels = Array.from(this.modelDatabase.values());
 
-• opportunity_cost: Evaluating what must be given up to pursue a particular action.
-  Use for: Resource allocation, prioritization, strategic planning.
+        // Score each model based on problem description and other factors
+        for (const model of allModels) {
+            let score = this.calculateModelScore(model, data);
 
-• error_propagation: Analyzing how errors cascade through a system.
-  Use for: Quality control, system reliability, fault tolerance design.
+            // Skip models with very low scores
+            if (score < 0.5) continue;
 
-• sensitivity_analysis: Determining how different variables affect outcomes.
-  Use for: Model validation, risk assessment, identifying critical factors.
+            // Generate reason and application advice
+            const reason = this.generateReason(model, data);
+            const howToApply = this.generateHowToApply(model, data);
 
-• sunk_cost: Avoiding decisions based on costs that cannot be recovered.
-  Use for: Project evaluation, resource reallocation, avoiding escalation of commitment.
+            recommendations.push({
+                modelId: model.id,
+                name: model.name,
+                score,
+                reason,
+                howToApply
+            });
+        }
 
-• thought_experiment: Exploring hypothetical scenarios through reasoning.
-  Use for: Ethical dilemmas, exploring edge cases, conceptual innovation.
+        // Sort by score (descending)
+        recommendations.sort((a, b) => b.score - a.score);
 
-Usage: Select a model, define your problem, and the tool will apply the model's framework.
-Example: { "modelName": "first_principles", "problem": "Our app is slow" }`,
+        // Return top 3 recommendations
+        return recommendations.slice(0, 3);
+    }
+
+    private calculateModelScore(model: MentalModel, data: ModelSelectorData): number {
+        let score = 0;
+
+        // Base score from keyword matching in problem description
+        score += this.calculateKeywordMatchScore(model, data.problem);
+
+        // Adjust score based on when_to_use matches
+        score += this.calculateWhenToUseScore(model, data);
+
+        // Adjust score based on domain if specified
+        if (data.domain) {
+            score += this.calculateDomainScore(model, data.domain);
+        }
+
+        // Adjust score based on goal if specified
+        if (data.goal) {
+            score += this.calculateGoalScore(model, data.goal);
+        }
+
+        // Normalize score to 0-1 range
+        return Math.min(Math.max(score, 0), 1);
+    }
+
+    private calculateKeywordMatchScore(model: MentalModel, problem: string): number {
+        let score = 0;
+        const problemLower = problem.toLowerCase();
+
+        // Check for model name in problem
+        if (problemLower.includes(model.name.toLowerCase())) {
+            score += 0.2;
+        }
+
+        // Check for model keywords in problem
+        const keywords = this.getModelKeywords(model);
+        for (const keyword of keywords) {
+            if (problemLower.includes(keyword.toLowerCase())) {
+                score += 0.1;
+            }
+        }
+
+        return score;
+    }
+
+    private getModelKeywords(model: MentalModel): string[] {
+        // Extract keywords from model definition and when_to_use
+        const keywords: string[] = [];
+
+        // Add words from definition
+        keywords.push(...model.definition.split(/\s+/).filter(w => w.length > 5));
+
+        // Add phrases from when_to_use
+        keywords.push(...model.when_to_use);
+
+        return keywords;
+    }
+
+    private calculateWhenToUseScore(model: MentalModel, data: ModelSelectorData): number {
+        let score = 0;
+        const problemLower = data.problem.toLowerCase();
+
+        // Check each when_to_use scenario
+        for (const scenario of model.when_to_use) {
+            const scenarioLower = scenario.toLowerCase();
+
+            // Check for semantic similarity between problem and scenario
+            // This is a simplified approach - in a real implementation, 
+            // you might use more sophisticated NLP techniques
+            const words = scenarioLower.split(/\s+/).filter(w => w.length > 4);
+            for (const word of words) {
+                if (problemLower.includes(word)) {
+                    score += 0.05;
+                }
+            }
+        }
+
+        return Math.min(score, 0.5); // Cap at 0.5
+    }
+
+    private calculateDomainScore(model: MentalModel, domain: string): number {
+        // Domain-specific scoring logic
+        // This is a placeholder - in a real implementation, 
+        // you would have a more sophisticated mapping of models to domains
+        const domainModelMap: Record<string, string[]> = {
+            "tech": ["first_principles", "systems_thinking", "rubber_duck", "error_propagation"],
+            "business": ["pareto_principle", "opportunity_cost", "systems_thinking", "scenario_planning"],
+            "science": ["scientific_method", "bayes_theorem", "first_principles", "thought_experiment"],
+            "personal": ["sunk_cost", "loss_aversion", "confirmation_bias", "hanlons_razor"],
+            "education": ["divergent_thinking", "lateral_thinking", "thought_experiment", "rubber_duck"]
+        };
+
+        if (domainModelMap[domain]?.includes(model.id)) {
+            return 0.2;
+        }
+
+        return 0;
+    }
+
+    private calculateGoalScore(model: MentalModel, goal: string): number {
+        // Goal-specific scoring logic
+        const goalModelMap: Record<string, string[]> = {
+            "analyze": ["systems_thinking", "first_principles", "scientific_method", "sensitivity_analysis"],
+            "innovate": ["lateral_thinking", "divergent_thinking", "first_principles", "thought_experiment"],
+            "optimize": ["pareto_principle", "opportunity_cost", "systems_thinking", "sensitivity_analysis"],
+            "debug": ["rubber_duck", "error_propagation", "occams_razor", "scientific_method"],
+            "decide": ["decision_tree", "bayes_theorem", "opportunity_cost", "scenario_planning"],
+            "understand": ["systems_thinking", "proximate_ultimate_causation", "thought_experiment", "scientific_method"]
+        };
+
+        if (goalModelMap[goal]?.includes(model.id)) {
+            return 0.3;
+        }
+
+        return 0;
+    }
+
+    private generateReason(model: MentalModel, data: ModelSelectorData): string {
+        // Generate a personalized reason why this model is recommended
+        let reason = "";
+
+        // Base reason on model definition
+        reason = `${model.definition} `;
+
+        // Add context based on problem
+        if (data.goal) {
+            switch (data.goal) {
+                case "analyze":
+                    reason += `This model is particularly effective for analyzing problems like yours because it helps break down complexity into manageable components.`;
+                    break;
+                case "innovate":
+                    reason += `This model can help you generate innovative solutions by providing a framework to think outside conventional boundaries.`;
+                    break;
+                case "optimize":
+                    reason += `This model is well-suited for optimization challenges, helping you identify inefficiencies and improvement opportunities.`;
+                    break;
+                case "debug":
+                    reason += `This model excels at debugging scenarios by providing a structured approach to identify root causes.`;
+                    break;
+                case "decide":
+                    reason += `This model provides a framework for making better decisions by considering key factors systematically.`;
+                    break;
+                case "understand":
+                    reason += `This model helps build deeper understanding by revealing underlying patterns and relationships.`;
+                    break;
+                default:
+                    reason += `This model provides a structured approach that can help address your specific problem.`;
+            }
+        } else {
+            reason += `This model provides a structured approach that can help address your specific problem.`;
+        }
+
+        return reason;
+    }
+
+    private generateHowToApply(model: MentalModel, data: ModelSelectorData): string {
+        // Generate advice on how to apply this model to the specific problem
+        let advice = "To apply this model to your problem:\n";
+
+        // Add steps from the model
+        for (let i = 0; i < model.steps.length; i++) {
+            advice += `${i + 1}. ${model.steps[i]}\n`;
+        }
+
+        // Add problem-specific advice
+        advice += `\nFor your specific problem about "${data.problem.substring(0, 50)}${data.problem.length > 50 ? '...' : ''}", `;
+        advice += `focus on identifying the key elements and applying the model systematically.`;
+
+        return advice;
+    }
+
+    private formatRecommendations(recommendations: Array<{
+        modelId: string;
+        name: string;
+        score: number;
+        reason: string;
+        howToApply: string;
+    }>, data: ModelSelectorData): string {
+        const border = '─'.repeat(60);
+
+        let output = `
+┌${border}┐
+│ 🧠 Model Recommendations for Your Problem ${' '.repeat(border.length - 40)} │
+├${border}┤
+│ Problem: ${data.problem.substring(0, border.length - 11)}${data.problem.length > border.length - 11 ? '...' : ' '.repeat(border.length - 11 - data.problem.length)} │`;
+
+        if (data.goal) {
+            output += `\n│ Goal: ${data.goal.padEnd(border.length - 8)} │`;
+        }
+
+        if (data.domain) {
+            output += `\n│ Domain: ${data.domain.padEnd(border.length - 10)} │`;
+        }
+
+        output += `\n├${border}┤`;
+
+        // Add recommendations
+        for (let i = 0; i < recommendations.length; i++) {
+            const rec = recommendations[i];
+            output += `\n│ ${i + 1}. ${rec.name} (${Math.round(rec.score * 100)}% match)${' '.repeat(border.length - rec.name.length - 15)} │`;
+            output += `\n│${' '.repeat(border.length)} │`;
+
+            // Add reason with word wrapping
+            const reasonWords = rec.reason.split(' ');
+            let line = '│    Why: ';
+            for (const word of reasonWords) {
+                if (line.length + word.length + 1 > border.length - 1) {
+                    output += `\n${line.padEnd(border.length)} │`;
+                    line = '│         ';
+                }
+                line += word + ' ';
+            }
+            output += `\n${line.padEnd(border.length)} │`;
+
+            output += `\n│${' '.repeat(border.length)} │`;
+
+            // Add how to apply with word wrapping
+            const howToApplyLines = rec.howToApply.split('\n');
+            output += `\n│    How to apply:${' '.repeat(border.length - 17)} │`;
+            for (const howToApplyLine of howToApplyLines) {
+                const words = howToApplyLine.split(' ');
+                line = '│      ';
+                for (const word of words) {
+                    if (line.length + word.length + 1 > border.length - 1) {
+                        output += `\n${line.padEnd(border.length)} │`;
+                        line = '│      ';
+                    }
+                    line += word + ' ';
+                }
+                output += `\n${line.padEnd(border.length)} │`;
+            }
+
+            if (i < recommendations.length - 1) {
+                output += `\n├${border}┤`;
+            }
+        }
+
+        output += `\n├${border}┤`;
+        output += `\n│ Next Steps: Use the mentalmodel tool with your chosen model ${' '.repeat(border.length - 54)} │`;
+        output += `\n│ Example: { "modelName": "${recommendations[0].modelId}", "problem": "..." } ${' '.repeat(border.length - recommendations[0].modelId.length - 36)} │`;
+        output += `\n└${border}┘`;
+
+        return output;
+    }
+
+    public processModelSelection(input: unknown): {
+        content: Array<{ type: string; text: string }>;
+        isError?: boolean;
+    } {
+        try {
+            const data = this.validateInput(input);
+            const recommendations = this.recommendModels(data);
+            const formattedOutput = this.formatRecommendations(recommendations, data);
+
+            console.error(formattedOutput);
+
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        recommendations: recommendations.map(r => ({
+                            modelId: r.modelId,
+                            name: r.name,
+                            score: r.score,
+                            reason: r.reason,
+                            howToApply: r.howToApply
+                        })),
+                        problem: data.problem,
+                        goal: data.goal,
+                        domain: data.domain,
+                        status: "success"
+                    }, null, 2)
+                }]
+            };
+        } catch (error) {
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                        error: error instanceof Error ? error.message : String(error),
+                        status: "failed"
+                    }, null, 2)
+                }],
+                isError: true
+            };
+        }
+    }
+}
+
+// Model categories definition
+const modelCategories: ModelCategory[] = [
+    {
+        id: "analytical",
+        name: "Analytical Models",
+        description: "For breaking down complex problems into components",
+        applicableGoals: ["analyze", "understand"],
+        models: ["first_principles", "systems_thinking", "scientific_method"]
+    },
+    {
+        id: "decision",
+        name: "Decision-Making Models",
+        description: "For choosing between alternatives",
+        applicableGoals: ["decide", "evaluate", "prioritize"],
+        models: ["decision_tree", "bayes_theorem", "opportunity_cost"]
+    },
+    {
+        id: "creative",
+        name: "Creative Thinking Models",
+        description: "For generating innovative solutions",
+        applicableGoals: ["innovate", "create"],
+        models: ["lateral_thinking", "divergent_thinking", "thought_experiment"]
+    },
+    {
+        id: "optimization",
+        name: "Optimization Models",
+        description: "For improving efficiency and effectiveness",
+        applicableGoals: ["optimize", "improve"],
+        models: ["pareto_principle", "sensitivity_analysis", "systems_thinking"]
+    },
+    {
+        id: "debugging",
+        name: "Debugging Models",
+        description: "For finding and fixing problems",
+        applicableGoals: ["debug", "fix", "troubleshoot"],
+        models: ["rubber_duck", "error_propagation", "occams_razor"]
+    },
+    {
+        id: "cognitive",
+        name: "Cognitive Bias Models",
+        description: "For overcoming mental pitfalls",
+        applicableGoals: ["understand", "decide"],
+        models: ["confirmation_bias", "sunk_cost", "loss_aversion", "survivorship_bias"]
+    }
+];
+
+// Model Selector Tool - helps AI agents choose the right mental model
+const MODEL_SELECTOR_TOOL: Tool = {
+    name: "modelSelector",
+    description: `A tool that intelligently recommends the optimal mental model for any problem.
+
+🧠 WHAT IT DOES:
+This AI-powered tool analyzes your problem and recommends the perfect mental models to solve it.
+It matches problem characteristics with model strengths to find the ideal cognitive framework.
+
+⚡️ WHY AI AGENTS LOVE IT:
+- Eliminates guesswork in model selection
+- Provides instant access to optimal problem-solving frameworks
+- Delivers personalized recommendations with confidence scores
+- Includes ready-to-use application instructions for each model
+- Seamlessly integrates with the mentalmodel tool
+
+🔍 HOW TO USE:
+Simply describe your problem and optionally specify your goal and domain.
+The tool will analyze your input and recommend the most effective mental models.
+
+Example: { "problem": "Our codebase has become difficult to maintain", "goal": "optimize" }
+
+🚀 PARAMETERS:
+- problem: A description of the challenge you're facing (required)
+- goal: Your objective (analyze, innovate, optimize, debug, decide, understand)
+- domain: The field of application (tech, business, science, personal, education)
+- complexity: Problem complexity level (low, medium, high)
+- constraints: Any limitations to consider
+- previousApproaches: Approaches already tried
+
+After receiving recommendations, use the mentalmodel tool with your chosen model.`,
     inputSchema: {
         type: "object",
         properties: {
-            modelName: {
-                type: "string",
-                enum: getAllMentalModelIds(),
-                description: "The specific mental model to apply. Choose the model that best fits your problem type and thinking approach. Each model provides a different analytical framework."
-            },
             problem: {
                 type: "string",
-                description: "A clear, concise statement of the problem you want to analyze. Be specific enough to allow meaningful analysis but broad enough to capture the core issue."
+                description: "A clear description of the problem you're trying to solve. Be specific about the challenge and context."
             },
-        },
-        required: ["modelName", "problem"],
-    },
-}
-
-const DEBUGGING_APPROACH_TOOL: Tool = {
-    name: "debuggingapproach",
-    description: `A tool for applying systematic debugging approaches to technical issues.
-
-This tool provides structured methodologies for identifying and resolving technical problems.
-Use it for complex issues, when standard debugging fails, or when you need a systematic approach.
-
-Available approaches:
-- Binary Search: Narrow down problems by testing midpoints (e.g., find which commit broke the build)
-- Reverse Engineering: Work backward from observed behavior
-- Divide and Conquer: Break complex problems into manageable sub-problems
-- Backtracking: Explore multiple solution paths
-- Cause Elimination: Rule out potential causes systematically
-- Program Slicing: Focus on code affecting specific variables
-
-Usage: Select an approach, define your issue, and follow the structured steps.
-Example: { "approachName": "binary_search", "issue": "Performance regression" }
-
-See documentation for detailed usage instructions.`,
-    inputSchema: {
-        type: "object",
-        properties: {
-            approachName: {
+            domain: {
                 type: "string",
-                enum: [
-                    "binary_search",
-                    "reverse_engineering",
-                    "divide_conquer",
-                    "backtracking",
-                    "cause_elimination",
-                    "program_slicing",
-                ],
-                description: "The debugging approach to apply. Select based on your problem type: binary_search for finding a specific change, reverse_engineering for understanding unknown systems, divide_conquer for complex problems, backtracking for exploring multiple solutions, cause_elimination for multiple potential causes, program_slicing for data flow issues."
+                enum: ["tech", "business", "science", "personal", "education", "other"],
+                description: "The domain or field of your problem. Helps tailor recommendations to your specific context."
             },
-            issue: {
+            goal: {
                 type: "string",
-                description: "A detailed description of the technical issue you're facing. Include relevant context, error messages, and observed behavior to enable effective debugging."
+                enum: ["analyze", "innovate", "optimize", "debug", "decide", "understand"],
+                description: "What you're trying to achieve. Different goals benefit from different mental models."
             },
-            steps: {
-                type: "array",
-                items: { type: "string" },
-                description: "Optional list of steps you've already taken or plan to take in your debugging process. Each step should be a clear, actionable item."
-            },
-            findings: {
+            complexity: {
                 type: "string",
-                description: "Optional information discovered during your debugging process. Include any patterns, anomalies, or insights that might help identify the root cause."
-            },
-            resolution: {
-                type: "string",
-                description: "Optional solution or fix for the issue. Describe how you resolved or plan to resolve the problem based on your debugging findings."
-            },
-        },
-        required: ["approachName", "issue"],
-    },
-}
-
-const SEQUENTIAL_THINKING_TOOL: Tool = {
-    name: "sequentialthinking",
-    description: `A tool for dynamic and reflective problem-solving through sequential thoughts.
-
-This tool facilitates a flexible thinking process that mimics human cognition, allowing thoughts
-to build upon, question, or revise previous insights as understanding deepens.
-
-Key features:
-- Dynamic adjustment of thought quantity as understanding evolves
-- Ability to revise previous thoughts when new insights emerge
-- Non-linear thinking with branching capabilities
-- Progressive refinement of solutions through iterative thinking
-
-Usage: Start with a problem statement, develop thoughts sequentially, revise when needed.
-Example: { "thought": "App is slow due to database queries", "thoughtNumber": 1, "totalThoughts": 5, "nextThoughtNeeded": true }
-
-Parameters include thought content, thought number, total thoughts estimate, revision flags, and branching options.
-Set nextThoughtNeeded=false only when you've reached a satisfactory conclusion.`,
-    inputSchema: {
-        type: "object",
-        properties: {
-            thought: {
-                type: "string",
-                description: "Your current thinking step in detail. This can be an analysis, observation, hypothesis, revision of previous thinking, or a conclusion. Be specific and thorough to enable meaningful progression."
-            },
-            nextThoughtNeeded: {
-                type: "boolean",
-                description: "Whether another thought step is needed after this one. Set to false only when you've reached a satisfactory conclusion that fully addresses the original problem."
-            },
-            thoughtNumber: {
-                type: "integer",
-                description: "The sequential number of this thought in your thinking process. Starts at 1 and increments with each new thought, including revisions and branches.",
-                minimum: 1,
-            },
-            totalThoughts: {
-                type: "integer",
-                description: "Your current estimate of how many thoughts will be needed to solve the problem. This can be adjusted up or down as your understanding evolves.",
-                minimum: 1,
-            },
-            isRevision: {
-                type: "boolean",
-                description: "Whether this thought revises or corrects a previous thought. Set to true when you need to update earlier thinking based on new insights or information."
-            },
-            revisesThought: {
-                type: "integer",
-                description: "If this is a revision (isRevision=true), specify which thought number is being revised or corrected. This creates a clear link between the original thought and its revision.",
-                minimum: 1,
-            },
-            branchFromThought: {
-                type: "integer",
-                description: "If this thought starts a new branch of thinking, specify which thought number it branches from. Use when exploring alternative approaches or perspectives.",
-                minimum: 1,
-            },
-            branchId: {
-                type: "string",
-                description: "A unique identifier for this branch of thinking. Use a descriptive name that indicates the nature or purpose of this thinking branch."
-            },
-            needsMoreThoughts: {
-                type: "boolean",
-                description: "Indicates that more thoughts are needed even if you initially thought you were done. Set to true when you realize additional analysis is required."
-            },
-        },
-        required: ["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"],
-    },
-}
-
-const BRAINSTORMING_TOOL: Tool = {
-    name: "brainstorming",
-    description: `A tool for facilitating structured brainstorming sessions.
-
-This tool guides you through a systematic brainstorming process, from preparation to action planning,
-helping generate, refine, evaluate, and select ideas in a structured way.
-
-Key features:
-- Six-phase process: preparation, ideation, clarification, evaluation, selection, action planning
-- Support for collaborative ideation with multiple participants
-- Idea categorization and voting mechanisms
-- Persistent sessions for ongoing brainstorming
-
-Usage: Start by creating a session with a topic, then progress through phases.
-Example: { "topic": "Improving user onboarding experience" }
-
-Parameters include session ID, topic, phase, ideas collection, constraints, participants, and more.
-Sessions persist across interactions using the sessionId parameter.`,
-    inputSchema: {
-        type: "object",
-        properties: {
-            sessionId: {
-                type: "string",
-                description: "Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions."
-            },
-            topic: {
-                type: "string",
-                description: "The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session."
-            },
-            phase: {
-                type: "string",
-                enum: Object.values(BrainstormingPhase),
-                description: "Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning."
-            },
-            ideas: {
-                type: "array",
-                items: {
-                    type: "object",
-                    properties: {
-                        id: {
-                            type: "string",
-                            description: "Unique identifier for the idea. Used for referencing in voting, categorization, and building upon ideas."
-                        },
-                        content: {
-                            type: "string",
-                            description: "The actual content of the idea. Be clear and specific, focusing on one concept per idea."
-                        },
-                        category: {
-                            type: "string",
-                            description: "Optional grouping or theme for the idea. Used during clarification phase to organize related ideas."
-                        },
-                        votes: {
-                            type: "number",
-                            description: "Number of votes this idea has received during the evaluation phase. Higher votes indicate greater team interest."
-                        },
-                        buildUpon: {
-                            type: "array",
-                            items: { type: "string" },
-                            description: "IDs of ideas that this idea builds upon or extends. Creates connections between related concepts."
-                        },
-                        createdAt: {
-                            type: "number",
-                            description: "Timestamp when the idea was created. Used for chronological ordering of ideas."
-                        },
-                    },
-                    required: ["id", "content", "createdAt"],
-                },
-                description: "Collection of generated ideas for the brainstorming session. Grows during the ideation phase and gets refined in later phases."
-            },
-            newIdea: {
-                type: "string",
-                description: "A new idea to add to the session (only used in ideation phase). Focus on one clear concept per idea for better organization later."
-            },
-            category: {
-                type: "string",
-                description: "Category for a new idea being added. Helps with organizing ideas into themes or groups during clarification."
-            },
-            buildUpon: {
-                type: "string",
-                description: "ID of an existing idea that this new idea builds upon. Creates connections between related ideas and shows evolution of thinking."
-            },
-            voteForIdea: {
-                type: "string",
-                description: "ID of an idea to vote for (only used in evaluation phase). Voting helps identify the most promising ideas for further development."
-            },
-            categorizeIdea: {
-                type: "object",
-                properties: {
-                    ideaId: {
-                        type: "string",
-                        description: "ID of the idea to categorize. Must reference an existing idea in the session."
-                    },
-                    category: {
-                        type: "string",
-                        description: "Category name to assign to the idea. Use consistent naming for better organization."
-                    },
-                },
-                required: ["ideaId", "category"],
-                description: "Categorize an existing idea (only used in clarification phase). Helps organize ideas into logical groups for evaluation."
+                enum: ["low", "medium", "high"],
+                description: "The complexity level of your problem. More complex problems may require more sophisticated models."
             },
             constraints: {
                 type: "array",
                 items: { type: "string" },
-                description: "Limitations or requirements to consider during brainstorming. Helps focus ideation on practical solutions that meet specific criteria."
+                description: "Any constraints or limitations you're working with. Helps filter out impractical approaches."
             },
-            participants: {
+            previousApproaches: {
                 type: "array",
                 items: { type: "string" },
-                description: "People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities."
-            },
-            timeLimit: {
-                type: "number",
-                description: "Time constraint for the session in minutes. Setting a time limit helps maintain focus and creates productive pressure."
-            },
-            recommendedModels: {
-                type: "array",
-                items: { type: "string" },
-                description: "Mental models that can help with this topic. These models provide frameworks for thinking about the problem in different ways."
-            },
-            currentStep: {
-                type: "number",
-                description: "Current step in the brainstorming process. Helps track progress within each phase of the session."
-            },
-            totalSteps: {
-                type: "number",
-                description: "Total number of steps in the brainstorming process. Provides context for how far along the session has progressed."
-            },
+                description: "Approaches you've already tried. Ensures fresh recommendations."
+            }
         },
-    },
-}
+        required: ["problem"]
+    }
+};
 
 // Server Instances
 const modelServer = new MentalModelServer()
 const debuggingServer = new DebuggingApproachServer()
 const thinkingServer = new SequentialThinkingServer()
 const brainstormingServer = new BrainstormingServer()
+const modelSelectorServer = new ModelSelectorServer()
 
 const server = new Server(
     {
@@ -1134,6 +1336,7 @@ const server = new Server(
                 mentalmodel: MENTAL_MODEL_TOOL,
                 debuggingapproach: DEBUGGING_APPROACH_TOOL,
                 brainstorming: BRAINSTORMING_TOOL,
+                modelSelector: MODEL_SELECTOR_TOOL,
             },
         },
     }
@@ -1146,6 +1349,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         MENTAL_MODEL_TOOL,
         DEBUGGING_APPROACH_TOOL,
         BRAINSTORMING_TOOL,
+        MODEL_SELECTOR_TOOL,
     ],
 }))
 
@@ -1159,6 +1363,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             return debuggingServer.processApproach(request.params.arguments)
         case "brainstorming":
             return brainstormingServer.processBrainstorming(request.params.arguments)
+        case "modelSelector":
+            return modelSelectorServer.processModelSelection(request.params.arguments)
         default:
             throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${request.params.name}`)
     }
