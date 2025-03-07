@@ -1368,11 +1368,17 @@ class ModelSelectorServer {
         reason: string;
         howToApply: string;
     }>, data: ModelSelectorData): string {
-        const border = '─'.repeat(60);
+        // Проверяем, что есть хотя бы одна рекомендация
+        if (recommendations.length === 0) {
+            return "No suitable mental models found for your problem. Try rephrasing or providing more details.";
+        }
+
+        const title = `🧠 Model Recommendations for: ${data.problem.substring(0, 50)}${data.problem.length > 50 ? '...' : ''}`;
+        const border = '─'.repeat(Math.max(title.length - 4, 80));
 
         let output = `
 ┌${border}┐
-│ 🧠 Model Recommendations for Your Problem ${' '.repeat(border.length - 40)} │
+│ ${title} │
 ├${border}┤
 │ Problem: ${data.problem.substring(0, border.length - 11)}${data.problem.length > border.length - 11 ? '...' : ' '.repeat(border.length - 11 - data.problem.length)} │`;
 
@@ -1442,6 +1448,21 @@ class ModelSelectorServer {
         try {
             const data = this.validateInput(input);
             const recommendations = this.recommendModels(data);
+
+            // Проверяем, что есть хотя бы одна рекомендация
+            if (recommendations.length === 0) {
+                return {
+                    content: [{
+                        type: "text",
+                        text: JSON.stringify({
+                            error: "No suitable mental models found for your problem. Try rephrasing or providing more details.",
+                            status: "no_recommendations"
+                        }, null, 2)
+                    }],
+                    isError: true
+                };
+            }
+
             const formattedOutput = this.formatRecommendations(recommendations, data);
 
             console.error(formattedOutput);
@@ -1465,6 +1486,7 @@ class ModelSelectorServer {
                 }]
             };
         } catch (error) {
+            console.error("Error in modelSelector:", error);
             return {
                 content: [{
                     type: "text",
