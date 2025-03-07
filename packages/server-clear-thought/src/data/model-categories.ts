@@ -59,5 +59,12 @@ export const modelCategories: ModelCategory[] = [
         description: "For reasoning under uncertainty",
         applicableGoals: ["decide", "predict"],
         models: ["bayes_theorem", "normal_distribution", "regression_to_mean"]
+    },
+    {
+        id: "stochastic",
+        name: "Stochastic Algorithm Models",
+        description: "For decision-making under uncertainty with randomness",
+        applicableGoals: ["decide", "optimize", "predict"],
+        models: ["mdp", "mcts", "bandit", "bayesian", "hmm"]
     }
 ];
