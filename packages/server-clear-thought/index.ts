@@ -18,6 +18,11 @@ import {
     formatMentalModelOutput,
     loadMentalModels
 } from "./src/models/mental-models.js"
+import {
+    SEQUENTIAL_THINKING_TOOL,
+    MENTAL_MODEL_TOOL,
+    DEBUGGING_APPROACH_TOOL
+} from "../../index.js"
 
 // Data Interfaces
 interface ThoughtData {
@@ -95,6 +100,107 @@ interface ModelSelectorData {
     complexity?: 'low' | 'medium' | 'high';
     previousApproaches?: string[];
 }
+
+// Brainstorming Tool - facilitates structured brainstorming sessions
+const BRAINSTORMING_TOOL: Tool = {
+    name: "brainstorming",
+    description: `A tool for facilitating structured brainstorming sessions.
+
+This tool guides you through a systematic brainstorming process, from preparation to action planning,
+helping generate, refine, evaluate, and select ideas in a structured way.
+
+Key features:
+- Six-phase process: preparation, ideation, clarification, evaluation, selection, action planning
+- Support for collaborative ideation with multiple participants
+- Idea categorization and voting mechanisms
+- Persistent sessions for ongoing brainstorming`,
+    inputSchema: {
+        type: "object",
+        properties: {
+            sessionId: {
+                type: "string",
+                description: "Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions."
+            },
+            topic: {
+                type: "string",
+                description: "The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session."
+            },
+            phase: {
+                type: "string",
+                enum: ["preparation", "ideation", "clarification", "evaluation", "selection", "action_planning"],
+                description: "Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning."
+            }
+        }
+    }
+};
+
+// Model Selector Tool - helps AI agents choose the right mental model
+const MODEL_SELECTOR_TOOL: Tool = {
+    name: "modelSelector",
+    description: `A tool that intelligently recommends the optimal mental model for any problem.
+
+🧠 WHAT IT DOES:
+This AI-powered tool analyzes your problem and recommends the perfect mental models to solve it.
+It matches problem characteristics with model strengths to find the ideal cognitive framework.
+
+⚡️ WHY AI AGENTS LOVE IT:
+- Eliminates guesswork in model selection
+- Provides instant access to optimal problem-solving frameworks
+- Delivers personalized recommendations with confidence scores
+- Includes ready-to-use application instructions for each model
+- Seamlessly integrates with the mentalmodel tool
+
+🔍 HOW TO USE:
+Simply describe your problem and optionally specify your goal and domain.
+The tool will analyze your input and recommend the most effective mental models.
+
+Example: { "problem": "Our codebase has become difficult to maintain", "goal": "optimize" }
+
+🚀 PARAMETERS:
+- problem: A description of the challenge you're facing (required)
+- goal: Your objective (analyze, innovate, optimize, debug, decide, understand)
+- domain: The field of application (tech, business, science, personal, education)
+- complexity: Problem complexity level (low, medium, high)
+- constraints: Any limitations to consider
+- previousApproaches: Approaches already tried
+
+After receiving recommendations, use the mentalmodel tool with your chosen model.`,
+    inputSchema: {
+        type: "object",
+        properties: {
+            problem: {
+                type: "string",
+                description: "A clear description of the problem you're trying to solve. Be specific about the challenge and context."
+            },
+            domain: {
+                type: "string",
+                enum: ["tech", "business", "science", "personal", "education", "other"],
+                description: "The domain or field of your problem. Helps tailor recommendations to your specific context."
+            },
+            goal: {
+                type: "string",
+                enum: ["analyze", "innovate", "optimize", "debug", "decide", "understand"],
+                description: "What you're trying to achieve. Different goals benefit from different mental models."
+            },
+            complexity: {
+                type: "string",
+                enum: ["low", "medium", "high"],
+                description: "The complexity level of your problem. More complex problems may require more sophisticated models."
+            },
+            constraints: {
+                type: "array",
+                items: { type: "string" },
+                description: "Any constraints or limitations you're working with. Helps filter out impractical approaches."
+            },
+            previousApproaches: {
+                type: "array",
+                items: { type: "string" },
+                description: "Approaches you've already tried. Ensures fresh recommendations."
+            }
+        },
+        required: ["problem"]
+    }
+};
 
 // Server Classes
 class MentalModelServer {
@@ -1249,74 +1355,6 @@ const modelCategories: ModelCategory[] = [
         models: ["confirmation_bias", "sunk_cost", "loss_aversion", "survivorship_bias"]
     }
 ];
-
-// Model Selector Tool - helps AI agents choose the right mental model
-const MODEL_SELECTOR_TOOL: Tool = {
-    name: "modelSelector",
-    description: `A tool that intelligently recommends the optimal mental model for any problem.
-
-🧠 WHAT IT DOES:
-This AI-powered tool analyzes your problem and recommends the perfect mental models to solve it.
-It matches problem characteristics with model strengths to find the ideal cognitive framework.
-
-⚡️ WHY AI AGENTS LOVE IT:
-- Eliminates guesswork in model selection
-- Provides instant access to optimal problem-solving frameworks
-- Delivers personalized recommendations with confidence scores
-- Includes ready-to-use application instructions for each model
-- Seamlessly integrates with the mentalmodel tool
-
-🔍 HOW TO USE:
-Simply describe your problem and optionally specify your goal and domain.
-The tool will analyze your input and recommend the most effective mental models.
-
-Example: { "problem": "Our codebase has become difficult to maintain", "goal": "optimize" }
-
-🚀 PARAMETERS:
-- problem: A description of the challenge you're facing (required)
-- goal: Your objective (analyze, innovate, optimize, debug, decide, understand)
-- domain: The field of application (tech, business, science, personal, education)
-- complexity: Problem complexity level (low, medium, high)
-- constraints: Any limitations to consider
-- previousApproaches: Approaches already tried
-
-After receiving recommendations, use the mentalmodel tool with your chosen model.`,
-    inputSchema: {
-        type: "object",
-        properties: {
-            problem: {
-                type: "string",
-                description: "A clear description of the problem you're trying to solve. Be specific about the challenge and context."
-            },
-            domain: {
-                type: "string",
-                enum: ["tech", "business", "science", "personal", "education", "other"],
-                description: "The domain or field of your problem. Helps tailor recommendations to your specific context."
-            },
-            goal: {
-                type: "string",
-                enum: ["analyze", "innovate", "optimize", "debug", "decide", "understand"],
-                description: "What you're trying to achieve. Different goals benefit from different mental models."
-            },
-            complexity: {
-                type: "string",
-                enum: ["low", "medium", "high"],
-                description: "The complexity level of your problem. More complex problems may require more sophisticated models."
-            },
-            constraints: {
-                type: "array",
-                items: { type: "string" },
-                description: "Any constraints or limitations you're working with. Helps filter out impractical approaches."
-            },
-            previousApproaches: {
-                type: "array",
-                items: { type: "string" },
-                description: "Approaches you've already tried. Ensures fresh recommendations."
-            }
-        },
-        required: ["problem"]
-    }
-};
 
 // Server Instances
 const modelServer = new MentalModelServer()

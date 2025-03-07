@@ -45,14 +45,14 @@ interface DebuggingApproachData {
 class MentalModelServer {
   private validateModelData(input: unknown): MentalModelData {
     const data = input as Record<string, unknown>;
-    
+
     if (!data.modelName || typeof data.modelName !== 'string') {
       throw new Error('Invalid modelName: must be a string');
     }
     if (!data.problem || typeof data.problem !== 'string') {
       throw new Error('Invalid problem: must be a string');
     }
-    
+
     return {
       modelName: data.modelName,
       problem: data.problem,
@@ -116,14 +116,14 @@ ${steps.map(step => `│ • ${step.padEnd(border.length - 4)} │`).join('\n')}
 class DebuggingApproachServer {
   private validateApproachData(input: unknown): DebuggingApproachData {
     const data = input as Record<string, unknown>;
-    
+
     if (!data.approachName || typeof data.approachName !== 'string') {
       throw new Error('Invalid approachName: must be a string');
     }
     if (!data.issue || typeof data.issue !== 'string') {
       throw new Error('Invalid issue: must be a string');
     }
-    
+
     return {
       approachName: data.approachName,
       issue: data.issue,
@@ -293,7 +293,7 @@ class SequentialThinkingServer {
 }
 
 // Tool Definitions
-const MENTAL_MODEL_TOOL: Tool = {
+export const MENTAL_MODEL_TOOL: Tool = {
   name: "mentalmodel",
   description: `A tool for applying structured mental models to problem-solving.
 Supports various mental models including:
@@ -320,7 +320,7 @@ Each model provides a systematic approach to breaking down and solving problems.
         ]
       },
       problem: { type: "string" },
-      steps: { 
+      steps: {
         type: "array",
         items: { type: "string" }
       },
@@ -331,7 +331,7 @@ Each model provides a systematic approach to breaking down and solving problems.
   }
 };
 
-const DEBUGGING_APPROACH_TOOL: Tool = {
+export const DEBUGGING_APPROACH_TOOL: Tool = {
   name: "debuggingapproach",
   description: `A tool for applying systematic debugging approaches to solve technical issues.
 Supports various debugging methods including:
@@ -369,7 +369,7 @@ Each approach provides a structured method for identifying and resolving issues.
   }
 };
 
-const SEQUENTIAL_THINKING_TOOL: Tool = {
+export const SEQUENTIAL_THINKING_TOOL: Tool = {
   name: "sequentialthinking",
   description: `A detailed tool for dynamic and reflective problem-solving through thoughts.
 This tool helps analyze problems through a flexible thinking process that can adapt and evolve.
