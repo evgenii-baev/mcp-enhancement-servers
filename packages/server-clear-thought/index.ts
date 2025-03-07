@@ -16,6 +16,7 @@ import {
     getMentalModelById,
     getAllMentalModelIds,
     formatMentalModelOutput,
+    loadMentalModels
 } from "./src/models/mental-models.js"
 
 // Data Interfaces
