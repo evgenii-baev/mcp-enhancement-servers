@@ -817,6 +817,145 @@
         "Overlooking resource limitations",
         "Failing to consider long-term sustainability"
       ]
+    },
+    {
+      "id": "mdp",
+      "name": "Markov Decision Process",
+      "always_consider": false,
+      "definition": "A mathematical framework for modeling decision-making in situations where outcomes are partly random and partly under the control of a decision-maker.",
+      "when_to_use": [
+        "Sequential decision-making problems",
+        "Optimization under uncertainty",
+        "Resource allocation with stochastic outcomes",
+        "Path planning and navigation",
+        "Dynamic pricing strategies"
+      ],
+      "steps": [
+        "Define states of the system",
+        "Define possible actions in each state",
+        "Define transition probabilities between states",
+        "Define rewards for state-action pairs",
+        "Calculate optimal policy using dynamic programming or reinforcement learning"
+      ],
+      "example": "A delivery company optimizing routes with uncertain traffic conditions, where each intersection is a state, directions are actions, and delivery time is the reward to minimize.",
+      "pitfalls": [
+        "State space explosion in complex problems",
+        "Difficulty in accurately estimating transition probabilities",
+        "Computational complexity for large-scale problems",
+        "Assuming the Markov property when it doesn't hold"
+      ]
+    },
+    {
+      "id": "mcts",
+      "name": "Monte Carlo Tree Search",
+      "always_consider": false,
+      "definition": "A heuristic search algorithm for decision processes, notably used in game playing AI that combines random sampling with strategic node expansion.",
+      "when_to_use": [
+        "Complex decision spaces with many possibilities",
+        "Game playing and strategy optimization",
+        "Planning under uncertainty",
+        "When exact solutions are computationally infeasible",
+        "Problems where simulations can be run quickly"
+      ],
+      "steps": [
+        "Selection: Choose a promising node to explore",
+        "Expansion: Add child nodes to the selected node",
+        "Simulation: Perform random rollouts from the new nodes",
+        "Backpropagation: Update node statistics based on simulation results",
+        "Repeat until computational budget is exhausted",
+        "Choose the best action based on node statistics"
+      ],
+      "example": "AlphaGo used MCTS to evaluate potential moves in the game of Go, combining random playouts with learned evaluation functions.",
+      "pitfalls": [
+        "Requires good simulation models",
+        "May converge slowly for very large search spaces",
+        "Balance between exploration and exploitation is critical",
+        "Performance depends on quality of random rollouts"
+      ]
+    },
+    {
+      "id": "bandit",
+      "name": "Multi-Armed Bandit",
+      "always_consider": false,
+      "definition": "A problem where a fixed limited set of resources must be allocated between competing choices to maximize expected gain, when the properties of each choice are only partially known.",
+      "when_to_use": [
+        "A/B testing and experimentation",
+        "Content recommendation systems",
+        "Ad placement optimization",
+        "Clinical trials for treatment selection",
+        "Resource allocation with exploration-exploitation tradeoff"
+      ],
+      "steps": [
+        "Define the arms (options) available",
+        "Choose a strategy (e.g., epsilon-greedy, UCB, Thompson sampling)",
+        "For each round, select an arm based on the strategy",
+        "Observe the reward and update the arm's statistics",
+        "Adjust the strategy parameters over time",
+        "Continue until the exploration budget is exhausted"
+      ],
+      "example": "A news website testing different headline variants, where each variant is an arm, and click-through rate is the reward to maximize.",
+      "pitfalls": [
+        "Cold start problem with no initial data",
+        "Non-stationary rewards over time",
+        "Difficulty in balancing exploration and exploitation",
+        "Context-dependent rewards not captured in basic models"
+      ]
+    },
+    {
+      "id": "bayesian",
+      "name": "Bayesian Optimization",
+      "always_consider": false,
+      "definition": "A sequential design strategy for global optimization of black-box functions that uses Bayesian inference and probability to balance exploration and exploitation.",
+      "when_to_use": [
+        "Optimizing expensive-to-evaluate functions",
+        "Hyperparameter tuning in machine learning",
+        "Experimental design optimization",
+        "When gradient information is unavailable",
+        "Limited evaluation budget scenarios"
+      ],
+      "steps": [
+        "Define the objective function to optimize",
+        "Choose a prior model (usually Gaussian Process)",
+        "Define an acquisition function to determine next evaluation point",
+        "Evaluate the objective function at the selected point",
+        "Update the model with the new observation",
+        "Repeat until convergence or budget exhaustion"
+      ],
+      "example": "Tuning hyperparameters of a deep learning model where each evaluation requires training the model, which is computationally expensive.",
+      "pitfalls": [
+        "Sensitive to choice of kernel and hyperparameters",
+        "Scaling poorly to high dimensions",
+        "Computational complexity growing with number of observations",
+        "Difficulty handling discrete or categorical variables"
+      ]
+    },
+    {
+      "id": "hmm",
+      "name": "Hidden Markov Model",
+      "always_consider": false,
+      "definition": "A statistical model where the system being modeled is assumed to be a Markov process with unobservable (hidden) states that generate observable outputs.",
+      "when_to_use": [
+        "Speech recognition and natural language processing",
+        "Biological sequence analysis",
+        "Time series analysis with hidden states",
+        "Pattern recognition in noisy data",
+        "Anomaly detection in sequential data"
+      ],
+      "steps": [
+        "Define possible hidden states",
+        "Define possible observations",
+        "Specify initial state probabilities",
+        "Specify state transition probabilities",
+        "Specify emission probabilities (observation given state)",
+        "Use algorithms like Forward-Backward, Viterbi, or Baum-Welch for inference and learning"
+      ],
+      "example": "In speech recognition, the hidden states might represent the words being spoken, while the observations are the acoustic signals captured by a microphone.",
+      "pitfalls": [
+        "Assuming the Markov property when dependencies span multiple time steps",
+        "Difficulty in determining the optimal number of hidden states",
+        "Computational complexity for long sequences",
+        "Local optima in parameter estimation"
+      ]
     }
   ]
-} 
+}

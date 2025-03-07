@@ -18,7 +18,7 @@ import {
     DEBUGGING_APPROACH_TOOL,
     SEQUENTIAL_THINKING_TOOL,
     BRAINSTORMING_TOOL,
-    MODEL_SELECTOR_TOOL,
+    FIRST_THOUGHT_ADVISOR_TOOL,
     STOCHASTIC_ALGORITHM_TOOL
 } from "./src/tools/index.js"
 
@@ -27,7 +27,7 @@ import {
     DebuggingApproachServer,
     SequentialThinkingServer,
     BrainstormingServer,
-    ModelSelectorServer,
+    FirstThoughtAdvisorServer,
     StochasticAlgorithmServer
 } from "./src/servers/index.js"
 
@@ -36,7 +36,7 @@ const mentalModelServer = new MentalModelServer()
 const debuggingApproachServer = new DebuggingApproachServer()
 const sequentialThinkingServer = new SequentialThinkingServer()
 const brainstormingServer = new BrainstormingServer()
-const modelSelectorServer = new ModelSelectorServer()
+const firstThoughtAdvisorServer = new FirstThoughtAdvisorServer()
 const stochasticAlgorithmServer = new StochasticAlgorithmServer()
 
 // Create MCP server
@@ -52,7 +52,7 @@ const server = new Server(
                 "mental_model": MENTAL_MODEL_TOOL,
                 "debugging_approach": DEBUGGING_APPROACH_TOOL,
                 "brainstorming": BRAINSTORMING_TOOL,
-                "model_selector": MODEL_SELECTOR_TOOL,
+                "first_thought_advisor": FIRST_THOUGHT_ADVISOR_TOOL,
                 "stochastic_algorithm": STOCHASTIC_ALGORITHM_TOOL,
             },
         },
@@ -66,7 +66,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         DEBUGGING_APPROACH_TOOL,
         SEQUENTIAL_THINKING_TOOL,
         BRAINSTORMING_TOOL,
-        MODEL_SELECTOR_TOOL,
+        FIRST_THOUGHT_ADVISOR_TOOL,
         STOCHASTIC_ALGORITHM_TOOL
     ],
 }))
@@ -84,8 +84,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 return sequentialThinkingServer.processThought(params)
             case "brainstorming":
                 return brainstormingServer.processBrainstorming(params)
-            case "model_selector":
-                return modelSelectorServer.processModelSelection(params)
+            case "first_thought_advisor":
+                return firstThoughtAdvisorServer.processModelSelection(params)
             case "stochastic_algorithm":
                 return stochasticAlgorithmServer.processAlgorithm(params)
             default:
