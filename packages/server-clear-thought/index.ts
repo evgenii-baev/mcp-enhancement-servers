@@ -374,10 +374,18 @@ HOW TO USE:
 4. Review the structured analysis and insights
 5. Apply the conclusions to your original problem
 
-EXAMPLE:
-Input: { "modelName": "first_principles", "problem": "Our application is too slow" }
-Output: A breakdown of the performance issue into fundamental components, questioning
-assumptions about what causes slowness, and building a solution from basic truths.
+EXAMPLES:
+• Input: { "modelName": "first_principles", "problem": "Our application is too slow" }
+  Output: A breakdown of the performance issue into fundamental components, questioning
+  assumptions about what causes slowness, and building a solution from basic truths.
+
+• Input: { "modelName": "systems_thinking", "problem": "Users are abandoning our platform" }
+  Output: Analysis of the platform as an interconnected system, identifying feedback loops,
+  dependencies, and emergent behaviors that might be causing user attrition.
+
+• Input: { "modelName": "occams_razor", "problem": "Our CI pipeline fails intermittently" }
+  Output: Evaluation of possible explanations, prioritizing the simplest ones that adequately
+  explain the observed behavior before considering more complex theories.
 
 INTERPRETING RESULTS:
 The response includes the model name, problem statement, structured analysis steps,
@@ -387,6 +395,10 @@ COMMON ERRORS:
 - Selecting an inappropriate model for your problem type
 - Providing a vague or overly broad problem statement
 - Not following through with the model's recommended steps
+
+RELATED TOOLS:
+- Use sequentialthinking after applying a mental model to work through the solution step by step
+- Use debuggingapproach for specific technical issues once you've identified the general approach
 
 Each model provides a systematic approach to breaking down and solving problems.`,
     inputSchema: {
@@ -451,10 +463,18 @@ HOW TO USE:
 4. Document your findings at each step
 5. Apply the resolution based on your analysis
 
-EXAMPLE:
-Input: { "approachName": "binary_search", "issue": "Performance regression in recent release" }
-Output: A structured approach to identify which change caused the regression by testing
-midpoints in your commit history until the problematic change is isolated.
+EXAMPLES:
+• Input: { "approachName": "binary_search", "issue": "Performance regression in recent release" }
+  Output: A structured approach to identify which change caused the regression by testing
+  midpoints in your commit history until the problematic change is isolated.
+
+• Input: { "approachName": "cause_elimination", "issue": "API requests fail intermittently" }
+  Output: A systematic process to identify potential causes (network, server load, authentication,
+  rate limiting) and methodically rule them out until the actual cause is found.
+
+• Input: { "approachName": "program_slicing", "issue": "Unexpected value in user profile" }
+  Output: Analysis focusing only on code paths that could affect the specific profile field,
+  ignoring unrelated parts of the codebase to efficiently isolate the issue.
 
 INTERPRETING RESULTS:
 The response includes the approach name, issue description, structured steps to follow,
@@ -465,6 +485,10 @@ COMMON ERRORS:
 - Providing insufficient detail about the issue
 - Not following through with all recommended steps
 - Jumping to conclusions before completing the process
+
+RELATED TOOLS:
+- Use mentalmodel first to understand the general problem space before selecting a debugging approach
+- Use sequentialthinking to document your debugging process step by step
 
 Each approach provides a structured method for identifying and resolving issues.`,
     inputSchema: {
@@ -547,14 +571,34 @@ PARAMETERS EXPLAINED:
 - branchId: Identifier for the current branch (if any)
 - needsMoreThoughts: If reaching end but realizing more thoughts needed
 
-EXAMPLE:
-Input: { 
+EXAMPLES:
+• Input: { 
   "thought": "The application seems slow because of database queries", 
   "thoughtNumber": 1, 
   "totalThoughts": 5, 
   "nextThoughtNeeded": true 
 }
-Output: A structured response acknowledging the thought and providing guidance for the next step.
+  Output: A structured response acknowledging the thought and providing guidance for the next step.
+
+• Input: { 
+  "thought": "After profiling, I see that the slowdown is actually in the image processing", 
+  "thoughtNumber": 2, 
+  "totalThoughts": 5, 
+  "isRevision": true, 
+  "revisesThought": 1,
+  "nextThoughtNeeded": true 
+}
+  Output: A response that acknowledges the revision of the previous thought and maintains the context.
+
+• Input: { 
+  "thought": "Let's explore an alternative approach using caching", 
+  "thoughtNumber": 3, 
+  "totalThoughts": 5, 
+  "branchFromThought": 2,
+  "branchId": "caching-solution",
+  "nextThoughtNeeded": true 
+}
+  Output: A response that acknowledges the new branch of thinking and helps explore this direction.
 
 INTERPRETING RESULTS:
 The response will indicate whether another thought is needed and may suggest directions
@@ -566,6 +610,10 @@ COMMON ERRORS:
 - Not revising thoughts when new information contradicts earlier assumptions
 - Failing to adjust totalThoughts when more steps are clearly needed
 - Not properly marking revisions or branches when changing direction
+
+RELATED TOOLS:
+- Use mentalmodel first to select an appropriate mental framework for your problem
+- Use debuggingapproach for specific technical issues that need structured troubleshooting
 
 BEST PRACTICES:
 1. Start with an initial estimate of needed thoughts, but be ready to adjust
