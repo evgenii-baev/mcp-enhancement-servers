@@ -18,11 +18,180 @@ import {
     formatMentalModelOutput,
     loadMentalModels
 } from "./src/models/mental-models.js"
-import {
-    SEQUENTIAL_THINKING_TOOL,
-    MENTAL_MODEL_TOOL,
-    DEBUGGING_APPROACH_TOOL
-} from "../../index.js"
+
+// Tool Definitions
+const MENTAL_MODEL_TOOL: Tool = {
+    name: "mentalmodel",
+    description: `A tool for applying structured mental models to problem-solving.
+
+This tool helps analyze problems from different perspectives using systematic mental models.
+Use it for complex problems, when standard approaches fail, or when you need a fresh perspective.
+
+Available models include first principles, systems thinking, Occam's razor, and more.
+
+Usage: Select a model, define your problem, and the tool will apply the model's framework.
+Example: { "modelName": "first_principles", "problem": "Our app is slow" }
+
+See documentation for full list of models and detailed usage instructions.`,
+    inputSchema: {
+        type: "object",
+        properties: {
+            modelName: {
+                type: "string",
+                enum: [
+                    "first_principles",
+                    "opportunity_cost",
+                    "error_propagation",
+                    "rubber_duck",
+                    "pareto_principle",
+                    "occams_razor",
+                    "regression_to_mean",
+                    "confirmation_bias",
+                    "normal_distribution",
+                    "sensitivity_analysis",
+                    "bayes_theorem",
+                    "survivorship_bias",
+                    "systems_thinking",
+                    "thought_experiment",
+                    "hanlons_razor",
+                    "proximate_ultimate_causation",
+                    "zero_sum_game",
+                    "loss_aversion",
+                    "sunk_cost",
+                    "lateral_thinking",
+                    "divergent_thinking",
+                    "scientific_method",
+                    "decision_tree",
+                    "scenario_planning",
+                    "simulation",
+                    "catalysis",
+                    "ecosystem"
+                ],
+                description: "The specific mental model to apply. Choose the model that best fits your problem type and thinking approach. Each model provides a different analytical framework."
+            },
+            problem: {
+                type: "string",
+                description: "A clear, concise statement of the problem you want to analyze. Be specific enough to allow meaningful analysis but broad enough to capture the core issue."
+            }
+        },
+        required: ["modelName", "problem"]
+    }
+};
+
+const DEBUGGING_APPROACH_TOOL: Tool = {
+    name: "debuggingapproach",
+    description: `A tool for applying systematic debugging approaches to technical issues.
+
+This tool provides structured methodologies for identifying and resolving technical problems.
+Use it for complex issues, when standard debugging fails, or when you need a systematic approach.
+
+Available approaches:
+- Binary Search: Narrow down problems by testing midpoints (e.g., find which commit broke the build)
+- Reverse Engineering: Work backward from observed behavior
+- Divide and Conquer: Break complex problems into manageable sub-problems
+- Backtracking: Explore multiple solution paths
+- Cause Elimination: Rule out potential causes systematically
+- Program Slicing: Focus on code affecting specific variables
+
+Usage: Select an approach, define your issue, and follow the structured steps.
+Example: { "approachName": "binary_search", "issue": "Performance regression" }
+
+See documentation for detailed usage instructions.`,
+    inputSchema: {
+        type: "object",
+        properties: {
+            approachName: {
+                type: "string",
+                enum: ["binary_search", "reverse_engineering", "divide_conquer", "backtracking", "cause_elimination", "program_slicing"],
+                description: "The debugging approach to apply. Select based on your problem type: binary_search for finding a specific change, reverse_engineering for understanding unknown systems, divide_conquer for complex problems, backtracking for exploring multiple solutions, cause_elimination for multiple potential causes, program_slicing for data flow issues."
+            },
+            issue: {
+                type: "string",
+                description: "A detailed description of the technical issue you're facing. Include relevant context, error messages, and observed behavior to enable effective debugging."
+            },
+            findings: {
+                type: "string",
+                description: "Optional information discovered during your debugging process. Include any patterns, anomalies, or insights that might help identify the root cause."
+            },
+            steps: {
+                type: "array",
+                items: { type: "string" },
+                description: "Optional list of steps you've already taken or plan to take in your debugging process. Each step should be a clear, actionable item."
+            },
+            resolution: {
+                type: "string",
+                description: "Optional solution or fix for the issue. Describe how you resolved or plan to resolve the problem based on your debugging findings."
+            }
+        },
+        required: ["approachName", "issue"]
+    }
+};
+
+const SEQUENTIAL_THINKING_TOOL: Tool = {
+    name: "sequentialthinking",
+    description: `A tool for dynamic and reflective problem-solving through sequential thoughts.
+
+This tool facilitates a flexible thinking process that mimics human cognition, allowing thoughts
+to build upon, question, or revise previous insights as understanding deepens.
+
+Key features:
+- Dynamic adjustment of thought quantity as understanding evolves
+- Ability to revise previous thoughts when new insights emerge
+- Non-linear thinking with branching capabilities
+- Progressive refinement of solutions through iterative thinking
+
+Usage: Start with a problem statement, develop thoughts sequentially, revise when needed.
+Example: { "thought": "App is slow due to database queries", "thoughtNumber": 1, "totalThoughts": 5, "nextThoughtNeeded": true }
+
+Parameters include thought content, thought number, total thoughts estimate, revision flags, and branching options.
+Set nextThoughtNeeded=false only when you've reached a satisfactory conclusion.`,
+    inputSchema: {
+        type: "object",
+        properties: {
+            thought: {
+                type: "string",
+                description: "Your current thinking step in detail. This can be an analysis, observation, hypothesis, revision of previous thinking, or a conclusion. Be specific and thorough to enable meaningful progression."
+            },
+            thoughtNumber: {
+                type: "integer",
+                minimum: 1,
+                description: "The sequential number of this thought in your thinking process. Starts at 1 and increments with each new thought, including revisions and branches."
+            },
+            totalThoughts: {
+                type: "integer",
+                minimum: 1,
+                description: "Your current estimate of how many thoughts will be needed to solve the problem. This can be adjusted up or down as your understanding evolves."
+            },
+            nextThoughtNeeded: {
+                type: "boolean",
+                description: "Whether another thought step is needed after this one. Set to false only when you've reached a satisfactory conclusion that fully addresses the original problem."
+            },
+            isRevision: {
+                type: "boolean",
+                description: "Whether this thought revises or corrects a previous thought. Set to true when you need to update earlier thinking based on new insights or information."
+            },
+            revisesThought: {
+                type: "integer",
+                minimum: 1,
+                description: "If this is a revision (isRevision=true), specify which thought number is being revised or corrected. This creates a clear link between the original thought and its revision."
+            },
+            branchFromThought: {
+                type: "integer",
+                minimum: 1,
+                description: "If this thought starts a new branch of thinking, specify which thought number it branches from. Use when exploring alternative approaches or perspectives."
+            },
+            branchId: {
+                type: "string",
+                description: "A unique identifier for this branch of thinking. Use a descriptive name that indicates the nature or purpose of this thinking branch."
+            },
+            needsMoreThoughts: {
+                type: "boolean",
+                description: "Indicates that more thoughts are needed even if you initially thought you were done. Set to true when you realize additional analysis is required."
+            }
+        },
+        required: ["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"]
+    }
+};
 
 // Data Interfaces
 interface ThoughtData {
