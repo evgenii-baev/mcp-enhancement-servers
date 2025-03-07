@@ -329,8 +329,8 @@ export class BrainstormingServer {
 
                 if (data.ideas !== undefined) {
                     session.ideas = data.ideas as BrainstormingIdea[];
-                } else if (data.phase === BrainstormingPhase.IDEATION && (data as any).newIdea) {
-                    // Add new idea if provided
+                } else if ((data as any).newIdea) {
+                    // Add new idea if provided, regardless of phase
                     const newIdea: BrainstormingIdea = {
                         id: Math.random().toString(36).substring(2, 15),
                         content: (data as any).newIdea,
