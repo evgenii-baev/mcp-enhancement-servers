@@ -1467,17 +1467,26 @@ class ModelSelectorServer {
 
             console.error(formattedOutput);
 
+            // Преобразуем символы переноса строки \n в реальные переносы строки
+            const processedRecommendations = recommendations.map(r => {
+                // Заменяем символы \n на реальные переносы строки
+                const reason = r.reason.split('\\n').join('\n');
+                const howToApply = r.howToApply.split('\\n').join('\n');
+
+                return {
+                    modelId: r.modelId,
+                    name: r.name,
+                    score: r.score,
+                    reason,
+                    howToApply
+                };
+            });
+
             return {
                 content: [{
                     type: "text",
                     text: JSON.stringify({
-                        recommendations: recommendations.map(r => ({
-                            modelId: r.modelId,
-                            name: r.name,
-                            score: r.score,
-                            reason: r.reason,
-                            howToApply: r.howToApply
-                        })),
+                        recommendations: processedRecommendations,
                         problem: data.problem,
                         goal: data.goal,
                         domain: data.domain,
