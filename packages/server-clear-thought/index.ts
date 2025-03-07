@@ -82,13 +82,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 return debuggingApproachServer.processApproach(params)
             case "sequential_thinking":
                 return sequentialThinkingServer.processThought(params)
-            case "brainstorming":
+        case "brainstorming":
                 return brainstormingServer.processBrainstorming(params)
             case "first_thought_advisor":
                 return firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
             case "stochastic_algorithm":
                 return stochasticAlgorithmServer.processAlgorithm(params)
-            default:
+        default:
                 throw new McpError(
                     ErrorCode.MethodNotFound,
                     `Unknown tool: ${name}`
