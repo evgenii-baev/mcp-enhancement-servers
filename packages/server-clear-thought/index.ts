@@ -806,11 +806,11 @@ WHEN TO USE:
 
 AVAILABLE MODELS:
 ${getAllMentalModelIds()
-    .map((id) => {
-        const model = getMentalModelById(id)
-        return `- ${model?.name}: ${model?.definition}`
-    })
-    .join("\n")}
+            .map((id) => {
+                const model = getMentalModelById(id)
+                return `- ${model?.name}: ${model?.definition}`
+            })
+            .join("\n")}
 
 HOW TO USE:
 1. Select the most appropriate mental model for your problem
@@ -853,8 +853,12 @@ Each model provides a systematic approach to breaking down and solving problems.
             modelName: {
                 type: "string",
                 enum: getAllMentalModelIds(),
+                description: "The specific mental model to apply. Choose the model that best fits your problem type and thinking approach. Each model provides a different analytical framework."
             },
-            problem: { type: "string" },
+            problem: {
+                type: "string",
+                description: "A clear, concise statement of the problem you want to analyze. Be specific enough to allow meaningful analysis but broad enough to capture the core issue."
+            },
         },
         required: ["modelName", "problem"],
     },
@@ -951,14 +955,25 @@ Each approach provides a structured method for identifying and resolving issues.
                     "cause_elimination",
                     "program_slicing",
                 ],
+                description: "The debugging approach to apply. Select based on your problem type: binary_search for finding a specific change, reverse_engineering for understanding unknown systems, divide_conquer for complex problems, backtracking for exploring multiple solutions, cause_elimination for multiple potential causes, program_slicing for data flow issues."
             },
-            issue: { type: "string" },
+            issue: {
+                type: "string",
+                description: "A detailed description of the technical issue you're facing. Include relevant context, error messages, and observed behavior to enable effective debugging."
+            },
             steps: {
                 type: "array",
                 items: { type: "string" },
+                description: "Optional list of steps you've already taken or plan to take in your debugging process. Each step should be a clear, actionable item."
             },
-            findings: { type: "string" },
-            resolution: { type: "string" },
+            findings: {
+                type: "string",
+                description: "Optional information discovered during your debugging process. Include any patterns, anomalies, or insights that might help identify the root cause."
+            },
+            resolution: {
+                type: "string",
+                description: "Optional solution or fix for the issue. Describe how you resolved or plan to resolve the problem based on your debugging findings."
+            },
         },
         required: ["approachName", "issue"],
     },
@@ -1001,22 +1016,15 @@ HOW TO USE:
 5. Provide a final thought that synthesizes your reasoning and solution
 
 PARAMETERS EXPLAINED:
-- thought: Your current thinking step, which can include:
-  * Regular analytical steps
-  * Revisions of previous thoughts
-  * Questions about previous decisions
-  * Realizations about needing more analysis
-  * Changes in approach
-  * Hypothesis generation
-  * Hypothesis verification
-- nextThoughtNeeded: True if you need more thinking, even if at what seemed like the end
-- thoughtNumber: Current number in sequence (can go beyond initial total if needed)
-- totalThoughts: Current estimate of thoughts needed (can be adjusted up/down)
-- isRevision: A boolean indicating if this thought revises previous thinking
-- revisesThought: If isRevision is true, which thought number is being reconsidered
-- branchFromThought: If branching, which thought number is the branching point
-- branchId: Identifier for the current branch (if any)
-- needsMoreThoughts: If reaching end but realizing more thoughts needed
+- thought: Your current thinking step in detail. This can be an analysis, observation, hypothesis, revision of previous thinking, or a conclusion. Be specific and thorough to enable meaningful progression.
+- nextThoughtNeeded: Whether another thought step is needed after this one. Set to false only when you've reached a satisfactory conclusion that fully addresses the original problem.
+- thoughtNumber: The sequential number of this thought in your thinking process. Starts at 1 and increments with each new thought, including revisions and branches.
+- totalThoughts: Your current estimate of how many thoughts will be needed to solve the problem. This can be adjusted up or down as your understanding evolves.
+- isRevision: Whether this thought revises or corrects a previous thought. Set to true when you need to update earlier thinking based on new insights or information.
+- revisesThought: If this is a revision (isRevision=true), specify which thought number is being revised or corrected. This creates a clear link between the original thought and its revision.
+- branchFromThought: If this thought starts a new branch of thinking, specify which thought number it branches from. Use when exploring alternative approaches or perspectives.
+- branchId: A unique identifier for this branch of thinking. Use a descriptive name that indicates the nature or purpose of this thinking branch.
+- needsMoreThoughts: Indicates that more thoughts are needed even if you initially thought you were done. Set to true when you realize additional analysis is required.
 
 EXAMPLES:
 • Input: { 
@@ -1080,43 +1088,43 @@ BEST PRACTICES:
         properties: {
             thought: {
                 type: "string",
-                description: "Your current thinking step",
+                description: "Your current thinking step in detail. This can be an analysis, observation, hypothesis, revision of previous thinking, or a conclusion. Be specific and thorough to enable meaningful progression."
             },
             nextThoughtNeeded: {
                 type: "boolean",
-                description: "Whether another thought step is needed",
+                description: "Whether another thought step is needed after this one. Set to false only when you've reached a satisfactory conclusion that fully addresses the original problem."
             },
             thoughtNumber: {
                 type: "integer",
-                description: "Current thought number",
+                description: "The sequential number of this thought in your thinking process. Starts at 1 and increments with each new thought, including revisions and branches.",
                 minimum: 1,
             },
             totalThoughts: {
                 type: "integer",
-                description: "Estimated total thoughts needed",
+                description: "Your current estimate of how many thoughts will be needed to solve the problem. This can be adjusted up or down as your understanding evolves.",
                 minimum: 1,
             },
             isRevision: {
                 type: "boolean",
-                description: "Whether this revises previous thinking",
+                description: "Whether this thought revises or corrects a previous thought. Set to true when you need to update earlier thinking based on new insights or information."
             },
             revisesThought: {
                 type: "integer",
-                description: "Which thought is being reconsidered",
+                description: "If this is a revision (isRevision=true), specify which thought number is being revised or corrected. This creates a clear link between the original thought and its revision.",
                 minimum: 1,
             },
             branchFromThought: {
                 type: "integer",
-                description: "Branching point thought number",
+                description: "If this thought starts a new branch of thinking, specify which thought number it branches from. Use when exploring alternative approaches or perspectives.",
                 minimum: 1,
             },
             branchId: {
                 type: "string",
-                description: "Branch identifier",
+                description: "A unique identifier for this branch of thinking. Use a descriptive name that indicates the nature or purpose of this thinking branch."
             },
             needsMoreThoughts: {
                 type: "boolean",
-                description: "If more thoughts are needed",
+                description: "Indicates that more thoughts are needed even if you initially thought you were done. Set to true when you realize additional analysis is required."
             },
         },
         required: ["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"],
@@ -1162,14 +1170,21 @@ HOW TO USE:
 4. Add, categorize, and vote on ideas as you progress
 
 PARAMETERS EXPLAINED:
-- topic: The main subject or problem for brainstorming
-- phase: Current phase of the brainstorming process
-- ideas: Collection of generated ideas
-- constraints: Limitations or requirements to consider
-- participants: People involved in the brainstorming
-- timeLimit: Optional time constraint for the session
-- recommendedModels: Mental models that can help with this topic
-- sessionId: Identifier for ongoing sessions
+- sessionId: Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions.
+- topic: The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session.
+- phase: Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning.
+- ideas: Collection of generated ideas for the brainstorming session. Grows during the ideation phase and gets refined in later phases.
+- newIdea: A new idea to add to the session (only used in ideation phase). Focus on one clear concept per idea for better organization later.
+- category: Category for a new idea being added. Helps with organizing ideas into themes or groups during clarification.
+- buildUpon: ID of an existing idea that this new idea builds upon. Creates connections between related ideas and shows evolution of thinking.
+- voteForIdea: ID of an idea to vote for (only used in evaluation phase). Voting helps identify the most promising ideas for further development.
+- categorizeIdea: Categorize an existing idea (only used in clarification phase). Helps organize ideas into logical groups for evaluation.
+- constraints: Limitations or requirements to consider during brainstorming. Helps focus ideation on practical solutions that meet specific criteria.
+- participants: People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities.
+- timeLimit: Time constraint for the session in minutes. Setting a time limit helps maintain focus and creates productive pressure.
+- recommendedModels: Mental models that can help with this topic. These models provide frameworks for thinking about the problem in different ways.
+- currentStep: Current step in the brainstorming process. Helps track progress within each phase of the session.
+- totalSteps: Total number of steps in the brainstorming process. Provides context for how far along the session has progressed.
 
 EXAMPLES:
 • Input: { "topic": "Improving user onboarding experience" }
@@ -1229,87 +1244,109 @@ BEST PRACTICES:
         properties: {
             sessionId: {
                 type: "string",
-                description: "Identifier for an existing brainstorming session",
+                description: "Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions."
             },
             topic: {
                 type: "string",
-                description: "The main subject or problem for brainstorming",
+                description: "The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session."
             },
             phase: {
                 type: "string",
                 enum: Object.values(BrainstormingPhase),
-                description: "Current phase of the brainstorming process",
+                description: "Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning."
             },
             ideas: {
                 type: "array",
                 items: {
                     type: "object",
                     properties: {
-                        id: { type: "string" },
-                        content: { type: "string" },
-                        category: { type: "string" },
-                        votes: { type: "number" },
+                        id: {
+                            type: "string",
+                            description: "Unique identifier for the idea. Used for referencing in voting, categorization, and building upon ideas."
+                        },
+                        content: {
+                            type: "string",
+                            description: "The actual content of the idea. Be clear and specific, focusing on one concept per idea."
+                        },
+                        category: {
+                            type: "string",
+                            description: "Optional grouping or theme for the idea. Used during clarification phase to organize related ideas."
+                        },
+                        votes: {
+                            type: "number",
+                            description: "Number of votes this idea has received during the evaluation phase. Higher votes indicate greater team interest."
+                        },
                         buildUpon: {
                             type: "array",
                             items: { type: "string" },
+                            description: "IDs of ideas that this idea builds upon or extends. Creates connections between related concepts."
                         },
-                        createdAt: { type: "number" },
+                        createdAt: {
+                            type: "number",
+                            description: "Timestamp when the idea was created. Used for chronological ordering of ideas."
+                        },
                     },
                     required: ["id", "content", "createdAt"],
                 },
-                description: "Collection of generated ideas",
+                description: "Collection of generated ideas for the brainstorming session. Grows during the ideation phase and gets refined in later phases."
             },
             newIdea: {
                 type: "string",
-                description: "A new idea to add to the session (only in ideation phase)",
+                description: "A new idea to add to the session (only used in ideation phase). Focus on one clear concept per idea for better organization later."
             },
             category: {
                 type: "string",
-                description: "Category for a new idea",
+                description: "Category for a new idea being added. Helps with organizing ideas into themes or groups during clarification."
             },
             buildUpon: {
                 type: "string",
-                description: "ID of an idea this new idea builds upon",
+                description: "ID of an existing idea that this new idea builds upon. Creates connections between related ideas and shows evolution of thinking."
             },
             voteForIdea: {
                 type: "string",
-                description: "ID of an idea to vote for (only in evaluation phase)",
+                description: "ID of an idea to vote for (only used in evaluation phase). Voting helps identify the most promising ideas for further development."
             },
             categorizeIdea: {
                 type: "object",
                 properties: {
-                    ideaId: { type: "string" },
-                    category: { type: "string" },
+                    ideaId: {
+                        type: "string",
+                        description: "ID of the idea to categorize. Must reference an existing idea in the session."
+                    },
+                    category: {
+                        type: "string",
+                        description: "Category name to assign to the idea. Use consistent naming for better organization."
+                    },
                 },
                 required: ["ideaId", "category"],
-                description: "Categorize an existing idea (only in clarification phase)",
+                description: "Categorize an existing idea (only used in clarification phase). Helps organize ideas into logical groups for evaluation."
             },
             constraints: {
                 type: "array",
                 items: { type: "string" },
-                description: "Limitations or requirements to consider",
+                description: "Limitations or requirements to consider during brainstorming. Helps focus ideation on practical solutions that meet specific criteria."
             },
             participants: {
                 type: "array",
                 items: { type: "string" },
-                description: "People involved in the brainstorming",
+                description: "People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities."
             },
             timeLimit: {
                 type: "number",
-                description: "Time constraint for the session in minutes",
+                description: "Time constraint for the session in minutes. Setting a time limit helps maintain focus and creates productive pressure."
             },
             recommendedModels: {
                 type: "array",
                 items: { type: "string" },
-                description: "Mental models that can help with this topic",
+                description: "Mental models that can help with this topic. These models provide frameworks for thinking about the problem in different ways."
             },
             currentStep: {
                 type: "number",
-                description: "Current step in the process",
+                description: "Current step in the brainstorming process. Helps track progress within each phase of the session."
             },
             totalSteps: {
                 type: "number",
-                description: "Total number of steps in the process",
+                description: "Total number of steps in the brainstorming process. Provides context for how far along the session has progressed."
             },
         },
     },
