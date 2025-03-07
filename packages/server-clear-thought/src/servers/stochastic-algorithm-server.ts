@@ -41,25 +41,23 @@ export class StochasticAlgorithmServer {
 
         let output = `
 ┌${border}┐
-│ 🎲 Stochastic Algorithm: ${algorithm.padEnd(border.length - 25)} │
+│ 🎲 Algorithm: ${algorithm.padEnd(border.length - 13)} │
 ├${border}┤
 │ Problem: ${problem.padEnd(border.length - 10)} │
 ├${border}┤
-│ Parameters:${' '.repeat(border.length - 13)} │
-`;
+│ Parameters:${' '.repeat(border.length - 12)} │`;
 
         // Format parameters
-        Object.entries(parameters).forEach(([key, value]) => {
-            const valueStr = JSON.stringify(value);
-            output += `│ • ${key}: ${valueStr.padEnd(border.length - key.length - 5)} │\n`;
-        });
-
-        if (result) {
-            output += `├${border}┤\n`;
-            output += `│ Result: ${result.padEnd(border.length - 9)} │\n`;
+        for (const [key, value] of Object.entries(parameters)) {
+            output += `\n│ • ${key}: ${String(value).padEnd(border.length - key.length - 4)} │`;
         }
 
-        output += `└${border}┘`;
+        if (result) {
+            output += `\n├${border}┤
+│ Result: ${result.padEnd(border.length - 9)} │`;
+        }
+
+        output += `\n└${border}┘`;
         return output;
     }
 
@@ -69,7 +67,7 @@ export class StochasticAlgorithmServer {
      * @returns Summary string
      */
     private mdpOneLineSummary(params: AlgorithmParameters): string {
-        return `Markov Decision Process with ${params.states || 'unknown'} states and ${params.actions || 'unknown'} actions`;
+        return `Optimized policy over ${params.states || 'N'} states with discount factor ${params.gamma || 0.9}`;
     }
 
     /**
@@ -78,7 +76,7 @@ export class StochasticAlgorithmServer {
      * @returns Summary string
      */
     private mctsOneLineSummary(params: AlgorithmParameters): string {
-        return `Monte Carlo Tree Search with ${params.iterations || 'default'} iterations and ${params.exploration || 'default'} exploration factor`;
+        return `Explored ${params.simulations || 1000} paths with exploration constant ${params.explorationConstant || 1.4}`;
     }
 
     /**
@@ -87,7 +85,7 @@ export class StochasticAlgorithmServer {
      * @returns Summary string
      */
     private banditOneLineSummary(params: AlgorithmParameters): string {
-        return `Multi-Armed Bandit with ${params.arms || 'unknown'} arms and ${params.strategy || 'default'} strategy`;
+        return `Selected optimal arm with ${params.strategy || 'epsilon-greedy'} strategy (ε=${params.epsilon || 0.1})`;
     }
 
     /**
@@ -96,7 +94,7 @@ export class StochasticAlgorithmServer {
      * @returns Summary string
      */
     private bayesianOneLineSummary(params: AlgorithmParameters): string {
-        return `Bayesian Optimization with ${params.iterations || 'default'} iterations and ${params.kernel || 'default'} kernel`;
+        return `Optimized objective with ${params.acquisitionFunction || 'expected improvement'} acquisition`;
     }
 
     /**
@@ -105,7 +103,7 @@ export class StochasticAlgorithmServer {
      * @returns Summary string
      */
     private hmmOneLineSummary(params: AlgorithmParameters): string {
-        return `Hidden Markov Model with ${params.states || 'unknown'} hidden states and ${params.observations || 'unknown'} observations`;
+        return `Inferred hidden states using ${params.algorithm || 'forward-backward'} algorithm`;
     }
 
     /**
