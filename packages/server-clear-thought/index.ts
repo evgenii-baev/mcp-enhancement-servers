@@ -17,39 +17,14 @@ import {
     getAllMentalModelIds,
     formatMentalModelOutput,
 } from "./src/models/mental-models.js"
-import { ServerBridge } from "./src/bridge/server-bridge"
-import { ThoughtOrchestrator } from "./src/core/thought-orchestrator"
-import { SequentialThinkingServer } from "./src/servers/sequential-thinking.js"
-import { MentalModelOutput, modelItems } from "./src/models/mental-models.js"
-
-// Data Interfaces
-interface ThoughtData {
-    thought: string
-    thoughtNumber: number
-    totalThoughts: number
-    isRevision?: boolean
-    revisesThought?: number
-    branchFromThought?: number
-    branchId?: string
-    needsMoreThoughts?: boolean
-    nextThoughtNeeded: boolean
-}
-
-interface MentalModelData {
-    modelName: string
-    problem: string
-    steps: string[]
-    reasoning: string
-    conclusion: string
-}
-
-interface DebuggingApproachData {
-    approachName: string
-    issue: string
-    steps: string[]
-    findings: string
-    resolution: string
-}
+import { ServerBridge } from "./src/bridge/server-bridge.js"
+import { ThoughtOrchestrator } from "./src/core/thought-orchestrator.js"
+import {
+    ThoughtData,
+    MentalModelData,
+    DebuggingApproachData,
+    FormattedOutput
+} from './src/interfaces/server-interfaces.js'
 
 // Server Classes
 class MentalModelServer {
@@ -69,10 +44,7 @@ class MentalModelServer {
         }
     }
 
-    public processModel(input: unknown): {
-        content: Array<{ type: string; text: string }>
-        isError?: boolean
-    } {
+    public processModel(input: unknown): FormattedOutput {
         try {
             const { modelName, problem } = this.validateModelData(input)
             const model = getMentalModelById(modelName)
@@ -167,10 +139,7 @@ ${steps.map((step) => `│ • ${step.padEnd(border.length - 4)} │`).join("\n"
 └${border}┘`
     }
 
-    public processApproach(input: unknown): {
-        content: Array<{ type: string; text: string }>
-        isError?: boolean
-    } {
+    public processApproach(input: unknown): FormattedOutput {
         try {
             const validatedInput = this.validateApproachData(input)
             const formattedOutput = this.formatApproachOutput(validatedInput)
@@ -248,63 +217,90 @@ class SequentialThinkingServer {
     }
 
     private formatThought(thoughtData: ThoughtData): string {
-        const {
-            thoughtNumber,
-            totalThoughts,
-            thought,
-            isRevision,
-            revisesThought,
-            branchFromThought,
-            branchId,
-        } = thoughtData
+        const { thought, thoughtNumber, totalThoughts, nextThoughtNeeded } = thoughtData
+        const border = "─".repeat(Math.max(50, Math.min(80, thought.length)))
 
-        let prefix = ""
-        let context = ""
-
-        if (isRevision) {
-            prefix = chalk.yellow("🔄 Revision")
-            context = ` (revising thought ${revisesThought})`
-        } else if (branchFromThought) {
-            prefix = chalk.green("🌿 Branch")
-            context = ` (from thought ${branchFromThought}, ID: ${branchId})`
-        } else {
-            prefix = chalk.blue("💭 Thought")
-            context = ""
+        let header = `Thought ${thoughtNumber}/${totalThoughts}`
+        if (thoughtData.isRevision) {
+            header += ` (Revision of Thought ${thoughtData.revisesThought})`
+        } else if (thoughtData.branchId) {
+            header += ` (Branch: ${thoughtData.branchId}, from Thought ${thoughtData.branchFromThought})`
         }
-
-        const header = `${prefix} ${thoughtNumber}/${totalThoughts}${context}`
-        const border = "─".repeat(Math.max(header.length, thought.length) + 4)
 
         return `
 ┌${border}┐
-│ ${header} │
+│ ${header.padEnd(border.length - 2)} │
 ├${border}┤
-│ ${thought.padEnd(border.length - 2)} │
+${this.wrapText(thought, border.length - 4).map((line) => `│ ${line.padEnd(border.length - 2)} │`).join("\n")}
+├${border}┤
+│ ${nextThoughtNeeded ? "✓ Needs next thought" : "✗ Complete"} ${" ".repeat(border.length - 23)} │
 └${border}┘`
     }
 
-    public processThought(input: unknown): {
-        content: Array<{ type: string; text: string }>
-        isError?: boolean
-    } {
+    private wrapText(text: string, maxLength: number): string[] {
+        const words = text.split(" ")
+        const lines: string[] = []
+        let currentLine = ""
+
+        for (const word of words) {
+            if (currentLine.length + word.length + 1 <= maxLength) {
+                currentLine += (currentLine ? " " : "") + word
+            } else {
+                lines.push(currentLine)
+                currentLine = word
+            }
+        }
+
+        if (currentLine) {
+            lines.push(currentLine)
+        }
+
+        return lines
+    }
+
+    public processThought(input: unknown): FormattedOutput {
         try {
-            const validatedInput = this.validateThoughtData(input)
+            const thoughtData = this.validateThoughtData(input)
+            const { thoughtNumber, branchId, isRevision, revisesThought } = thoughtData
 
-            if (validatedInput.thoughtNumber > validatedInput.totalThoughts) {
-                validatedInput.totalThoughts = validatedInput.thoughtNumber
-            }
-
-            this.thoughtHistory.push(validatedInput)
-
-            if (validatedInput.branchFromThought && validatedInput.branchId) {
-                if (!this.branches[validatedInput.branchId]) {
-                    this.branches[validatedInput.branchId] = []
+            // Handle branches
+            if (branchId) {
+                if (!this.branches[branchId]) {
+                    this.branches[branchId] = []
                 }
-                this.branches[validatedInput.branchId].push(validatedInput)
+
+                // If this is a revision, update the existing thought in the branch
+                if (isRevision && revisesThought) {
+                    const thoughtIndex = this.branches[branchId].findIndex(
+                        (t) => t.thoughtNumber === revisesThought
+                    )
+                    if (thoughtIndex >= 0) {
+                        this.branches[branchId][thoughtIndex] = thoughtData
+                    } else {
+                        this.branches[branchId].push(thoughtData)
+                    }
+                } else {
+                    this.branches[branchId].push(thoughtData)
+                }
+            } else {
+                // Handle main thought history
+                // If this is a revision, update the existing thought
+                if (isRevision && revisesThought) {
+                    const thoughtIndex = this.thoughtHistory.findIndex(
+                        (t) => t.thoughtNumber === revisesThought
+                    )
+                    if (thoughtIndex >= 0) {
+                        this.thoughtHistory[thoughtIndex] = thoughtData
+                    } else {
+                        this.thoughtHistory.push(thoughtData)
+                    }
+                } else {
+                    this.thoughtHistory.push(thoughtData)
+                }
             }
 
-            const formattedThought = this.formatThought(validatedInput)
-            console.error(formattedThought)
+            const formattedOutput = this.formatThought(thoughtData)
+            console.error(formattedOutput)
 
             return {
                 content: [
@@ -312,9 +308,9 @@ class SequentialThinkingServer {
                         type: "text",
                         text: JSON.stringify(
                             {
-                                thoughtNumber: validatedInput.thoughtNumber,
-                                totalThoughts: validatedInput.totalThoughts,
-                                nextThoughtNeeded: validatedInput.nextThoughtNeeded,
+                                thoughtNumber,
+                                totalThoughts: thoughtData.totalThoughts,
+                                nextThoughtNeeded: thoughtData.nextThoughtNeeded,
                                 branches: Object.keys(this.branches),
                                 thoughtHistoryLength: this.thoughtHistory.length,
                             },
@@ -706,24 +702,23 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 }))
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    const { name, params } = request
     try {
+        // Извлекаем параметры из запроса
+        const params = request.params;
+        const name = params.name;
+
         switch (name) {
             case "mental_model":
-                return modelServer.processModel(params)
+                return modelServer.processModel(params.arguments)
             case "debugging_approach":
-                return debuggingServer.processApproach(params)
+                return debuggingServer.processApproach(params.arguments)
             case "sequential_thinking":
-                return thinkingServer.processThought(params)
-            case "brainstorming":
-                return brainstormingServer.processBrainstorming(params)
-            case "first_thought_advisor":
-                return firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
-            case "stochastic_algorithm":
-                return stochasticAlgorithmServer.processAlgorithm(params)
+                return thinkingServer.processThought(params.arguments)
             case "feature_analyzer":
+                // Используем мост для перенаправления запроса к новой архитектуре
+                // Когда мост будет полностью готов, все инструменты будут работать через него
                 const bridge = new ServerBridge(new ThoughtOrchestrator());
-                return bridge.handleFeatureAnalyzerRequest(params);
+                return bridge.handleFeatureAnalyzerRequest(params.arguments);
             default:
                 throw new McpError(
                     ErrorCode.MethodNotFound,
