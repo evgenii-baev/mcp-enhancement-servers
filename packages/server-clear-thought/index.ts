@@ -789,64 +789,17 @@ class BrainstormingServer {
 // Tool Definitions
 const MENTAL_MODEL_TOOL: Tool = {
     name: "mentalmodel",
-    description: `A comprehensive tool for applying structured mental models to problem-solving.
+    description: `A tool for applying structured mental models to problem-solving.
 
-WHAT IT DOES:
-This tool applies systematic mental models to analyze problems from different perspectives,
-helping to break down complex issues into manageable components and revealing insights
-that might otherwise be missed.
+This tool helps analyze problems from different perspectives using systematic mental models.
+Use it for complex problems, when standard approaches fail, or when you need a fresh perspective.
 
-WHEN TO USE:
-- When facing complex or ambiguous problems
-- When standard approaches aren't yielding results
-- When you need a fresh perspective on a problem
-- When you want to ensure thorough analysis of all aspects
-- When you need to overcome cognitive biases
-- When communicating complex reasoning to others
+Available models include first principles, systems thinking, Occam's razor, and more.
 
-AVAILABLE MODELS:
-${getAllMentalModelIds()
-            .map((id) => {
-                const model = getMentalModelById(id)
-                return `- ${model?.name}: ${model?.definition}`
-            })
-            .join("\n")}
+Usage: Select a model, define your problem, and the tool will apply the model's framework.
+Example: { "modelName": "first_principles", "problem": "Our app is slow" }
 
-HOW TO USE:
-1. Select the most appropriate mental model for your problem
-2. Clearly define your problem statement
-3. The tool will apply the model's framework to your problem
-4. Review the structured analysis and insights
-5. Apply the conclusions to your original problem
-
-EXAMPLES:
-• Input: { "modelName": "first_principles", "problem": "Our application is too slow" }
-  Output: A breakdown of the performance issue into fundamental components, questioning
-  assumptions about what causes slowness, and building a solution from basic truths.
-
-• Input: { "modelName": "systems_thinking", "problem": "Users are abandoning our platform" }
-  Output: Analysis of the platform as an interconnected system, identifying feedback loops,
-  dependencies, and emergent behaviors that might be causing user attrition.
-
-• Input: { "modelName": "occams_razor", "problem": "Our CI pipeline fails intermittently" }
-  Output: Evaluation of possible explanations, prioritizing the simplest ones that adequately
-  explain the observed behavior before considering more complex theories.
-
-INTERPRETING RESULTS:
-The response includes the model name, problem statement, structured analysis steps,
-and conclusions. Use these insights to guide your approach to the original problem.
-
-COMMON ERRORS:
-- Selecting an inappropriate model for your problem type
-- Providing a vague or overly broad problem statement
-- Not following through with the model's recommended steps
-
-RELATED TOOLS:
-- Use sequentialthinking after applying a mental model to work through the solution step by step
-- Use debuggingapproach for specific technical issues once you've identified the general approach
-- Use brainstorming when you need to generate multiple creative solutions based on a mental model
-
-Each model provides a systematic approach to breaking down and solving problems.`,
+See documentation for full list of models and detailed usage instructions.`,
     inputSchema: {
         type: "object",
         properties: {
@@ -866,82 +819,23 @@ Each model provides a systematic approach to breaking down and solving problems.
 
 const DEBUGGING_APPROACH_TOOL: Tool = {
     name: "debuggingapproach",
-    description: `A powerful tool for applying systematic debugging approaches to solve technical issues.
+    description: `A tool for applying systematic debugging approaches to technical issues.
 
-WHAT IT DOES:
-This tool provides structured methodologies for identifying, isolating, and resolving
-technical problems by applying proven debugging strategies tailored to different types of issues.
+This tool provides structured methodologies for identifying and resolving technical problems.
+Use it for complex issues, when standard debugging fails, or when you need a systematic approach.
 
-WHEN TO USE:
-- When facing complex technical problems
-- When standard debugging isn't yielding results
-- When you need a systematic approach to troubleshooting
-- When you want to document your debugging process
-- When teaching others about structured problem-solving
+Available approaches:
+- Binary Search: Narrow down problems by testing midpoints (e.g., find which commit broke the build)
+- Reverse Engineering: Work backward from observed behavior
+- Divide and Conquer: Break complex problems into manageable sub-problems
+- Backtracking: Explore multiple solution paths
+- Cause Elimination: Rule out potential causes systematically
+- Program Slicing: Focus on code affecting specific variables
 
-AVAILABLE APPROACHES:
+Usage: Select an approach, define your issue, and follow the structured steps.
+Example: { "approachName": "binary_search", "issue": "Performance regression" }
 
-1. Binary Search:
-   A divide-and-conquer approach that systematically narrows down the problem space
-   by testing the midpoint and eliminating half the remaining possibilities each time.
-   Best for: Linear problems with clear test criteria (e.g., finding which commit introduced a bug).
-
-2. Reverse Engineering:
-   Working backward from observed behavior to understand underlying mechanisms.
-   Best for: Understanding undocumented systems or unexpected behaviors.
-
-3. Divide and Conquer:
-   Breaking a complex problem into smaller, more manageable sub-problems.
-   Best for: Large, complex systems with multiple potential failure points.
-
-4. Backtracking:
-   Exploring multiple solution paths and backing out when a path proves unsuccessful.
-   Best for: Problems with multiple possible solutions where some paths may be dead ends.
-
-5. Cause Elimination:
-   Systematically identifying and ruling out potential causes until the actual cause is found.
-   Best for: Issues with multiple potential causes that can be individually tested.
-
-6. Program Slicing:
-   Isolating the specific parts of code that could affect a particular variable or behavior.
-   Best for: Understanding data flow and dependencies in complex codebases.
-
-HOW TO USE:
-1. Select the most appropriate debugging approach for your issue
-2. Clearly define the problem you're experiencing
-3. Follow the structured steps provided by the approach
-4. Document your findings at each step
-5. Apply the resolution based on your analysis
-
-EXAMPLES:
-• Input: { "approachName": "binary_search", "issue": "Performance regression in recent release" }
-  Output: A structured approach to identify which change caused the regression by testing
-  midpoints in your commit history until the problematic change is isolated.
-
-• Input: { "approachName": "cause_elimination", "issue": "API requests fail intermittently" }
-  Output: A systematic process to identify potential causes (network, server load, authentication,
-  rate limiting) and methodically rule them out until the actual cause is found.
-
-• Input: { "approachName": "program_slicing", "issue": "Unexpected value in user profile" }
-  Output: Analysis focusing only on code paths that could affect the specific profile field,
-  ignoring unrelated parts of the codebase to efficiently isolate the issue.
-
-INTERPRETING RESULTS:
-The response includes the approach name, issue description, structured steps to follow,
-key findings from the process, and recommended resolution.
-
-COMMON ERRORS:
-- Selecting an inappropriate approach for your issue type
-- Providing insufficient detail about the issue
-- Not following through with all recommended steps
-- Jumping to conclusions before completing the process
-
-RELATED TOOLS:
-- Use mentalmodel first to understand the general problem space before selecting a debugging approach
-- Use sequentialthinking to document your debugging process step by step
-- Use brainstorming to generate multiple potential solutions after identifying the root cause
-
-Each approach provides a structured method for identifying and resolving issues.`,
+See documentation for detailed usage instructions.`,
     inputSchema: {
         type: "object",
         properties: {
@@ -981,108 +875,22 @@ Each approach provides a structured method for identifying and resolving issues.
 
 const SEQUENTIAL_THINKING_TOOL: Tool = {
     name: "sequentialthinking",
-    description: `A sophisticated tool for dynamic and reflective problem-solving through sequential thoughts.
+    description: `A tool for dynamic and reflective problem-solving through sequential thoughts.
 
-WHAT IT DOES:
-This tool facilitates a flexible thinking process that mimics human cognition by allowing
-thoughts to build upon, question, or revise previous insights as understanding deepens.
-It enables non-linear exploration of problem spaces with the ability to branch, revise,
-and extend thinking paths as needed.
+This tool facilitates a flexible thinking process that mimics human cognition, allowing thoughts
+to build upon, question, or revise previous insights as understanding deepens.
 
-WHEN TO USE:
-- Breaking down complex problems into manageable steps
-- Planning and design processes that require flexibility for revision
-- Analysis that might need course correction as new information emerges
-- Problems where the full scope might not be clear initially
-- Problems that require a multi-step solution with dependencies between steps
-- Tasks that need to maintain context over multiple reasoning steps
-- Situations where irrelevant information needs to be filtered out
-- When you need to document your reasoning process for others
-
-KEY FEATURES:
+Key features:
 - Dynamic adjustment of thought quantity as understanding evolves
-- Ability to question or revise previous thoughts when new insights emerge
-- Flexible extension of thinking even after reaching what seemed like the end
-- Expression of uncertainty and exploration of alternative approaches
-- Non-linear thinking with branching and backtracking capabilities
-- Hypothesis generation and verification through structured reasoning
+- Ability to revise previous thoughts when new insights emerge
+- Non-linear thinking with branching capabilities
 - Progressive refinement of solutions through iterative thinking
 
-HOW TO USE:
-1. Start with an initial problem statement and estimate of needed thoughts
-2. Develop each thought sequentially, building on previous insights
-3. When appropriate, revise previous thoughts or branch into new directions
-4. Continue until you reach a satisfactory conclusion
-5. Provide a final thought that synthesizes your reasoning and solution
+Usage: Start with a problem statement, develop thoughts sequentially, revise when needed.
+Example: { "thought": "App is slow due to database queries", "thoughtNumber": 1, "totalThoughts": 5, "nextThoughtNeeded": true }
 
-PARAMETERS EXPLAINED:
-- thought: Your current thinking step in detail. This can be an analysis, observation, hypothesis, revision of previous thinking, or a conclusion. Be specific and thorough to enable meaningful progression.
-- nextThoughtNeeded: Whether another thought step is needed after this one. Set to false only when you've reached a satisfactory conclusion that fully addresses the original problem.
-- thoughtNumber: The sequential number of this thought in your thinking process. Starts at 1 and increments with each new thought, including revisions and branches.
-- totalThoughts: Your current estimate of how many thoughts will be needed to solve the problem. This can be adjusted up or down as your understanding evolves.
-- isRevision: Whether this thought revises or corrects a previous thought. Set to true when you need to update earlier thinking based on new insights or information.
-- revisesThought: If this is a revision (isRevision=true), specify which thought number is being revised or corrected. This creates a clear link between the original thought and its revision.
-- branchFromThought: If this thought starts a new branch of thinking, specify which thought number it branches from. Use when exploring alternative approaches or perspectives.
-- branchId: A unique identifier for this branch of thinking. Use a descriptive name that indicates the nature or purpose of this thinking branch.
-- needsMoreThoughts: Indicates that more thoughts are needed even if you initially thought you were done. Set to true when you realize additional analysis is required.
-
-EXAMPLES:
-• Input: { 
-  "thought": "The application seems slow because of database queries", 
-  "thoughtNumber": 1, 
-  "totalThoughts": 5, 
-  "nextThoughtNeeded": true 
-}
-  Output: A structured response acknowledging the thought and providing guidance for the next step.
-
-• Input: { 
-  "thought": "After profiling, I see that the slowdown is actually in the image processing", 
-  "thoughtNumber": 2, 
-  "totalThoughts": 5, 
-  "isRevision": true, 
-  "revisesThought": 1,
-  "nextThoughtNeeded": true 
-}
-  Output: A response that acknowledges the revision of the previous thought and maintains the context.
-
-• Input: { 
-  "thought": "Let's explore an alternative approach using caching", 
-  "thoughtNumber": 3, 
-  "totalThoughts": 5, 
-  "branchFromThought": 2,
-  "branchId": "caching-solution",
-  "nextThoughtNeeded": true 
-}
-  Output: A response that acknowledges the new branch of thinking and helps explore this direction.
-
-INTERPRETING RESULTS:
-The response will indicate whether another thought is needed and may suggest directions
-for subsequent thinking steps. It maintains the context of your thought process.
-
-COMMON ERRORS:
-- Not providing sufficient detail in each thought
-- Setting nextThoughtNeeded=false prematurely
-- Not revising thoughts when new information contradicts earlier assumptions
-- Failing to adjust totalThoughts when more steps are clearly needed
-- Not properly marking revisions or branches when changing direction
-
-RELATED TOOLS:
-- Use mentalmodel first to select an appropriate mental framework for your problem
-- Use debuggingapproach for specific technical issues that need structured troubleshooting
-- Use brainstorming when you need to generate and evaluate multiple solution paths
-
-BEST PRACTICES:
-1. Start with an initial estimate of needed thoughts, but be ready to adjust
-2. Feel free to question or revise previous thoughts when appropriate
-3. Don't hesitate to add more thoughts if needed, even at the "end"
-4. Express uncertainty when present rather than making unfounded assertions
-5. Mark thoughts that revise previous thinking or branch into new paths
-6. Ignore information that is irrelevant to the current step
-7. Generate a solution hypothesis when appropriate
-8. Verify the hypothesis based on the Chain of Thought steps
-9. Repeat the process until satisfied with the solution
-10. Provide a single, ideally correct answer as the final output
-11. Only set nextThoughtNeeded to false when truly done and a satisfactory answer is reached`,
+Parameters include thought content, thought number, total thoughts estimate, revision flags, and branching options.
+Set nextThoughtNeeded=false only when you've reached a satisfactory conclusion.`,
     inputSchema: {
         type: "object",
         properties: {
@@ -1133,112 +941,22 @@ BEST PRACTICES:
 
 const BRAINSTORMING_TOOL: Tool = {
     name: "brainstorming",
-    description: `A comprehensive tool for facilitating structured brainstorming sessions.
+    description: `A tool for facilitating structured brainstorming sessions.
 
-WHAT IT DOES:
-This tool guides you through a systematic brainstorming process, from preparation to action planning.
-It helps generate, refine, evaluate, and select ideas in a structured way, while leveraging
-appropriate mental models to enhance creativity and effectiveness.
+This tool guides you through a systematic brainstorming process, from preparation to action planning,
+helping generate, refine, evaluate, and select ideas in a structured way.
 
-WHEN TO USE:
-- When you need to generate creative solutions to complex problems
-- When you want to explore multiple approaches to a challenge
-- When you need to involve multiple perspectives in idea generation
-- When you want to systematically evaluate and select the best ideas
-- When you need to break out of conventional thinking patterns
-- When planning new features, products, or strategies
-- When trying to overcome obstacles or bottlenecks
-
-KEY FEATURES:
-- Structured six-phase brainstorming process
-- Integration with mental models to enhance creativity
-- Support for collaborative ideation
-- Idea categorization and evaluation
+Key features:
+- Six-phase process: preparation, ideation, clarification, evaluation, selection, action planning
+- Support for collaborative ideation with multiple participants
+- Idea categorization and voting mechanisms
 - Persistent sessions for ongoing brainstorming
-- Guidance tailored to each phase of the process
 
-HOW TO USE:
-1. Start by creating a new session with a clear topic
-2. Follow the guided process through each phase:
-   - Preparation: Define constraints and participants
-   - Ideation: Generate as many ideas as possible
-   - Clarification: Refine and categorize ideas
-   - Evaluation: Assess ideas objectively
-   - Selection: Choose the best ideas to pursue
-   - Action Planning: Define next steps for implementation
-3. Use recommended mental models to enhance your thinking
-4. Add, categorize, and vote on ideas as you progress
+Usage: Start by creating a session with a topic, then progress through phases.
+Example: { "topic": "Improving user onboarding experience" }
 
-PARAMETERS EXPLAINED:
-- sessionId: Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions.
-- topic: The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session.
-- phase: Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning.
-- ideas: Collection of generated ideas for the brainstorming session. Grows during the ideation phase and gets refined in later phases.
-- newIdea: A new idea to add to the session (only used in ideation phase). Focus on one clear concept per idea for better organization later.
-- category: Category for a new idea being added. Helps with organizing ideas into themes or groups during clarification.
-- buildUpon: ID of an existing idea that this new idea builds upon. Creates connections between related ideas and shows evolution of thinking.
-- voteForIdea: ID of an idea to vote for (only used in evaluation phase). Voting helps identify the most promising ideas for further development.
-- categorizeIdea: Categorize an existing idea (only used in clarification phase). Helps organize ideas into logical groups for evaluation.
-- constraints: Limitations or requirements to consider during brainstorming. Helps focus ideation on practical solutions that meet specific criteria.
-- participants: People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities.
-- timeLimit: Time constraint for the session in minutes. Setting a time limit helps maintain focus and creates productive pressure.
-- recommendedModels: Mental models that can help with this topic. These models provide frameworks for thinking about the problem in different ways.
-- currentStep: Current step in the brainstorming process. Helps track progress within each phase of the session.
-- totalSteps: Total number of steps in the brainstorming process. Provides context for how far along the session has progressed.
-
-EXAMPLES:
-• Input: { "topic": "Improving user onboarding experience" }
-  Output: A structured brainstorming session with recommended mental models and guidance for the preparation phase.
-
-• Input: { 
-  "sessionId": "abc123", 
-  "phase": "ideation", 
-  "newIdea": "Interactive tutorial with gamification elements" 
-}
-  Output: The idea is added to the session and guidance for continuing ideation is provided.
-
-• Input: { 
-  "sessionId": "abc123", 
-  "phase": "clarification", 
-  "categorizeIdea": {
-    "ideaId": "idea456", 
-    "category": "Gamification"
-  }
-}
-  Output: The idea is categorized and guidance for the clarification phase is updated.
-
-• Input: { 
-  "sessionId": "abc123", 
-  "phase": "evaluation", 
-  "voteForIdea": "idea456"
-}
-  Output: A vote is recorded for the idea and guidance for evaluation is provided.
-
-INTERPRETING RESULTS:
-The response includes the session ID, current phase, and number of ideas.
-The console output provides a detailed view of the session, including all ideas,
-recommended models, and guidance for the current phase.
-
-COMMON ERRORS:
-- Not providing a topic when creating a new session
-- Submitting ideas during phases other than ideation
-- Voting on ideas before reaching the evaluation phase
-- Skipping phases in the brainstorming process
-- Not following the recommended mental models
-
-RELATED TOOLS:
-- Use mentalmodel before brainstorming to select appropriate mental frameworks for your topic
-- Use sequentialthinking after brainstorming to develop selected ideas in detail
-- Use debuggingapproach to systematically address challenges identified during brainstorming
-
-BEST PRACTICES:
-1. Define a clear, focused topic for your brainstorming session
-2. Follow the structured process through all phases
-3. Defer judgment during the ideation phase
-4. Use the recommended mental models to stimulate creative thinking
-5. Categorize similar ideas during the clarification phase
-6. Evaluate ideas objectively based on feasibility and impact
-7. Create concrete action plans for selected ideas`,
+Parameters include session ID, topic, phase, ideas collection, constraints, participants, and more.
+Sessions persist across interactions using the sessionId parameter.`,
     inputSchema: {
         type: "object",
         properties: {
