@@ -1,0 +1,121 @@
+{
+    "algorithms": [
+        {
+            "name": "mdp",
+            "fullName": "Markov Decision Process",
+            "description": "A mathematical framework for modeling decision-making in situations where outcomes are partly random and partly under the control of a decision-maker",
+            "components": [
+                "States: Possible situations in the environment",
+                "Actions: Choices available to the decision-maker",
+                "Transition probabilities: Likelihood of moving from one state to another given an action",
+                "Rewards: Immediate return for taking an action in a state",
+                "Discount factor: Value that determines the importance of future rewards"
+            ],
+            "applications": [
+                "Robotics navigation and control",
+                "Resource management and allocation",
+                "Game AI and strategy optimization",
+                "Healthcare treatment planning"
+            ],
+            "bestFor": [
+                "Sequential decision problems",
+                "Environments with clear state transitions",
+                "Problems where future outcomes matter",
+                "Situations with trade-offs between immediate and long-term rewards"
+            ]
+        },
+        {
+            "name": "mcts",
+            "fullName": "Monte Carlo Tree Search",
+            "description": "A heuristic search algorithm for decision processes that combines tree search with random sampling to find optimal decisions",
+            "components": [
+                "Selection: Choose which nodes to explore based on a balance of exploitation and exploration",
+                "Expansion: Add new nodes to the tree",
+                "Simulation: Randomly play out the game from the new node",
+                "Backpropagation: Update node statistics based on simulation results"
+            ],
+            "applications": [
+                "Game AI (Chess, Go, etc.)",
+                "Planning under uncertainty",
+                "Combinatorial optimization",
+                "Real-time decision making"
+            ],
+            "bestFor": [
+                "Large decision spaces where exhaustive search is impractical",
+                "Problems with clear win/loss conditions",
+                "Situations where quick approximate solutions are valuable",
+                "Domains where simulating outcomes is feasible"
+            ]
+        },
+        {
+            "name": "bandit",
+            "fullName": "Multi-Armed Bandit",
+            "description": "A problem where a fixed limited set of resources must be allocated between competing choices to maximize expected gain",
+            "components": [
+                "Arms: Different options or actions available",
+                "Rewards: Payoffs associated with each arm",
+                "Strategies: Methods for balancing exploration and exploitation",
+                "Regret: Difference between optimal and actual performance"
+            ],
+            "applications": [
+                "A/B testing and website optimization",
+                "Clinical trials and drug testing",
+                "Ad placement and recommendation systems",
+                "Resource allocation in uncertain environments"
+            ],
+            "bestFor": [
+                "Exploration vs. exploitation dilemmas",
+                "Limited resources that must be allocated optimally",
+                "Situations where feedback is immediate",
+                "Problems where learning from experience is crucial"
+            ]
+        },
+        {
+            "name": "bayesian",
+            "fullName": "Bayesian Optimization",
+            "description": "A sequential design strategy for global optimization of black-box functions that doesn't require derivatives",
+            "components": [
+                "Surrogate model: Probabilistic model of the objective function",
+                "Acquisition function: Determines which points to evaluate next",
+                "Posterior update: Refines the surrogate model based on new observations",
+                "Exploration-exploitation trade-off: Balance between sampling uncertain regions and promising areas"
+            ],
+            "applications": [
+                "Hyperparameter tuning in machine learning",
+                "Experimental design in science and engineering",
+                "Drug discovery and material design",
+                "Optimizing complex systems with expensive evaluations"
+            ],
+            "bestFor": [
+                "Expensive-to-evaluate objective functions",
+                "Black-box optimization problems",
+                "Situations with limited evaluation budget",
+                "Problems where gradient information is unavailable"
+            ]
+        },
+        {
+            "name": "hmm",
+            "fullName": "Hidden Markov Model",
+            "description": "A statistical model where the system is assumed to be a Markov process with unobservable (hidden) states",
+            "components": [
+                "Hidden states: Unobservable conditions of the system",
+                "Observations: Visible outputs dependent on the hidden state",
+                "Transition probabilities: Likelihood of moving between hidden states",
+                "Emission probabilities: Likelihood of an observation given a hidden state",
+                "Initial state distribution: Probability of starting in each hidden state"
+            ],
+            "applications": [
+                "Speech recognition and natural language processing",
+                "Bioinformatics (gene finding, protein structure prediction)",
+                "Time series analysis and anomaly detection",
+                "User behavior modeling"
+            ],
+            "bestFor": [
+                "Sequential data with underlying patterns",
+                "Systems where direct state observation is impossible",
+                "Pattern recognition in noisy environments",
+                "Temporal data with clear state transitions"
+            ]
+        }
+    ]
+}
