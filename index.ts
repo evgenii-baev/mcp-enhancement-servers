@@ -4,30 +4,45 @@
 
 import { Server, ServerCapability } from './src/interfaces/server-interfaces.js';
 import {
-  MentalModelServer,
-  SequentialThinkingServer,
-  DebuggingApproachServer,
-  BrainstormingServer,
-  StochasticAlgorithmServer,
-  FirstThoughtAdvisorServer
+  // 1. Базовые мыслительные инструменты
+  SequentialThinkingServer,  // Основа последовательного мышления
+  MentalModelServer,  // Применение ментальных моделей
+  DebuggingApproachServer,  // Подходы к отладке
+
+  // 2. Инструменты для генерации идей и анализа
+  FirstThoughtAdvisorServer,  // Помощь в выборе начального подхода
+  BrainstormingServer,  // Структурированный мозговой штурм
+
+  // 3. Специализированные инструменты для сложных задач
+  StochasticAlgorithmServer  // Стохастические алгоритмы
 } from './src/servers/index.js';
 
 // Создание экземпляров серверов
-const mentalModelServer = new MentalModelServer();
+// 1. Базовые мыслительные инструменты
 const sequentialThinkingServer = new SequentialThinkingServer();
+const mentalModelServer = new MentalModelServer();
 const debuggingApproachServer = new DebuggingApproachServer();
-const brainstormingServer = new BrainstormingServer();
-const stochasticAlgorithmServer = new StochasticAlgorithmServer();
+
+// 2. Инструменты для генерации идей и анализа
 const firstThoughtAdvisorServer = new FirstThoughtAdvisorServer();
+const brainstormingServer = new BrainstormingServer();
+
+// 3. Специализированные инструменты для сложных задач
+const stochasticAlgorithmServer = new StochasticAlgorithmServer();
 
 // Экспорт серверов
 export const servers = {
-  mentalModelServer,
+  // 1. Базовые мыслительные инструменты
   sequentialThinkingServer,
+  mentalModelServer,
   debuggingApproachServer,
+
+  // 2. Инструменты для генерации идей и анализа
+  firstThoughtAdvisorServer,
   brainstormingServer,
-  stochasticAlgorithmServer,
-  firstThoughtAdvisorServer
+
+  // 3. Специализированные инструменты для сложных задач
+  stochasticAlgorithmServer
 };
 
 // Функция для получения всех возможностей серверов
@@ -60,12 +75,17 @@ export async function handleServerRequest(
 }
 
 // Экспорт основных классов для использования в других проектах
-export { MentalModelServer } from './src/servers/index.js';
+// 1. Базовые мыслительные инструменты
 export { SequentialThinkingServer } from './src/servers/index.js';
+export { MentalModelServer } from './src/servers/index.js';
 export { DebuggingApproachServer } from './src/servers/index.js';
-export { BrainstormingServer } from './src/servers/index.js';
-export { StochasticAlgorithmServer } from './src/servers/index.js';
+
+// 2. Инструменты для генерации идей и анализа
 export { FirstThoughtAdvisorServer } from './src/servers/index.js';
+export { BrainstormingServer } from './src/servers/index.js';
+
+// 3. Специализированные инструменты для сложных задач
+export { StochasticAlgorithmServer } from './src/servers/index.js';
 
 // Экспорт интерфейсов
 export {

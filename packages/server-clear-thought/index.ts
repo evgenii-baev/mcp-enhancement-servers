@@ -617,15 +617,22 @@ const server = new Server(
     {
         capabilities: {
             tools: {
-                "sequential_thinking": SEQUENTIAL_THINKING_TOOL,
-                "mental_model": MENTAL_MODEL_TOOL,
-                "debugging_approach": DEBUGGING_APPROACH_TOOL,
-                "brainstorming": BRAINSTORMING_TOOL,
-                "stochastic_algorithm": STOCHASTIC_ALGORITHM_TOOL,
-                "first_thought_advisor": FIRST_THOUGHT_ADVISOR_TOOL,
-                "feature_discussion": FEATURE_DISCUSSION_TOOL,
-                "feature_analyzer": FEATURE_ANALYZER_TOOL,
-                "model_selector": MODEL_SELECTOR_TOOL
+                // 1. Базовые мыслительные инструменты (для основных задач мышления)
+                "sequential_thinking": SEQUENTIAL_THINKING_TOOL,  // Основа последовательного мышления
+                "mental_model": MENTAL_MODEL_TOOL,  // Применение ментальных моделей
+                "debugging_approach": DEBUGGING_APPROACH_TOOL,  // Подходы к отладке
+
+                // 2. Инструменты для генерации идей и анализа
+                "first_thought_advisor": FIRST_THOUGHT_ADVISOR_TOOL,  // Помощь в выборе начального подхода
+                "brainstorming": BRAINSTORMING_TOOL,  // Структурированный мозговой штурм
+
+                // 3. Специализированные инструменты для сложных задач
+                "stochastic_algorithm": STOCHASTIC_ALGORITHM_TOOL,  // Стохастические алгоритмы
+                "model_selector": MODEL_SELECTOR_TOOL,  // Выбор оптимальной модели
+
+                // 4. Инструменты для работы с функциями и требованиями
+                "feature_discussion": FEATURE_DISCUSSION_TOOL,  // Обсуждение функций
+                "feature_analyzer": FEATURE_ANALYZER_TOOL  // Анализ функций
             },
         },
     }
@@ -634,15 +641,22 @@ const server = new Server(
 // Request Handlers
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: [
-        SEQUENTIAL_THINKING_TOOL,
-        MENTAL_MODEL_TOOL,
-        DEBUGGING_APPROACH_TOOL,
-        BRAINSTORMING_TOOL,
-        STOCHASTIC_ALGORITHM_TOOL,
-        FIRST_THOUGHT_ADVISOR_TOOL,
-        FEATURE_DISCUSSION_TOOL,
-        FEATURE_ANALYZER_TOOL,
-        MODEL_SELECTOR_TOOL
+        // 1. Базовые мыслительные инструменты (для основных задач мышления)
+        SEQUENTIAL_THINKING_TOOL,  // Основа последовательного мышления
+        MENTAL_MODEL_TOOL,  // Применение ментальных моделей
+        DEBUGGING_APPROACH_TOOL,  // Подходы к отладке
+
+        // 2. Инструменты для генерации идей и анализа
+        FIRST_THOUGHT_ADVISOR_TOOL,  // Помощь в выборе начального подхода
+        BRAINSTORMING_TOOL,  // Структурированный мозговой штурм
+
+        // 3. Специализированные инструменты для сложных задач
+        STOCHASTIC_ALGORITHM_TOOL,  // Стохастические алгоритмы
+        MODEL_SELECTOR_TOOL,  // Выбор оптимальной модели
+
+        // 4. Инструменты для работы с функциями и требованиями
+        FEATURE_DISCUSSION_TOOL,  // Обсуждение функций
+        FEATURE_ANALYZER_TOOL  // Анализ функций
     ],
 }))
 
