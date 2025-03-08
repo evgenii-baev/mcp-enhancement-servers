@@ -89,10 +89,14 @@ Recommends initial thinking approaches for problems.
 
 ### Model Selector Server
 
-Helps select the optimal model for a specific task.
+Helps select the optimal model for a specific task. Now with enhanced capabilities for programming tasks, including architecture selection, design patterns, algorithms, and data structures.
 
 **Capabilities:**
 - `select_model`: Selects the optimal model based on task requirements and constraints
+- `list_models`: Lists all available models, optionally filtered by category
+- `compare_models`: Compares two or more models side by side
+
+See [Model Selector Usage Guide](docs/MODEL_SELECTOR_USAGE.md) for detailed examples and best practices.
 
 ### Sequential Thinking Server
 

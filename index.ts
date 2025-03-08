@@ -6,6 +6,7 @@ import { Server, ServerCapability } from './src/interfaces/server-interfaces.js'
 import {
   // 1. Инструменты для начального анализа и выбора подхода
   FirstThoughtAdvisorServer,  // Помощь в выборе начального подхода
+  ModelSelectorServer,       // Выбор оптимальной модели
 
   // 2. Базовые инструменты структурированного мышления
   SequentialThinkingServer,  // Основа последовательного мышления
@@ -20,6 +21,7 @@ import {
 // Создание экземпляров серверов
 // 1. Инструменты для начального анализа и выбора подхода
 const firstThoughtAdvisorServer = new FirstThoughtAdvisorServer();
+const modelSelectorServer = new ModelSelectorServer();
 
 // 2. Базовые инструменты структурированного мышления
 const sequentialThinkingServer = new SequentialThinkingServer();
@@ -34,6 +36,7 @@ const stochasticAlgorithmServer = new StochasticAlgorithmServer();
 export const servers = {
   // 1. Инструменты для начального анализа и выбора подхода
   firstThoughtAdvisorServer,
+  modelSelectorServer,
 
   // 2. Базовые инструменты структурированного мышления
   sequentialThinkingServer,
@@ -77,6 +80,7 @@ export async function handleServerRequest(
 // Экспорт основных классов для использования в других проектах
 // 1. Инструменты для начального анализа и выбора подхода
 export { FirstThoughtAdvisorServer } from './src/servers/index.js';
+export { ModelSelectorServer } from './src/servers/index.js';
 
 // 2. Базовые инструменты структурированного мышления
 export { SequentialThinkingServer } from './src/servers/index.js';

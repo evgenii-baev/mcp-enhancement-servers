@@ -5,6 +5,9 @@
 import { Server, ServerCapability, ServerRequest, ServerResponse } from '../interfaces/server-interfaces.js';
 import { getAllMentalModelNames } from '../models/mental-models.js';
 
+// Импортируем ModelSelectorServer
+export { ModelSelectorServer } from './model-selector-server.js';
+
 // Базовый класс для серверов
 export class BaseServer implements Server {
     name: string;
