@@ -3,6 +3,8 @@
  */
 
 import { ThoughtOrchestrator } from '../core/thought-orchestrator.js';
+import { FeatureDiscussionAdapter } from '../adapters/feature-discussion-adapter.js';
+import { ToolRequest, ToolResponse } from '../interfaces/tool-metadata.js';
 import { ThinkingLevel } from '../interfaces/tool-metadata.js';
 
 // Класс для моста между серверами

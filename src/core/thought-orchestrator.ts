@@ -2,6 +2,12 @@
  * Оркестратор мыслей
  */
 
+import { ToolInteractionAPI } from './tool-interaction-api.js';
+import { ToolRegistry } from './tool-registry.js';
+import { ThoughtRouter } from './thought-router.js';
+import { IncorporationSystem } from './incorporation-system.js';
+import { ToolMetadata } from '../interfaces/tool-metadata.js';
+
 // Определение типа для результатов инкорпорации
 interface IncorporationResult {
     id: number;
@@ -80,7 +86,7 @@ export class ThoughtOrchestrator {
             summary: `Incorporated ${results.length} results`
         };
 
-        historyItem.incorporatedResults = incorporationResult.incorporations.map((inc: any) => ({
+        historyItem.incorporatedResults = incorporationResult.incorporations.map((inc: { id: number; content: string; timestamp: string; source: string }) => ({
             id: inc.id,
             content: inc.content,
             timestamp: inc.timestamp,
