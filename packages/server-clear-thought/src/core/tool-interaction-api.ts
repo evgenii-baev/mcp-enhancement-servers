@@ -5,7 +5,7 @@
  * включая вызов инструментов, кэширование результатов и управление метаданными.
  */
 
-import { ToolMetadata, IncorporationOptions } from '../interfaces/tool-metadata';
+import { ToolMetadata, IncorporationOptions, ThinkingLevel } from '../interfaces/tool-metadata.js';
 
 /**
  * Результат вызова инструмента
@@ -173,11 +173,11 @@ export class ToolInteractionAPI {
     }
 
     /**
-     * Обрабатывает инкорпорацию других инструментов
+     * Обрабатывает результаты инструментов для включения в другие инструменты
      * @param mainToolName Имя основного инструмента
      * @param params Параметры основного инструмента
-     * @param incorporation Опции инкорпорации
-     * @param context Контекстные данные
+     * @param incorporation Опции включения
+     * @param context Контекст выполнения
      * @returns Обогащенные параметры
      */
     private async handleIncorporation(
@@ -193,7 +193,7 @@ export class ToolInteractionAPI {
 
         // Проверяем, что инструменты могут быть инкорпорированы
         const validTools = incorporation.tools.filter(tool =>
-            toolMetadata.canIncorporate.includes(tool)
+            toolMetadata.interactsWith && toolMetadata.interactsWith.includes(tool)
         );
 
         if (validTools.length === 0) {
@@ -281,11 +281,11 @@ export class ToolInteractionAPI {
     }
 
     /**
-     * Оценивает условие для условной инкорпорации
-     * @param condition Условие (JavaScript-выражение)
-     * @param context Контекстные данные
+     * Оценивает условие для включения результатов
+     * @param condition Условие
+     * @param context Контекст выполнения
      * @param params Параметры инструмента
-     * @returns Результат оценки условия
+     * @returns true, если условие выполнено, иначе false
      */
     private evaluateCondition(
         condition: string,
@@ -303,9 +303,9 @@ export class ToolInteractionAPI {
     }
 
     /**
-     * Обогащает параметры результатами другого инструмента
+     * Обогащает параметры результатами других инструментов
      * @param params Исходные параметры
-     * @param result Результат другого инструмента
+     * @param result Результат для включения
      * @returns Обогащенные параметры
      */
     private enrichParams(params: any, result: any): any {
@@ -415,8 +415,27 @@ export class ToolInteractionAPI {
      * @param level Уровень инструментов
      * @returns Массив метаданных инструментов указанного уровня
      */
-    public getToolMetadataByLevel(level: number): ToolMetadata[] {
+    public getToolMetadataByLevel(level: ThinkingLevel): ToolMetadata[] {
         return Array.from(this.toolMetadataRepository.values())
             .filter(metadata => metadata.level === level);
+    }
+
+    /**
+     * Регистрирует инструмент в API
+     * @param toolName Имя инструмента
+     * @param toolImplementation Реализация инструмента
+     * @returns true, если инструмент успешно зарегистрирован, иначе false
+     */
+    public registerTool(toolName: string, toolImplementation: any): boolean {
+        if (!toolName || !toolImplementation) {
+            return false;
+        }
+
+        // Регистрируем инструмент в сервере
+        if (this.server && typeof this.server.registerTool === 'function') {
+            this.server.registerTool(toolName, toolImplementation);
+        }
+
+        return true;
     }
 } 

@@ -5,8 +5,8 @@
  * и рекомендации по реализации на основе входных данных от обсуждения функций.
  */
 
-import { ToolMetadata, ThinkingLevel, ToolType, ToolParameter } from '../interfaces/tool-metadata';
-import { FeatureDiscussionResult } from '../adapters/feature-discussion-adapter';
+import { ToolMetadata, ThinkingLevel, ToolType, ToolParameter } from '../interfaces/tool-metadata.js';
+import { FeatureDiscussionResult } from '../adapters/feature-discussion-adapter.js';
 
 /**
  * Результат анализа требований

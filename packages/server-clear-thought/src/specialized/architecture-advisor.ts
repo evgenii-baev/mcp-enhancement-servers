@@ -5,8 +5,8 @@
  * требований к функциям и контекста проекта.
  */
 
-import { ToolMetadata, ThinkingLevel, ToolType } from '../interfaces/tool-metadata';
-import { RequirementsAnalysisResult } from './feature-analyzer';
+import { ToolMetadata, ThinkingLevel, ToolType } from '../interfaces/tool-metadata.js';
+import { RequirementsAnalysisResult } from './feature-analyzer.js';
 
 /**
  * Компонент архитектуры

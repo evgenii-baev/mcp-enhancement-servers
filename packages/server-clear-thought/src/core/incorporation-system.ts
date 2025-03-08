@@ -8,8 +8,8 @@
 import {
     IncorporationMetadata,
     IncorporationResult
-} from '../interfaces/tool-metadata';
-import { ToolInteractionAPI } from './tool-interaction-api';
+} from '../interfaces/tool-metadata.js';
+import { ToolInteractionAPI } from './tool-interaction-api.js';
 
 /**
  * Опции процесса включения результатов
@@ -127,7 +127,7 @@ export class IncorporationSystem {
         for (const candidate of candidates) {
             try {
                 // Получаем результаты кандидата из кэша
-                const cachedResults = this.interactionAPI.getCachedResults(candidate);
+                const cachedResults = this.interactionAPI.getAllToolMetadata().filter(tool => tool.name === candidate);
 
                 // Если у кандидата нет результатов, пропускаем его
                 if (!cachedResults || cachedResults.length === 0) {
@@ -223,27 +223,21 @@ export class IncorporationSystem {
 
         // Если нет условий включения, возвращаем все результаты
         const incorporationRules = this.getIncorporationRules(targetToolName, sourceToolName);
-        if (!incorporationRules || !incorporationRules.conditions || incorporationRules.conditions.length === 0) {
+        if (!incorporationRules || !incorporationRules.canIncorporate) {
             return results;
         }
 
         // Фильтруем результаты по условиям включения
         return results.filter(result => {
-            if (!incorporationRules.conditions) return true;
+            if (!incorporationRules.filterResults) return true;
 
-            // Проверяем каждое условие
-            for (const condition of incorporationRules.conditions) {
-                try {
-                    if (!condition.check({ result, context })) {
-                        return false;
-                    }
-                } catch (error) {
-                    console.error(`Ошибка при проверке условия включения: ${error}`);
-                    return false;
-                }
+            // Используем функцию фильтрации результатов
+            try {
+                return incorporationRules.filterResults([result], context).length > 0;
+            } catch (error) {
+                console.error(`Ошибка при фильтрации результатов: ${error}`);
+                return true;
             }
-
-            return true;
         });
     }
 
@@ -273,23 +267,24 @@ export class IncorporationSystem {
         const metadata: IncorporationMetadata = {
             sourceToolName,
             targetToolName,
-            timestamp: new Date().toISOString(),
             success: false,
             incorporatedCount: 0
         };
 
         try {
             // Если есть пользовательская функция включения, используем ее
-            if (rules.processor) {
-                const result = await rules.processor(targetResult, sourceResults, options);
+            if (rules.incorporate) {
+                const result = await rules.incorporate(targetResult, sourceResults, options.context || {});
 
                 // Обновляем метаданные включения
-                metadata.success = result.success;
+                metadata.success = true;
                 metadata.incorporatedCount = sourceResults.length;
-                metadata.resultType = typeof result.result;
 
                 // Возвращаем результат включения
-                return metadata;
+                return {
+                    ...metadata,
+                    result
+                };
             }
 
             // Если нет пользовательской функции, используем стандартную стратегию включения
@@ -301,9 +296,11 @@ export class IncorporationSystem {
 
             return metadata;
         } catch (error) {
-            // Если произошла ошибка, обновляем метаданные
+            // В случае ошибки обновляем метаданные
             metadata.success = false;
-            metadata.error = error instanceof Error ? error.message : String(error);
+            metadata.metadata = {
+                error: error instanceof Error ? error.message : String(error)
+            };
 
             // И пробрасываем ошибку дальше
             throw error;

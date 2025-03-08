@@ -5,7 +5,7 @@
  * и функциональностью обсуждения особенностей.
  */
 
-import { ToolMetadata, ThinkingLevel, ToolType } from '../interfaces/tool-metadata';
+import { ToolMetadata, ThinkingLevel, ToolType } from '../interfaces/tool-metadata.js';
 
 /**
  * Интерфейс для функций обсуждения особенностей
