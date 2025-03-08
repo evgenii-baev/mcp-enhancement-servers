@@ -29,6 +29,7 @@ interface FeatureDiscussionData {
     title: string;
     prompts: FeatureDiscussionPrompt[];
     responses: FeatureDiscussionResponse[];
+    fullText?: string; // Полный текст обсуждения для анализа
 }
 
 /**
@@ -412,11 +413,25 @@ export class FeatureDiscussionAdapter {
                 response: r.response || r.content || ''
             })) || [];
 
+            // Создаем полный текст обсуждения для анализа
+            let fullText = `Feature: ${externalData.title}\n\n`;
+
+            // Добавляем текст всех промптов и ответов
+            prompts.forEach(prompt => {
+                fullText += `${prompt.type}: ${prompt.text}\n`;
+            });
+
+            responses.forEach(response => {
+                const relatedPrompt = prompts.find(p => p.id === response.promptId);
+                fullText += `Response to ${relatedPrompt?.type || 'prompt'}: ${response.response}\n`;
+            });
+
             return {
                 featureId: externalData.id,
                 title: externalData.title,
                 prompts,
-                responses
+                responses,
+                fullText
             };
         } catch (error) {
             throw new McpError(

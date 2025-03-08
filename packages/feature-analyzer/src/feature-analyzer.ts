@@ -95,16 +95,170 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
      */
     private async extractRequirements(params: FeatureAnalysisParams): Promise<Requirement[]> {
         const requirements: Requirement[] = [];
+        const processedDescriptions = new Set<string>(); // Для дедупликации
+
+        // Словари для определения типа требований
+        const requirementTypeKeywords = {
+            [RequirementType.FUNCTIONAL]: [
+                'должен', 'should', 'shall', 'must', 'needs to', 'will', 'функция', 'function',
+                'feature', 'capability', 'ability', 'enable', 'implement', 'provide', 'support',
+                'allow', 'create', 'generate', 'process', 'handle', 'manage', 'control', 'operate',
+                'выполнять', 'создавать', 'обрабатывать', 'управлять', 'контролировать'
+            ],
+            [RequirementType.PERFORMANCE]: [
+                'performance', 'speed', 'fast', 'efficient', 'response time', 'latency', 'throughput',
+                'scalable', 'scale', 'load', 'capacity', 'concurrent', 'parallel', 'optimize',
+                'производительность', 'скорость', 'быстро', 'эффективно', 'время отклика', 'задержка',
+                'пропускная способность', 'масштабируемый', 'нагрузка', 'оптимизировать'
+            ],
+            [RequirementType.SECURITY]: [
+                'security', 'secure', 'protect', 'encryption', 'encrypted', 'authentication',
+                'authorization', 'permission', 'access control', 'confidential', 'integrity',
+                'privacy', 'безопасность', 'защита', 'шифрование', 'аутентификация', 'авторизация',
+                'разрешение', 'контроль доступа', 'конфиденциальность', 'целостность', 'приватность'
+            ],
+            [RequirementType.USER_INTERFACE]: [
+                'ui', 'user interface', 'gui', 'display', 'screen', 'view', 'layout', 'design',
+                'user experience', 'ux', 'usability', 'accessible', 'responsive', 'mobile',
+                'интерфейс', 'отображение', 'экран', 'вид', 'макет', 'дизайн', 'пользовательский опыт',
+                'удобство использования', 'доступность', 'адаптивный', 'мобильный'
+            ],
+            [RequirementType.COMPATIBILITY]: [
+                'compatible', 'compatibility', 'interoperable', 'interoperability', 'integration',
+                'platform', 'browser', 'device', 'operating system', 'version', 'backward compatible',
+                'совместимый', 'совместимость', 'взаимодействие', 'интеграция', 'платформа',
+                'браузер', 'устройство', 'операционная система', 'версия', 'обратная совместимость'
+            ],
+            [RequirementType.RELIABILITY]: [
+                'reliable', 'reliability', 'stable', 'stability', 'robust', 'resilient', 'fault tolerant',
+                'recovery', 'backup', 'availability', 'uptime', 'error handling', 'exception handling',
+                'надежный', 'надежность', 'стабильный', 'стабильность', 'устойчивый', 'отказоустойчивый',
+                'восстановление', 'резервное копирование', 'доступность', 'время безотказной работы',
+                'обработка ошибок', 'обработка исключений'
+            ]
+        };
+
+        // Словари для определения приоритета требований
+        const priorityKeywords = {
+            [RequirementPriority.HIGH]: [
+                'critical', 'essential', 'highest priority', 'high priority', 'must have', 'required',
+                'mandatory', 'necessary', 'vital', 'crucial', 'important', 'key', 'core', 'fundamental',
+                'критический', 'существенный', 'высший приоритет', 'высокий приоритет', 'обязательно',
+                'необходимо', 'жизненно важный', 'ключевой', 'основной', 'фундаментальный'
+            ],
+            [RequirementPriority.MEDIUM]: [
+                'should have', 'medium priority', 'important', 'significant', 'valuable', 'useful',
+                'desired', 'expected', 'standard', 'normal', 'средний приоритет', 'важный', 'значимый',
+                'ценный', 'полезный', 'желаемый', 'ожидаемый', 'стандартный', 'нормальный'
+            ],
+            [RequirementPriority.LOW]: [
+                'nice to have', 'low priority', 'optional', 'desirable', 'additional', 'enhancement',
+                'improvement', 'bonus', 'secondary', 'tertiary', 'when possible', 'if possible',
+                'низкий приоритет', 'опциональный', 'желательный', 'дополнительный', 'улучшение',
+                'бонус', 'вторичный', 'третичный', 'когда возможно', 'если возможно'
+            ]
+        };
+
+        /**
+         * Определяет тип требования на основе его описания
+         */
+        const determineRequirementType = (description: string): RequirementType => {
+            description = description.toLowerCase();
+
+            // Проверяем каждый тип требований
+            for (const [type, keywords] of Object.entries(requirementTypeKeywords)) {
+                for (const keyword of keywords) {
+                    if (description.includes(keyword.toLowerCase())) {
+                        return type as RequirementType;
+                    }
+                }
+            }
+
+            // По умолчанию - функциональное требование
+            return RequirementType.FUNCTIONAL;
+        };
+
+        /**
+         * Определяет приоритет требования на основе его описания
+         */
+        const determineRequirementPriority = (description: string): RequirementPriority => {
+            description = description.toLowerCase();
+
+            // Проверяем каждый уровень приоритета
+            for (const [priority, keywords] of Object.entries(priorityKeywords)) {
+                for (const keyword of keywords) {
+                    if (description.includes(keyword.toLowerCase())) {
+                        return priority as RequirementPriority;
+                    }
+                }
+            }
+
+            // По умолчанию - средний приоритет
+            return RequirementPriority.MEDIUM;
+        };
+
+        /**
+         * Извлекает отдельные требования из текста
+         */
+        const extractRequirementsFromText = (text: string, source: string): Requirement[] => {
+            const extractedRequirements: Requirement[] = [];
+
+            // Разбиваем текст на предложения
+            const sentences = text.split(/[.!?]/).filter(s => s.trim().length > 0);
+
+            // Анализируем каждое предложение
+            for (const sentence of sentences) {
+                const trimmedSentence = sentence.trim();
+
+                // Пропускаем короткие предложения и дубликаты
+                if (trimmedSentence.length < 10 || processedDescriptions.has(trimmedSentence)) {
+                    continue;
+                }
+
+                // Проверяем, содержит ли предложение требование
+                const containsRequirement = [
+                    'должен', 'should', 'shall', 'must', 'needs to', 'will', 'can', 'could',
+                    'требуется', 'необходимо', 'важно', 'нужно', 'следует', 'может', 'способен'
+                ].some(keyword => trimmedSentence.toLowerCase().includes(keyword));
+
+                if (containsRequirement) {
+                    const type = determineRequirementType(trimmedSentence);
+                    const priority = determineRequirementPriority(trimmedSentence);
+
+                    extractedRequirements.push({
+                        id: `req_${requirements.length + extractedRequirements.length + 1}`,
+                        description: trimmedSentence,
+                        type,
+                        priority,
+                        source
+                    });
+
+                    processedDescriptions.add(trimmedSentence);
+                }
+            }
+
+            return extractedRequirements;
+        };
 
         // Извлечение требований из описания функции
         if (params.featureDescription) {
-            requirements.push({
-                id: `req_${requirements.length + 1}`,
-                description: `Initial requirement extracted from feature description: ${params.featureTitle}`,
-                type: RequirementType.FUNCTIONAL,
-                priority: RequirementPriority.MEDIUM,
-                source: 'feature_description'
-            });
+            const featureRequirements = extractRequirementsFromText(
+                params.featureDescription,
+                'feature_description'
+            );
+
+            // Если не удалось извлечь требования из описания, создаем одно общее
+            if (featureRequirements.length === 0) {
+                requirements.push({
+                    id: `req_${requirements.length + 1}`,
+                    description: `Feature requirement: ${params.featureTitle}`,
+                    type: RequirementType.FUNCTIONAL,
+                    priority: RequirementPriority.MEDIUM,
+                    source: 'feature_description'
+                });
+            } else {
+                requirements.push(...featureRequirements);
+            }
         }
 
         // Извлечение требований из данных обсуждения с использованием адаптера
@@ -113,11 +267,41 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
                 // Преобразование данных обсуждения в наш формат
                 const discussionData = FeatureDiscussionAdapter.fromExternalFormat(params.discussionData);
 
-                // Извлечение требований из данных обсуждения
+                // Извлечение требований из данных обсуждения через адаптер
                 const discussionRequirements = FeatureDiscussionAdapter.extractRequirements(discussionData);
 
+                // Дополнительный анализ и обогащение требований из обсуждения
+                const enhancedDiscussionRequirements = discussionRequirements.map(req => {
+                    // Если тип или приоритет не определены адаптером, определяем их
+                    if (req.type === RequirementType.FUNCTIONAL) {
+                        req.type = determineRequirementType(req.description);
+                    }
+
+                    if (req.priority === RequirementPriority.MEDIUM) {
+                        req.priority = determineRequirementPriority(req.description);
+                    }
+
+                    // Проверяем, не дублирует ли это требование уже существующее
+                    if (!processedDescriptions.has(req.description)) {
+                        processedDescriptions.add(req.description);
+                        return req;
+                    }
+
+                    return null;
+                }).filter(req => req !== null) as Requirement[];
+
                 // Добавление требований из обсуждения
-                requirements.push(...discussionRequirements);
+                requirements.push(...enhancedDiscussionRequirements);
+
+                // Дополнительно анализируем весь текст обсуждения для выявления неявных требований
+                if (discussionData.fullText) {
+                    const implicitRequirements = extractRequirementsFromText(
+                        discussionData.fullText,
+                        'discussion_implicit'
+                    );
+
+                    requirements.push(...implicitRequirements);
+                }
             } catch (error) {
                 console.warn(`Warning: Failed to extract requirements from discussion data: ${(error as Error).message}`);
             }
@@ -125,18 +309,59 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
 
         // Добавление дополнительных требований
         if (params.additionalRequirements && params.additionalRequirements.length > 0) {
-            params.additionalRequirements.forEach((req, index) => {
+            params.additionalRequirements.forEach((req) => {
+                // Пропускаем дубликаты
+                if (processedDescriptions.has(req)) {
+                    return;
+                }
+
+                const type = determineRequirementType(req);
+                const priority = determineRequirementPriority(req);
+
                 requirements.push({
                     id: `req_${requirements.length + 1}`,
                     description: req,
-                    type: RequirementType.FUNCTIONAL, // По умолчанию
-                    priority: RequirementPriority.MEDIUM, // По умолчанию
+                    type,
+                    priority,
                     source: 'user_input'
                 });
+
+                processedDescriptions.add(req);
             });
         }
 
-        return requirements;
+        // Валидация и нормализация требований
+        const validatedRequirements = requirements.map(req => {
+            // Убедимся, что у требования есть все необходимые поля
+            if (!req.id) {
+                req.id = `req_${Math.random().toString(36).substring(2, 11)}`;
+            }
+
+            if (!req.description) {
+                return null; // Пропускаем требования без описания
+            }
+
+            // Нормализуем описание (убираем лишние пробелы, переносы строк и т.д.)
+            req.description = req.description.replace(/\s+/g, ' ').trim();
+
+            // Убедимся, что тип и приоритет установлены
+            if (!req.type) {
+                req.type = RequirementType.FUNCTIONAL;
+            }
+
+            if (!req.priority) {
+                req.priority = RequirementPriority.MEDIUM;
+            }
+
+            // Убедимся, что источник указан
+            if (!req.source) {
+                req.source = 'unknown';
+            }
+
+            return req;
+        }).filter(req => req !== null) as Requirement[];
+
+        return validatedRequirements;
     }
 
     /**
@@ -1193,25 +1418,227 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
      * @returns Техническая спецификация
      */
     async generateTechnicalSpecification(analysisResult: RequirementsAnalysisResult): Promise<TechnicalSpecification> {
-        // TODO: Реализовать генерацию детальной технической спецификации
-        // Это заглушка для демонстрации
+        // Группировка требований по типам для удобства обработки
+        const requirementsByType: Record<string, Requirement[]> = {};
+
+        // Инициализация групп для всех типов требований
+        Object.values(RequirementType).forEach(type => {
+            requirementsByType[type] = [];
+        });
+
+        // Группировка требований по приоритетам
+        const requirementsByPriority: Record<string, Requirement[]> = {};
+
+        // Инициализация групп для всех приоритетов
+        Object.values(RequirementPriority).forEach(priority => {
+            requirementsByPriority[priority] = [];
+        });
+
+        // Заполнение групп требований
+        analysisResult.requirements.forEach(req => {
+            requirementsByType[req.type].push(req);
+            requirementsByPriority[req.priority].push(req);
+        });
+
+        // Создание компонентов на основе типов требований
+        const components: {
+            name: string;
+            description: string;
+            responsibilities: string[];
+            interfaces: string[];
+            dependencies: string[];
+        }[] = [];
+
+        // Компонент бизнес-логики (на основе функциональных требований)
+        if (requirementsByType[RequirementType.FUNCTIONAL].length > 0) {
+            const functionalReqs = requirementsByType[RequirementType.FUNCTIONAL];
+            components.push({
+                name: 'BusinessLogicComponent',
+                description: 'Handles core business logic for the feature',
+                responsibilities: functionalReqs.map(req =>
+                    `Handle ${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}`
+                ),
+                interfaces: ['IBusinessLogic'],
+                dependencies: []
+            });
+        }
+
+        // Компонент пользовательского интерфейса
+        if (requirementsByType[RequirementType.USER_INTERFACE].length > 0) {
+            const uiReqs = requirementsByType[RequirementType.USER_INTERFACE];
+            components.push({
+                name: 'UserInterfaceComponent',
+                description: 'Provides user interface for the feature',
+                responsibilities: uiReqs.map(req =>
+                    `Implement ${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}`
+                ),
+                interfaces: ['IUserInterface'],
+                dependencies: ['BusinessLogicComponent']
+            });
+        }
+
+        // Компонент безопасности
+        if (requirementsByType[RequirementType.SECURITY].length > 0) {
+            const secReqs = requirementsByType[RequirementType.SECURITY];
+            components.push({
+                name: 'SecurityComponent',
+                description: 'Handles security aspects of the feature',
+                responsibilities: secReqs.map(req =>
+                    `Secure ${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}`
+                ),
+                interfaces: ['ISecurity'],
+                dependencies: ['BusinessLogicComponent']
+            });
+        }
+
+        // Компонент производительности
+        if (requirementsByType[RequirementType.PERFORMANCE].length > 0) {
+            const perfReqs = requirementsByType[RequirementType.PERFORMANCE];
+            components.push({
+                name: 'PerformanceComponent',
+                description: 'Ensures performance requirements are met',
+                responsibilities: perfReqs.map(req =>
+                    `Optimize ${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}`
+                ),
+                interfaces: ['IPerformanceMonitor'],
+                dependencies: ['BusinessLogicComponent']
+            });
+        }
+
+        // Генерация API на основе функциональных требований
+        const apis: string[] = [];
+
+        requirementsByType[RequirementType.FUNCTIONAL].forEach(req => {
+            // Определяем тип API на основе описания требования
+            if (req.description.toLowerCase().includes('get') ||
+                req.description.toLowerCase().includes('retrieve') ||
+                req.description.toLowerCase().includes('view')) {
+                apis.push(`GET /api/${analysisResult.featureId.toLowerCase()}/${req.id.replace('req_', '')}`);
+            } else if (req.description.toLowerCase().includes('create') ||
+                req.description.toLowerCase().includes('add')) {
+                apis.push(`POST /api/${analysisResult.featureId.toLowerCase()}`);
+            } else if (req.description.toLowerCase().includes('update') ||
+                req.description.toLowerCase().includes('modify')) {
+                apis.push(`PUT /api/${analysisResult.featureId.toLowerCase()}/{id}`);
+            } else if (req.description.toLowerCase().includes('delete') ||
+                req.description.toLowerCase().includes('remove')) {
+                apis.push(`DELETE /api/${analysisResult.featureId.toLowerCase()}/{id}`);
+            } else if (req.description.toLowerCase().includes('search') ||
+                req.description.toLowerCase().includes('find')) {
+                apis.push(`GET /api/${analysisResult.featureId.toLowerCase()}/search?query={query}`);
+            }
+        });
+
+        // Если не удалось сгенерировать API, добавляем базовые CRUD операции
+        if (apis.length === 0) {
+            apis.push(`GET /api/${analysisResult.featureId.toLowerCase()}`);
+            apis.push(`GET /api/${analysisResult.featureId.toLowerCase()}/{id}`);
+            apis.push(`POST /api/${analysisResult.featureId.toLowerCase()}`);
+            apis.push(`PUT /api/${analysisResult.featureId.toLowerCase()}/{id}`);
+            apis.push(`DELETE /api/${analysisResult.featureId.toLowerCase()}/{id}`);
+        }
+
+        // Генерация структур данных на основе требований
+        const dataStructures: string[] = [];
+
+        // Основная структура данных для функции
+        dataStructures.push(`${analysisResult.featureId}Data`);
+
+        // Дополнительные структуры данных на основе типов требований
+        if (requirementsByType[RequirementType.USER_INTERFACE].length > 0) {
+            dataStructures.push(`${analysisResult.featureId}UIModel`);
+        }
+
+        if (requirementsByType[RequirementType.SECURITY].length > 0) {
+            dataStructures.push(`${analysisResult.featureId}SecurityContext`);
+        }
+
+        // Генерация стратегии тестирования
+        let testingStrategy = '';
+
+        // Базовые тесты для всех типов требований
+        testingStrategy += 'Unit tests for all components\n';
+        testingStrategy += 'Integration tests for component interactions\n';
+
+        // Специфические тесты в зависимости от типов требований
+        if (requirementsByType[RequirementType.PERFORMANCE].length > 0) {
+            testingStrategy += 'Performance tests for measuring response times and throughput\n';
+        }
+
+        if (requirementsByType[RequirementType.SECURITY].length > 0) {
+            testingStrategy += 'Security tests including penetration testing and vulnerability scanning\n';
+        }
+
+        if (requirementsByType[RequirementType.USER_INTERFACE].length > 0) {
+            testingStrategy += 'UI tests including usability testing and cross-browser compatibility\n';
+        }
+
+        // Стратегия реализации на основе приоритетов и зависимостей
+        let implementationStrategy = '';
+
+        // Фазы реализации
+        implementationStrategy += 'Phase 1: Core functionality (high-priority requirements)\n';
+        implementationStrategy += 'Phase 2: Additional features (medium-priority requirements)\n';
+        implementationStrategy += 'Phase 3: Enhancements and optimizations (low-priority requirements)\n';
+
+        // Учет противоречий
+        if (analysisResult.contradictions && analysisResult.contradictions.conflictsFound) {
+            implementationStrategy += '\nConflict resolution strategy:\n';
+
+            analysisResult.contradictions.conflicts?.forEach(conflict => {
+                implementationStrategy += `- ${conflict.description}\n`;
+
+                if (conflict.resolutionOptions && conflict.resolutionOptions.length > 0) {
+                    implementationStrategy += '  Possible resolutions:\n';
+                    conflict.resolutionOptions.forEach(option => {
+                        implementationStrategy += `  * ${option}\n`;
+                    });
+                }
+            });
+        }
+
+        // Оценка рисков на основе сложности
+        let riskAssessment = '';
+
+        if (analysisResult.complexity) {
+            riskAssessment += `Overall complexity: ${analysisResult.complexity.overallComplexity}\n\n`;
+
+            // Определяем уровень риска на основе сложности
+            let riskLevel = 'Low';
+            if (analysisResult.complexity.overallComplexity > 7) {
+                riskLevel = 'High';
+            } else if (analysisResult.complexity.overallComplexity > 4) {
+                riskLevel = 'Medium';
+            }
+
+            riskAssessment += `Risk level: ${riskLevel}\n\n`;
+
+            // Рекомендации по снижению рисков
+            riskAssessment += 'Risk mitigation strategies:\n';
+
+            if (riskLevel === 'High') {
+                riskAssessment += '- Consider breaking down the feature into smaller, manageable sub-features\n';
+                riskAssessment += '- Implement a proof-of-concept for the most complex aspects first\n';
+                riskAssessment += '- Allocate additional resources and time for testing and debugging\n';
+            } else if (riskLevel === 'Medium') {
+                riskAssessment += '- Focus on thorough testing of the most complex components\n';
+                riskAssessment += '- Implement incremental delivery to validate assumptions early\n';
+            } else {
+                riskAssessment += '- Follow standard development and testing practices\n';
+                riskAssessment += '- Ensure proper code reviews and documentation\n';
+            }
+        }
 
         return {
             id: `spec_${analysisResult.featureId}`,
             featureId: analysisResult.featureId,
             overview: `Technical specification for feature ${analysisResult.featureId}`,
-            components: [
-                {
-                    name: 'MainComponent',
-                    description: 'Main component for the feature implementation',
-                    responsibilities: ['Handle core feature logic'],
-                    interfaces: ['IMainComponent'],
-                    dependencies: []
-                }
-            ],
-            apis: ['GET /api/feature/{featureId}'],
-            dataStructures: ['FeatureData'],
-            testingStrategy: 'Unit tests + Integration tests'
+            components,
+            apis,
+            dataStructures,
+            testingStrategy,
+            implementationStrategy,
+            riskAssessment
         };
     }
 } 

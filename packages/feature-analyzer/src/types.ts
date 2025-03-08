@@ -108,6 +108,8 @@ export interface TechnicalSpecification {
     securityConsiderations?: string[];
     performanceRequirements?: string[];
     testingStrategy?: string;
+    implementationStrategy?: string;
+    riskAssessment?: string;
 }
 
 /**
