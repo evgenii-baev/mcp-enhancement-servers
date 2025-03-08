@@ -617,18 +617,18 @@ const server = new Server(
     {
         capabilities: {
             tools: {
-                // 1. Базовые мыслительные инструменты (для основных задач мышления)
+                // 1. Инструменты для начального анализа и выбора подхода
+                "first_thought_advisor": FIRST_THOUGHT_ADVISOR_TOOL,  // Помощь в выборе начального подхода
+                "model_selector": MODEL_SELECTOR_TOOL,  // Выбор оптимальной модели для задачи
+
+                // 2. Базовые инструменты структурированного мышления
                 "sequential_thinking": SEQUENTIAL_THINKING_TOOL,  // Основа последовательного мышления
                 "mental_model": MENTAL_MODEL_TOOL,  // Применение ментальных моделей
                 "debugging_approach": DEBUGGING_APPROACH_TOOL,  // Подходы к отладке
 
-                // 2. Инструменты для генерации идей и анализа
-                "first_thought_advisor": FIRST_THOUGHT_ADVISOR_TOOL,  // Помощь в выборе начального подхода
+                // 3. Инструменты для генерации и оптимизации решений
                 "brainstorming": BRAINSTORMING_TOOL,  // Структурированный мозговой штурм
-
-                // 3. Специализированные инструменты для сложных задач
                 "stochastic_algorithm": STOCHASTIC_ALGORITHM_TOOL,  // Стохастические алгоритмы
-                "model_selector": MODEL_SELECTOR_TOOL,  // Выбор оптимальной модели
 
                 // 4. Инструменты для работы с функциями и требованиями
                 "feature_discussion": FEATURE_DISCUSSION_TOOL,  // Обсуждение функций
@@ -641,18 +641,18 @@ const server = new Server(
 // Request Handlers
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: [
-        // 1. Базовые мыслительные инструменты (для основных задач мышления)
+        // 1. Инструменты для начального анализа и выбора подхода
+        FIRST_THOUGHT_ADVISOR_TOOL,  // Помощь в выборе начального подхода
+        MODEL_SELECTOR_TOOL,  // Выбор оптимальной модели для задачи
+
+        // 2. Базовые инструменты структурированного мышления
         SEQUENTIAL_THINKING_TOOL,  // Основа последовательного мышления
         MENTAL_MODEL_TOOL,  // Применение ментальных моделей
         DEBUGGING_APPROACH_TOOL,  // Подходы к отладке
 
-        // 2. Инструменты для генерации идей и анализа
-        FIRST_THOUGHT_ADVISOR_TOOL,  // Помощь в выборе начального подхода
+        // 3. Инструменты для генерации и оптимизации решений
         BRAINSTORMING_TOOL,  // Структурированный мозговой штурм
-
-        // 3. Специализированные инструменты для сложных задач
         STOCHASTIC_ALGORITHM_TOOL,  // Стохастические алгоритмы
-        MODEL_SELECTOR_TOOL,  // Выбор оптимальной модели
 
         // 4. Инструменты для работы с функциями и требованиями
         FEATURE_DISCUSSION_TOOL,  // Обсуждение функций
