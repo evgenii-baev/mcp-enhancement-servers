@@ -12,480 +12,250 @@ import {
 // Fixed chalk import for ESM
 import chalk from 'chalk';
 
-// Data Interfaces
-interface ThoughtData {
-  thought: string;
-  thoughtNumber: number;
-  totalThoughts: number;
-  isRevision?: boolean;
-  revisesThought?: number;
-  branchFromThought?: number;
-  branchId?: string;
-  needsMoreThoughts?: boolean;
-  nextThoughtNeeded: boolean;
-}
+// Import tools
+import { MENTAL_MODEL_TOOL } from "./src/tools/mental-model-tool.js";
+import { SEQUENTIAL_THINKING_TOOL } from "./src/tools/sequential-thinking-tool.js";
+import { DEBUGGING_APPROACH_TOOL } from "./src/tools/debugging-approach-tool.js";
+import { BRAINSTORMING_TOOL } from "./src/tools/brainstorming-tool.js";
+import { MODEL_SELECTOR_TOOL } from "./src/tools/model-selector-tool.js";
+import { STOCHASTIC_ALGORITHM_TOOL } from "./src/tools/stochastic-algorithm-tool.js";
 
-interface MentalModelData {
-  modelName: string;
-  problem: string;
-  steps: string[];
-  reasoning: string;
-  conclusion: string;
-}
+// Import interfaces from server-interfaces.js
+import {
+  ThoughtData,
+  MentalModelData,
+  DebuggingApproachData,
+  BrainstormingData,
+  ModelSelectorData,
+  FeatureDiscussionData,
+  FeatureAnalyzerData,
+  FirstThoughtAdvisorData,
+  StochasticAlgorithmData
+} from './src/interfaces/server-interfaces.js'
 
-interface DebuggingApproachData {
-  approachName: string;
-  issue: string;
-  steps: string[];
-  findings: string;
-  resolution: string;
-}
+// Import server classes
+import {
+  MentalModelServer,
+  DebuggingApproachServer,
+  SequentialThinkingServer
+} from './src/servers/index.js'
 
-// Server Classes
-class MentalModelServer {
-  private validateModelData(input: unknown): MentalModelData {
+// Create classes for new servers
+class BrainstormingServer {
+  private validateBrainstormingData(input: unknown): BrainstormingData {
     const data = input as Record<string, unknown>;
-    
-    if (!data.modelName || typeof data.modelName !== 'string') {
-      throw new Error('Invalid modelName: must be a string');
+
+    if (!data.phase || typeof data.phase !== 'string') {
+      throw new Error('Invalid phase: must be a string');
+    }
+
+    return data as BrainstormingData;
+  }
+
+  public processBrainstorming(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
+    try {
+      const data = this.validateBrainstormingData(input);
+
+      // Process the brainstorming data
+      console.log(`Processing brainstorming phase: ${data.phase}`);
+
+      return {
+        content: [{ type: "text", text: `Processed brainstorming phase: ${data.phase}` }]
+      };
+    } catch (error) {
+      return {
+        content: [{ type: "text", text: `Error processing brainstorming: ${error}` }],
+        isError: true
+      };
+    }
+  }
+}
+
+class StochasticAlgorithmServer {
+  private validateAlgorithmData(input: unknown): StochasticAlgorithmData {
+    const data = input as Record<string, unknown>;
+
+    if (!data.algorithm || typeof data.algorithm !== 'string') {
+      throw new Error('Invalid algorithm: must be a string');
     }
     if (!data.problem || typeof data.problem !== 'string') {
       throw new Error('Invalid problem: must be a string');
     }
-    
-    return {
-      modelName: data.modelName,
-      problem: data.problem,
-      steps: Array.isArray(data.steps) ? data.steps.map(String) : [],
-      reasoning: typeof data.reasoning === 'string' ? data.reasoning : '',
-      conclusion: typeof data.conclusion === 'string' ? data.conclusion : ''
-    };
+
+    return data as StochasticAlgorithmData;
   }
 
-  private formatModelOutput(modelData: MentalModelData): string {
-    const { modelName, problem, steps, reasoning, conclusion } = modelData;
-    const border = '─'.repeat(Math.max(modelName.length + 20, problem.length + 4));
-
-    return `
-┌${border}┐
-│ 🧠 Mental Model: ${modelName.padEnd(border.length - 16)} │
-├${border}┤
-│ Problem: ${problem.padEnd(border.length - 10)} │
-├${border}┤
-│ Steps:${' '.repeat(border.length - 7)} │
-${steps.map(step => `│ • ${step.padEnd(border.length - 4)} │`).join('\n')}
-├${border}┤
-│ Reasoning: ${reasoning.padEnd(border.length - 11)} │
-├${border}┤
-│ Conclusion: ${conclusion.padEnd(border.length - 12)} │
-└${border}┘`;
-  }
-
-  public processModel(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
+  public processAlgorithm(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
     try {
-      const validatedInput = this.validateModelData(input);
-      const formattedOutput = this.formatModelOutput(validatedInput);
-      console.error(formattedOutput);
+      const data = this.validateAlgorithmData(input);
+
+      // Process the stochastic algorithm data
+      console.log(`Processing algorithm: ${data.algorithm} for problem: ${data.problem}`);
 
       return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            modelName: validatedInput.modelName,
-            status: 'success',
-            hasSteps: validatedInput.steps.length > 0,
-            hasConclusion: !!validatedInput.conclusion
-          }, null, 2)
-        }]
+        content: [{ type: "text", text: `Applied ${data.algorithm} to problem: ${data.problem}` }]
       };
     } catch (error) {
       return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            error: error instanceof Error ? error.message : String(error),
-            status: 'failed'
-          }, null, 2)
-        }],
+        content: [{ type: "text", text: `Error processing stochastic algorithm: ${error}` }],
         isError: true
       };
     }
   }
 }
 
-class DebuggingApproachServer {
-  private validateApproachData(input: unknown): DebuggingApproachData {
-    const data = input as Record<string, unknown>;
-    
-    if (!data.approachName || typeof data.approachName !== 'string') {
-      throw new Error('Invalid approachName: must be a string');
-    }
-    if (!data.issue || typeof data.issue !== 'string') {
-      throw new Error('Invalid issue: must be a string');
-    }
-    
-    return {
-      approachName: data.approachName,
-      issue: data.issue,
-      steps: Array.isArray(data.steps) ? data.steps.map(String) : [],
-      findings: typeof data.findings === 'string' ? data.findings : '',
-      resolution: typeof data.resolution === 'string' ? data.resolution : ''
-    };
-  }
-
-  private formatApproachOutput(approachData: DebuggingApproachData): string {
-    const { approachName, issue, steps, findings, resolution } = approachData;
-    const border = '─'.repeat(Math.max(approachName.length + 25, issue.length + 4));
-
-    return `
-┌${border}┐
-│ 🔍 Debugging Approach: ${approachName.padEnd(border.length - 21)} │
-├${border}┤
-│ Issue: ${issue.padEnd(border.length - 8)} │
-├${border}┤
-│ Steps:${' '.repeat(border.length - 7)} │
-${steps.map(step => `│ • ${step.padEnd(border.length - 4)} │`).join('\n')}
-├${border}┤
-│ Findings: ${findings.padEnd(border.length - 11)} │
-├${border}┤
-│ Resolution: ${resolution.padEnd(border.length - 12)} │
-└${border}┘`;
-  }
-
-  public processApproach(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
-    try {
-      const validatedInput = this.validateApproachData(input);
-      const formattedOutput = this.formatApproachOutput(validatedInput);
-      console.error(formattedOutput);
-
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            approachName: validatedInput.approachName,
-            status: 'success',
-            hasSteps: validatedInput.steps.length > 0,
-            hasResolution: !!validatedInput.resolution
-          }, null, 2)
-        }]
-      };
-    } catch (error) {
-      return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            error: error instanceof Error ? error.message : String(error),
-            status: 'failed'
-          }, null, 2)
-        }],
-        isError: true
-      };
-    }
-  }
-}
-
-class SequentialThinkingServer {
-  private thoughtHistory: ThoughtData[] = [];
-  private branches: Record<string, ThoughtData[]> = {};
-
-  private validateThoughtData(input: unknown): ThoughtData {
+class FirstThoughtAdvisorServer {
+  private validateAdviceData(input: unknown): FirstThoughtAdvisorData {
     const data = input as Record<string, unknown>;
 
-    if (!data.thought || typeof data.thought !== 'string') {
-      throw new Error('Invalid thought: must be a string');
-    }
-    if (!data.thoughtNumber || typeof data.thoughtNumber !== 'number') {
-      throw new Error('Invalid thoughtNumber: must be a number');
-    }
-    if (!data.totalThoughts || typeof data.totalThoughts !== 'number') {
-      throw new Error('Invalid totalThoughts: must be a number');
-    }
-    if (typeof data.nextThoughtNeeded !== 'boolean') {
-      throw new Error('Invalid nextThoughtNeeded: must be a boolean');
+    if (!data.problem || typeof data.problem !== 'string') {
+      throw new Error('Invalid problem: must be a string');
     }
 
-    return {
-      thought: data.thought,
-      thoughtNumber: data.thoughtNumber,
-      totalThoughts: data.totalThoughts,
-      nextThoughtNeeded: data.nextThoughtNeeded,
-      isRevision: data.isRevision as boolean | undefined,
-      revisesThought: data.revisesThought as number | undefined,
-      branchFromThought: data.branchFromThought as number | undefined,
-      branchId: data.branchId as string | undefined,
-      needsMoreThoughts: data.needsMoreThoughts as boolean | undefined,
-    };
+    return data as FirstThoughtAdvisorData;
   }
 
-  private formatThought(thoughtData: ThoughtData): string {
-    const { thoughtNumber, totalThoughts, thought, isRevision, revisesThought, branchFromThought, branchId } = thoughtData;
-
-    let prefix = '';
-    let context = '';
-
-    if (isRevision) {
-      prefix = chalk.yellow('🔄 Revision');
-      context = ` (revising thought ${revisesThought})`;
-    } else if (branchFromThought) {
-      prefix = chalk.green('🌿 Branch');
-      context = ` (from thought ${branchFromThought}, ID: ${branchId})`;
-    } else {
-      prefix = chalk.blue('💭 Thought');
-      context = '';
-    }
-
-    const header = `${prefix} ${thoughtNumber}/${totalThoughts}${context}`;
-    const border = '─'.repeat(Math.max(header.length, thought.length) + 4);
-
-    return `
-┌${border}┐
-│ ${header} │
-├${border}┤
-│ ${thought.padEnd(border.length - 2)} │
-└${border}┘`;
-  }
-
-  public processThought(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
+  public processAdvice(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
     try {
-      const validatedInput = this.validateThoughtData(input);
+      const data = this.validateAdviceData(input);
 
-      if (validatedInput.thoughtNumber > validatedInput.totalThoughts) {
-        validatedInput.totalThoughts = validatedInput.thoughtNumber;
-      }
-
-      this.thoughtHistory.push(validatedInput);
-
-      if (validatedInput.branchFromThought && validatedInput.branchId) {
-        if (!this.branches[validatedInput.branchId]) {
-          this.branches[validatedInput.branchId] = [];
-        }
-        this.branches[validatedInput.branchId].push(validatedInput);
-      }
-
-      const formattedThought = this.formatThought(validatedInput);
-      console.error(formattedThought);
+      // Process the first thought advisor data
+      console.log(`Processing advice for problem: ${data.problem}`);
 
       return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            thoughtNumber: validatedInput.thoughtNumber,
-            totalThoughts: validatedInput.totalThoughts,
-            nextThoughtNeeded: validatedInput.nextThoughtNeeded,
-            branches: Object.keys(this.branches),
-            thoughtHistoryLength: this.thoughtHistory.length
-          }, null, 2)
-        }]
+        content: [{ type: "text", text: `Processed advice for problem: ${data.problem}` }]
       };
     } catch (error) {
       return {
-        content: [{
-          type: "text",
-          text: JSON.stringify({
-            error: error instanceof Error ? error.message : String(error),
-            status: 'failed'
-          }, null, 2)
-        }],
+        content: [{ type: "text", text: `Error processing advice: ${error}` }],
         isError: true
       };
     }
   }
 }
 
-// Tool Definitions
-const MENTAL_MODEL_TOOL: Tool = {
-  name: "mentalmodel",
-  description: `A tool for applying structured mental models to problem-solving.
-Supports various mental models including:
-- First Principles Thinking
-- Opportunity Cost Analysis
-- Error Propagation Understanding
-- Rubber Duck Debugging
-- Pareto Principle
-- Occam's Razor
+class FeatureDiscussionServer {
+  private validateDiscussionData(input: unknown): FeatureDiscussionData {
+    const data = input as Record<string, unknown>;
 
-Each model provides a systematic approach to breaking down and solving problems.`,
-  inputSchema: {
-    type: "object",
-    properties: {
-      modelName: {
-        type: "string",
-        enum: [
-          "first_principles",
-          "opportunity_cost",
-          "error_propagation",
-          "rubber_duck",
-          "pareto_principle",
-          "occams_razor"
-        ]
-      },
-      problem: { type: "string" },
-      steps: { 
-        type: "array",
-        items: { type: "string" }
-      },
-      reasoning: { type: "string" },
-      conclusion: { type: "string" }
-    },
-    required: ["modelName", "problem"]
+    if (!data.featureId || typeof data.featureId !== 'string') {
+      throw new Error('Invalid featureId: must be a string');
+    }
+    if (!data.response || typeof data.response !== 'string') {
+      throw new Error('Invalid response: must be a string');
+    }
+
+    return data as FeatureDiscussionData;
   }
-};
 
-const DEBUGGING_APPROACH_TOOL: Tool = {
-  name: "debuggingapproach",
-  description: `A tool for applying systematic debugging approaches to solve technical issues.
-Supports various debugging methods including:
-- Binary Search
-- Reverse Engineering
-- Divide and Conquer
-- Backtracking
-- Cause Elimination
-- Program Slicing
+  public processDiscussion(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
+    try {
+      const data = this.validateDiscussionData(input);
 
-Each approach provides a structured method for identifying and resolving issues.`,
-  inputSchema: {
-    type: "object",
-    properties: {
-      approachName: {
-        type: "string",
-        enum: [
-          "binary_search",
-          "reverse_engineering",
-          "divide_conquer",
-          "backtracking",
-          "cause_elimination",
-          "program_slicing"
-        ]
-      },
-      issue: { type: "string" },
-      steps: {
-        type: "array",
-        items: { type: "string" }
-      },
-      findings: { type: "string" },
-      resolution: { type: "string" }
-    },
-    required: ["approachName", "issue"]
+      // Process the feature discussion data
+      console.log(`Processing feature discussion for: ${data.featureId}`);
+
+      return {
+        content: [{ type: "text", text: `Processed feature discussion for: ${data.featureId}` }]
+      };
+    } catch (error) {
+      return {
+        content: [{ type: "text", text: `Error processing feature discussion: ${error}` }],
+        isError: true
+      };
+    }
   }
-};
+}
 
-const SEQUENTIAL_THINKING_TOOL: Tool = {
-  name: "sequentialthinking",
-  description: `A detailed tool for dynamic and reflective problem-solving through thoughts.
-This tool helps analyze problems through a flexible thinking process that can adapt and evolve.
-Each thought can build on, question, or revise previous insights as understanding deepens.
+class FeatureAnalyzerServer {
+  private validateAnalysisData(input: unknown): FeatureAnalyzerData {
+    const data = input as Record<string, unknown>;
 
-When to use this tool:
-- Breaking down complex problems into steps
-- Planning and design with room for revision
-- Analysis that might need course correction
-- Problems where the full scope might not be clear initially
-- Problems that require a multi-step solution
-- Tasks that need to maintain context over multiple steps
-- Situations where irrelevant information needs to be filtered out
+    if (!data.featureName || typeof data.featureName !== 'string') {
+      throw new Error('Invalid featureName: must be a string');
+    }
 
-Key features:
-- You can adjust total_thoughts up or down as you progress
-- You can question or revise previous thoughts
-- You can add more thoughts even after reaching what seemed like the end
-- You can express uncertainty and explore alternative approaches
-- Not every thought needs to build linearly - you can branch or backtrack
-- Generates a solution hypothesis
-- Verifies the hypothesis based on the Chain of Thought steps
-- Repeats the process until satisfied
-- Provides a correct answer
-
-Parameters explained:
-- thought: Your current thinking step, which can include:
-* Regular analytical steps
-* Revisions of previous thoughts
-* Questions about previous decisions
-* Realizations about needing more analysis
-* Changes in approach
-* Hypothesis generation
-* Hypothesis verification
-- next_thought_needed: True if you need more thinking, even if at what seemed like the end
-- thought_number: Current number in sequence (can go beyond initial total if needed)
-- total_thoughts: Current estimate of thoughts needed (can be adjusted up/down)
-- is_revision: A boolean indicating if this thought revises previous thinking
-- revises_thought: If is_revision is true, which thought number is being reconsidered
-- branch_from_thought: If branching, which thought number is the branching point
-- branch_id: Identifier for the current branch (if any)
-- needs_more_thoughts: If reaching end but realizing more thoughts needed
-
-You should:
-1. Start with an initial estimate of needed thoughts, but be ready to adjust
-2. Feel free to question or revise previous thoughts
-3. Don't hesitate to add more thoughts if needed, even at the "end"
-4. Express uncertainty when present
-5. Mark thoughts that revise previous thinking or branch into new paths
-6. Ignore information that is irrelevant to the current step
-7. Generate a solution hypothesis when appropriate
-8. Verify the hypothesis based on the Chain of Thought steps
-9. Repeat the process until satisfied with the solution
-10. Provide a single, ideally correct answer as the final output
-11. Only set next_thought_needed to false when truly done and a satisfactory answer is reached`,
-  inputSchema: {
-    type: "object",
-    properties: {
-      thought: {
-        type: "string",
-        description: "Your current thinking step"
-      },
-      nextThoughtNeeded: {
-        type: "boolean",
-        description: "Whether another thought step is needed"
-      },
-      thoughtNumber: {
-        type: "integer",
-        description: "Current thought number",
-        minimum: 1
-      },
-      totalThoughts: {
-        type: "integer",
-        description: "Estimated total thoughts needed",
-        minimum: 1
-      },
-      isRevision: {
-        type: "boolean",
-        description: "Whether this revises previous thinking"
-      },
-      revisesThought: {
-        type: "integer",
-        description: "Which thought is being reconsidered",
-        minimum: 1
-      },
-      branchFromThought: {
-        type: "integer",
-        description: "Branching point thought number",
-        minimum: 1
-      },
-      branchId: {
-        type: "string",
-        description: "Branch identifier"
-      },
-      needsMoreThoughts: {
-        type: "boolean",
-        description: "If more thoughts are needed"
-      }
-    },
-    required: ["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"]
+    return data as FeatureAnalyzerData;
   }
-};
 
-// Server Instances
-const modelServer = new MentalModelServer();
-const debuggingServer = new DebuggingApproachServer();
-const thinkingServer = new SequentialThinkingServer();
+  public processAnalysis(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
+    try {
+      const data = this.validateAnalysisData(input);
+
+      // Process the feature analyzer data
+      console.log(`Processing feature analysis for: ${data.featureName}`);
+
+      return {
+        content: [{ type: "text", text: `Processed feature analysis for: ${data.featureName}` }]
+      };
+    } catch (error) {
+      return {
+        content: [{ type: "text", text: `Error processing feature analysis: ${error}` }],
+        isError: true
+      };
+    }
+  }
+}
+
+class ModelSelectorServer {
+  private validateModelSelectionData(input: unknown): ModelSelectorData {
+    const data = input as Record<string, unknown>;
+
+    if (!data.task || typeof data.task !== 'string') {
+      throw new Error('Invalid task: must be a string');
+    }
+
+    return data as ModelSelectorData;
+  }
+
+  public processModelSelection(input: unknown): { content: Array<{ type: string; text: string }>; isError?: boolean } {
+    try {
+      const data = this.validateModelSelectionData(input);
+
+      // Process the model selector data
+      console.log(`Processing model selection for task: ${data.task}`);
+
+      return {
+        content: [{ type: "text", text: `Processed model selection for task: ${data.task}` }]
+      };
+    } catch (error) {
+      return {
+        content: [{ type: "text", text: `Error processing model selection: ${error}` }],
+        isError: true
+      };
+    }
+  }
+}
+
+// Initialize server instances
+const mentalModelServer = new MentalModelServer();
+const debuggingApproachServer = new DebuggingApproachServer();
+const sequentialThinkingServer = new SequentialThinkingServer();
+const brainstormingServer = new BrainstormingServer();
+const stochasticAlgorithmServer = new StochasticAlgorithmServer();
+const firstThoughtAdvisorServer = new FirstThoughtAdvisorServer();
+const featureDiscussionServer = new FeatureDiscussionServer();
+const featureAnalyzerServer = new FeatureAnalyzerServer();
+const modelSelectorServer = new ModelSelectorServer();
 
 const server = new Server(
   {
-    name: "sequential-thinking-server",
-    version: "0.2.0",
+    name: "clear-thought-server",
+    version: "0.3.0",
   },
   {
     capabilities: {
-      tools: {},
+      tools: {
+        "sequential_thinking": SEQUENTIAL_THINKING_TOOL,
+        "mental_model": MENTAL_MODEL_TOOL,
+        "debugging_approach": DEBUGGING_APPROACH_TOOL,
+        "brainstorming": BRAINSTORMING_TOOL,
+        "stochastic_algorithm": STOCHASTIC_ALGORITHM_TOOL,
+        "model_selector": MODEL_SELECTOR_TOOL,
+        "first_thought_advisor": { name: "first_thought_advisor", description: "A tool that intelligently recommends the optimal mental model or algorithm for any problem." },
+        "feature_discussion": { name: "feature_discussion", description: "Start a new feature discussion" },
+        "feature_analyzer": { name: "feature_analyzer", description: "Analyze a feature" }
+      },
     },
   }
 );
@@ -495,30 +265,55 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
     SEQUENTIAL_THINKING_TOOL,
     MENTAL_MODEL_TOOL,
-    DEBUGGING_APPROACH_TOOL
+    DEBUGGING_APPROACH_TOOL,
+    BRAINSTORMING_TOOL,
+    STOCHASTIC_ALGORITHM_TOOL,
+    MODEL_SELECTOR_TOOL,
+    { name: "first_thought_advisor", description: "A tool that intelligently recommends the optimal mental model or algorithm for any problem." },
+    { name: "feature_discussion", description: "Start a new feature discussion" },
+    { name: "feature_analyzer", description: "Analyze a feature" }
   ],
 }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  switch (request.params.name) {
-    case "sequentialthinking":
-      return thinkingServer.processThought(request.params.arguments);
-    case "mentalmodel":
-      return modelServer.processModel(request.params.arguments);
-    case "debuggingapproach":
-      return debuggingServer.processApproach(request.params.arguments);
-    default:
-      throw new McpError(
-        ErrorCode.MethodNotFound,
-        `Unknown tool: ${request.params.name}`
-      );
+  const { name, arguments: params } = request.params;
+
+  try {
+    switch (name) {
+      case "mental_model":
+        return mentalModelServer.processModel(params);
+      case "debugging_approach":
+        return debuggingApproachServer.processApproach(params);
+      case "sequential_thinking":
+        return sequentialThinkingServer.processThought(params);
+      case "brainstorming":
+        return brainstormingServer.processBrainstorming(params);
+      case "stochastic_algorithm":
+        return stochasticAlgorithmServer.processAlgorithm(params);
+      case "first_thought_advisor":
+        return firstThoughtAdvisorServer.processAdvice(params);
+      case "feature_discussion":
+        return featureDiscussionServer.processDiscussion(params);
+      case "feature_analyzer":
+        return featureAnalyzerServer.processAnalysis(params);
+      case "model_selector":
+        return modelSelectorServer.processModelSelection(params);
+      default:
+        throw new McpError(
+          ErrorCode.MethodNotFound,
+          `Unknown tool: ${name}`
+        );
+    }
+  } catch (error) {
+    console.error(`Error processing ${name} request:`, error);
+    throw error;
   }
 });
 
 async function runServer() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Sequential Thinking MCP Server running on stdio");
+  console.error("Clear Thought MCP Server running on stdio");
 }
 
 runServer().catch((error) => {
