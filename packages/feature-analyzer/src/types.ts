@@ -36,7 +36,9 @@ export enum RequirementType {
     SECURITY = 'security',
     PERFORMANCE = 'performance',
     ACCESSIBILITY = 'accessibility',
-    LOCALIZATION = 'localization'
+    LOCALIZATION = 'localization',
+    COMPATIBILITY = 'compatibility',
+    RELIABILITY = 'reliability'
 }
 
 /**
@@ -68,7 +70,7 @@ export interface Requirement {
 export interface RequirementDependency {
     requirementId: string;
     dependsOnId: string;
-    type: 'requires' | 'conflicts' | 'enhances';
+    type: 'requires' | 'conflicts' | 'enhances' | 'related_to' | 'potentially_follows' | 'constrained_by';
     description?: string;
 }
 
@@ -119,12 +121,20 @@ export interface RequirementsAnalysisResult {
     featureId: string;
     requirements: Requirement[];
     dependencies: RequirementDependency[];
-    conflictsFounded: boolean;
+    conflictsFound: boolean;
     conflicts?: {
         description: string;
         relatedRequirements: string[];
         resolutionOptions?: string[];
     }[];
+    contradictions?: {
+        conflictsFound: boolean;
+        conflicts?: {
+            description: string;
+            relatedRequirements: string[];
+            resolutionOptions?: string[];
+        }[];
+    };
     complexity: ComplexityEstimation[];
     overallComplexity: number; // обобщенная оценка сложности от 1 до 10
     technicalSpecification?: TechnicalSpecification;

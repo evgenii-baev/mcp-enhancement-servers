@@ -60,7 +60,7 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
                 featureId: params.featureId,
                 requirements,
                 dependencies,
-                conflictsFounded: contradictionsCheck.conflictsFound,
+                conflictsFound: contradictionsCheck.conflictsFound,
                 conflicts: contradictionsCheck.conflicts,
                 complexity: complexityResult.individualComplexity,
                 overallComplexity: complexityResult.overallComplexity
@@ -71,7 +71,7 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
                 featureId: params.featureId,
                 requirements,
                 dependencies,
-                conflictsFounded: contradictionsCheck.conflictsFound,
+                conflictsFound: contradictionsCheck.conflictsFound,
                 conflicts: contradictionsCheck.conflicts,
                 complexity: complexityResult.individualComplexity,
                 overallComplexity: complexityResult.overallComplexity,
@@ -562,11 +562,13 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
      * @returns true, если первое требование зависит от второго на основе приоритета
      */
     private determineDependencyByPriority(req1: Requirement, req2: Requirement): boolean {
-        // Обычно требования с более низким приоритетом зависят от требований с более высоким приоритетом
-        const priorityMap = {
+        // Зависимость по приоритету: требования с более низким приоритетом могут зависеть от требований с более высоким приоритетом
+        const priorityMap: Record<string, number> = {
+            [RequirementPriority.CRITICAL]: 4,
             [RequirementPriority.HIGH]: 3,
             [RequirementPriority.MEDIUM]: 2,
-            [RequirementPriority.LOW]: 1
+            [RequirementPriority.LOW]: 1,
+            [RequirementPriority.OPTIONAL]: 0
         };
 
         return priorityMap[req1.priority] < priorityMap[req2.priority];
@@ -1129,7 +1131,7 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
         }
 
         // Определяем факторы сложности для различных типов требований
-        const complexityFactors = {
+        const complexityFactors: Record<string, { highFactors: string[], mediumFactors: string[], lowFactors: string[] }> = {
             // Факторы сложности для функциональных требований
             [RequirementType.FUNCTIONAL]: {
                 highFactors: [
@@ -1153,6 +1155,21 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
                     'read-only', 'configuration', 'simple logic', 'common pattern',
                     'простая валидация', 'базовая форма', 'статический контент',
                     'отображение', 'только для чтения', 'конфигурация', 'простая логика'
+                ]
+            },
+            // Факторы сложности для нефункциональных требований
+            [RequirementType.NON_FUNCTIONAL]: {
+                highFactors: [
+                    'strict requirements', 'complex constraints', 'system-wide impact',
+                    'жесткие требования', 'сложные ограничения', 'общесистемное влияние'
+                ],
+                mediumFactors: [
+                    'moderate constraints', 'partial system impact', 'specific requirements',
+                    'умеренные ограничения', 'частичное влияние на систему', 'специфические требования'
+                ],
+                lowFactors: [
+                    'simple constraints', 'minimal impact', 'optional requirements',
+                    'простые ограничения', 'минимальное влияние', 'опциональные требования'
                 ]
             },
             // Факторы сложности для требований производительности
@@ -1247,19 +1264,26 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
         };
 
         // Количественные оценки сложности по типу и приоритету
-        const baseComplexity = {
+        const baseComplexity: Record<string, number> = {
             [RequirementType.FUNCTIONAL]: 3,
+            [RequirementType.NON_FUNCTIONAL]: 3,
+            [RequirementType.CONSTRAINT]: 2,
+            [RequirementType.TECHNICAL]: 4,
             [RequirementType.PERFORMANCE]: 4,
             [RequirementType.SECURITY]: 5,
             [RequirementType.USER_INTERFACE]: 2,
+            [RequirementType.ACCESSIBILITY]: 3,
+            [RequirementType.LOCALIZATION]: 3,
             [RequirementType.COMPATIBILITY]: 3,
             [RequirementType.RELIABILITY]: 4
         };
 
-        const priorityMultiplier = {
+        const priorityMultiplier: Record<string, number> = {
+            [RequirementPriority.CRITICAL]: 1.5,
             [RequirementPriority.HIGH]: 1.2,
             [RequirementPriority.MEDIUM]: 1.0,
-            [RequirementPriority.LOW]: 0.8
+            [RequirementPriority.LOW]: 0.8,
+            [RequirementPriority.OPTIONAL]: 0.5
         };
 
         // Карта зависимостей для учета в оценке сложности
@@ -1585,12 +1609,16 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
         if (analysisResult.contradictions && analysisResult.contradictions.conflictsFound) {
             implementationStrategy += '\nConflict resolution strategy:\n';
 
-            analysisResult.contradictions.conflicts?.forEach(conflict => {
+            analysisResult.contradictions.conflicts?.forEach((conflict: {
+                description: string;
+                relatedRequirements: string[];
+                resolutionOptions?: string[]
+            }) => {
                 implementationStrategy += `- ${conflict.description}\n`;
 
                 if (conflict.resolutionOptions && conflict.resolutionOptions.length > 0) {
                     implementationStrategy += '  Possible resolutions:\n';
-                    conflict.resolutionOptions.forEach(option => {
+                    conflict.resolutionOptions.forEach((option: string) => {
                         implementationStrategy += `  * ${option}\n`;
                     });
                 }
@@ -1600,14 +1628,14 @@ export class FeatureAnalyzer implements FeatureAnalyzerInterface {
         // Оценка рисков на основе сложности
         let riskAssessment = '';
 
-        if (analysisResult.complexity) {
-            riskAssessment += `Overall complexity: ${analysisResult.complexity.overallComplexity}\n\n`;
+        if (analysisResult.complexity && analysisResult.overallComplexity) {
+            riskAssessment += `Overall complexity: ${analysisResult.overallComplexity}\n\n`;
 
             // Определяем уровень риска на основе сложности
             let riskLevel = 'Low';
-            if (analysisResult.complexity.overallComplexity > 7) {
+            if (analysisResult.overallComplexity > 7) {
                 riskLevel = 'High';
-            } else if (analysisResult.complexity.overallComplexity > 4) {
+            } else if (analysisResult.overallComplexity > 4) {
                 riskLevel = 'Medium';
             }
 
