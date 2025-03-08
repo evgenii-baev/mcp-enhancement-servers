@@ -10,7 +10,7 @@ import {
     ThinkingLevel,
     ToolType,
     IncorporationResult
-} from '../interfaces/tool-metadata';
+} from '../interfaces/tool-metadata.js';
 
 /**
  * Опции поиска инструментов
@@ -85,6 +85,7 @@ export class ToolRegistry {
     private static instance: ToolRegistry;
     private toolTypes: Map<string, ToolType> = new Map();
     private toolMetadata: Map<string, ToolMetadata> = new Map();
+    private incorporationRules: Map<string, IncorporationResult> = new Map();
 
     private constructor() {
         this.initializeToolTypes();
@@ -120,51 +121,56 @@ export class ToolRegistry {
      * Инициализирует метаданные инструментов
      */
     private initializeToolMetadata(): void {
-        // Метаданные для советника по архитектуре
-        this.registerToolMetadata({
-            name: 'architecture_advisor',
-            description: 'Инструмент для создания и оценки архитектурных решений на основе требований проекта',
-            type: 'architecture_advisor',
+        // Регистрируем метаданные для ментальных моделей
+        this.registerTool({
+            name: 'mental_model',
+            description: 'Инструмент для применения ментальных моделей к проблемам',
+            level: ThinkingLevel.FOUNDATION,
+            type: ToolType.ANALYSIS,
             parameters: {
-                action: {
+                modelName: {
+                    name: 'modelName',
+                    description: 'Название ментальной модели',
                     type: 'string',
-                    description: 'Действие: recommend (создать рекомендацию), get (получить существующую), clear (очистить кэш)',
                     required: true
                 },
-                featureId: {
+                problem: {
+                    name: 'problem',
+                    description: 'Проблема для анализа',
                     type: 'string',
-                    description: 'Идентификатор функции, для которой создается архитектура',
                     required: true
-                },
-                requirements: {
+                }
+            },
+            resultFormat: {
+                analysis: {
+                    name: 'analysis',
+                    description: 'Результат анализа проблемы',
                     type: 'object',
-                    description: 'Требования для создания архитектуры (только для action=recommend)',
                     required: false
                 }
             },
             examples: [
                 {
-                    description: 'Создание рекомендации по архитектуре',
-                    call: {
-                        action: 'recommend',
-                        featureId: 'auth-system',
-                        requirements: {
-                            performance: 'high',
-                            scalability: 'medium',
-                            security: 'critical',
-                            components: ['user-service', 'auth-service', 'token-manager']
+                    name: 'Анализ с помощью первых принципов',
+                    description: 'Применение первых принципов к проблеме',
+                    input: {
+                        modelName: 'first_principles',
+                        problem: 'Как улучшить производительность приложения?'
+                    },
+                    expectedOutput: {
+                        analysis: {
+                            // Ожидаемый результат
                         }
                     }
-                },
-                {
-                    description: 'Получение существующей рекомендации',
-                    call: {
-                        action: 'get',
-                        featureId: 'auth-system'
-                    }
                 }
-            ]
+            ],
+            tags: ['mental_model', 'analysis', 'thinking'],
+            priority: 80,
+            version: '1.0.0',
+            updatedAt: new Date().toISOString()
         });
+
+        // Другие инструменты...
     }
 
     /**
@@ -261,7 +267,8 @@ export class ToolRegistry {
 
             // Удаляем все правила включения, связанные с этим инструментом
             this.incorporationRules.forEach((rule, key) => {
-                if (rule.sourceToolName === toolName || rule.targetToolName === toolName) {
+                const [source, target] = key.split('->');
+                if (source === toolName || target === toolName) {
                     this.incorporationRules.delete(key);
                 }
             });
@@ -407,11 +414,7 @@ export class ToolRegistry {
             const ruleKey = `${sourceToolName}->${targetToolName}`;
 
             // Регистрируем правило
-            this.incorporationRules.set(ruleKey, {
-                sourceToolName,
-                targetToolName,
-                rules
-            });
+            this.incorporationRules.set(ruleKey, rules);
 
             // Обновляем метаданные инструментов
             const sourceMetadata = this.toolMetadata.get(sourceToolName)!;
@@ -460,9 +463,7 @@ export class ToolRegistry {
         targetToolName: string
     ): IncorporationResult | undefined {
         const ruleKey = `${sourceToolName}->${targetToolName}`;
-        const rule = this.incorporationRules.get(ruleKey);
-
-        return rule?.rules;
+        return this.incorporationRules.get(ruleKey);
     }
 
     /**
@@ -513,13 +514,17 @@ export class ToolRegistry {
     ): IncorporationRule[] {
         const rules: IncorporationRule[] = [];
 
-        this.incorporationRules.forEach(rule => {
+        this.incorporationRules.forEach((rule, key) => {
             if (
-                (direction === 'source' && rule.sourceToolName === toolName) ||
-                (direction === 'target' && rule.targetToolName === toolName) ||
-                (direction === 'both' && (rule.sourceToolName === toolName || rule.targetToolName === toolName))
+                (direction === 'source' && key.startsWith(toolName + '->')) ||
+                (direction === 'target' && key.endsWith('->' + toolName)) ||
+                (direction === 'both' && (key.startsWith(toolName + '->') || key.endsWith('->' + toolName)))
             ) {
-                rules.push(rule);
+                rules.push({
+                    sourceToolName: key.split('->')[0],
+                    targetToolName: key.split('->')[1],
+                    rules: rule
+                });
             }
         });
 
@@ -593,5 +598,35 @@ export class ToolRegistry {
         } catch (error) {
             throw new Error('Дата обновления инструмента должна быть валидной датой ISO');
         }
+    }
+
+    /**
+     * Регистрирует тип инструмента
+     * @param name Имя типа инструмента
+     * @param description Описание типа инструмента
+     * @param level Уровень мышления
+     * @returns Результат регистрации
+     */
+    private registerToolType(name: string, description: string, level: ThinkingLevel): ToolRegistrationResult {
+        if (this.toolTypes.has(name)) {
+            return {
+                success: false,
+                toolName: name,
+                message: `Тип инструмента ${name} уже зарегистрирован`,
+                error: new Error(`Тип инструмента ${name} уже зарегистрирован`)
+            };
+        }
+
+        this.toolTypes.set(name, {
+            name,
+            description,
+            level
+        } as unknown as ToolType);
+
+        return {
+            success: true,
+            toolName: name,
+            message: `Тип инструмента ${name} успешно зарегистрирован`
+        };
     }
 } 

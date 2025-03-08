@@ -5,11 +5,11 @@
  * всех мыслительных процессов и инструментов.
  */
 
-import { ToolInteractionAPI } from './tool-interaction-api';
-import { ToolRegistry } from './tool-registry';
-import { ThoughtRouter } from './thought-router';
-import { IncorporationSystem } from './incorporation-system';
-import { ThinkingLevel } from '../interfaces/tool-metadata';
+import { ToolInteractionAPI } from './tool-interaction-api.js';
+import { ToolRegistry } from './tool-registry.js';
+import { ThoughtRouter } from './thought-router.js';
+import { IncorporationSystem } from './incorporation-system.js';
+import { ThinkingLevel } from '../interfaces/tool-metadata.js';
 
 /**
  * Сессия мышления
@@ -135,7 +135,7 @@ export class ThoughtOrchestrator {
      */
     constructor() {
         // Инициализируем компоненты
-        this.registry = new ToolRegistry();
+        this.registry = ToolRegistry.getInstance();
         this.interactionAPI = new ToolInteractionAPI(this.registry);
         this.router = new ThoughtRouter(this.interactionAPI);
         this.incorporationSystem = new IncorporationSystem(this.interactionAPI);
@@ -326,7 +326,7 @@ export class ThoughtOrchestrator {
                     processedOutput = incorporationResult.result;
 
                     // Добавляем информацию о включенных результатах в историю
-                    historyItem.incorporatedResults = incorporationResult.incorporations.map(inc => ({
+                    historyItem.incorporatedResults = incorporationResult.incorporations.map((inc: { sourceToolName: string; incorporatedCount?: number; success: boolean }) => ({
                         sourceToolName: inc.sourceToolName,
                         incorporatedCount: inc.incorporatedCount || 0,
                         success: inc.success

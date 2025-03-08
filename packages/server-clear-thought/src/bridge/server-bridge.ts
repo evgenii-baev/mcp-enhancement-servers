@@ -5,10 +5,10 @@
  * и новой многоуровневой архитектурой мышления.
  */
 
-import { ThoughtOrchestrator } from '../core/thought-orchestrator';
-import { FeatureDiscussionAdapter } from '../adapters/feature-discussion-adapter';
-import { FeatureAnalyzer, ArchitectureAdvisor } from '../specialized';
-import { ThinkingLevel } from '../interfaces/tool-metadata';
+import { ThoughtOrchestrator } from '../core/thought-orchestrator.js';
+import { FeatureDiscussionAdapter } from '../adapters/feature-discussion-adapter.js';
+import { FeatureAnalyzer, ArchitectureAdvisor } from '../specialized/index.js';
+import { ThinkingLevel } from '../interfaces/tool-metadata.js';
 
 // Типы запросов к различным серверам
 type MentalModelRequest = { modelName: string; problem: string };
@@ -297,14 +297,14 @@ export class ServerBridge {
         if (!this.architectureAdvisor) {
             throw new Error('Советник по архитектуре не инициализирован');
         }
-        
+
         // Преобразуем запрос для обработки в новой архитектуре
         const session = await this.orchestrator.processRequest(request, {
             forceTool: 'architecture_advisor',
             preferredLevel: ThinkingLevel.SPECIALIZED,
             maxSteps: 1 // Для рекомендации архитектуры достаточно одного шага
         });
-        
+
         // Возвращаем результат
         return session.result;
     }

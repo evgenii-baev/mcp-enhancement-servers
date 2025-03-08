@@ -16,7 +16,7 @@
         "LICENSE"
     ],
     "scripts": {
-        "build": "npx tsc --listFiles --project tsconfig.json && mkdir -p dist/src/models && cp src/models/*.json dist/src/models/ && chmod +x dist/*.js",
+        "build": "npx tsc --listFiles --project tsconfig.json && mkdir -p dist/src/models && mkdir -p dist/src/servers && cp src/models/*.json dist/src/models/ && cp src/servers/*.js dist/src/servers/ && cp src/servers/*.d.ts dist/src/servers/ && chmod +x dist/*.js",
         "prepare": "npm run build",
         "watch": "npx tsc --watch",
         "clean": "rm -rf dist",

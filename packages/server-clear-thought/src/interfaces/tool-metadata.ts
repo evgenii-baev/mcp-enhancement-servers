@@ -16,7 +16,13 @@ export enum ThinkingLevel {
     SPECIALIZED = 'specialized',
 
     /** Интегрированный уровень мышления */
-    INTEGRATED = 'integrated'
+    INTEGRATED = 'integrated',
+
+    /** Мета-уровень мышления */
+    META = 'meta',
+
+    /** Базовый уровень мышления (для совместимости) */
+    BASIC = 'basic'
 }
 
 /**
@@ -227,4 +233,50 @@ export interface ToolMetadataRepository {
 
     /** Обновить метаданные инструмента */
     updateToolMetadata(name: string, metadata: Partial<ToolMetadata>): void;
+}
+
+/**
+ * Метаданные инкорпорации результатов
+ */
+export interface IncorporationMetadata {
+    /** Имя исходного инструмента */
+    sourceToolName: string;
+
+    /** Имя целевого инструмента */
+    targetToolName: string;
+
+    /** Количество включенных результатов */
+    incorporatedCount?: number;
+
+    /** Успешность включения */
+    success: boolean;
+
+    /** Время, затраченное на включение (мс) */
+    timeSpent?: number;
+
+    /** Дополнительные метаданные */
+    metadata?: Record<string, any>;
+
+    /** Результат включения */
+    result?: any;
+}
+
+/**
+ * Результат инкорпорации
+ */
+export interface IncorporationResult {
+    /** Функция для включения результатов */
+    incorporate: (targetResult: any, sourceResults: any[], context: Record<string, any>) => Promise<any>;
+
+    /** Функция для проверки возможности включения */
+    canIncorporate?: (targetResult: any, sourceResults: any[], context: Record<string, any>) => boolean;
+
+    /** Функция для фильтрации результатов */
+    filterResults?: (sourceResults: any[], context: Record<string, any>) => any[];
+
+    /** Функция для трансформации результатов */
+    transformResults?: (sourceResults: any[], context: Record<string, any>) => any[];
+
+    /** Функция для обработки ошибок */
+    handleError?: (error: Error, context: Record<string, any>) => any;
 } 

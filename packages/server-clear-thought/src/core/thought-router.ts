@@ -5,8 +5,8 @@
  * а также преобразует параметры для выбранных инструментов.
  */
 
-import { ToolMetadata, ThinkingLevel } from '../interfaces/tool-metadata';
-import { ToolInteractionAPI } from './tool-interaction-api';
+import { ToolMetadata, ThinkingLevel } from '../interfaces/tool-metadata.js';
+import { ToolInteractionAPI } from './tool-interaction-api.js';
 
 /**
  * Результат анализа запроса

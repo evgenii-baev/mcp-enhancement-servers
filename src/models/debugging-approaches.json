@@ -1,0 +1,124 @@
+{
+    "approaches": [
+        {
+            "name": "binary_search",
+            "description": "A divide-and-conquer approach to narrow down the source of a problem by repeatedly dividing the search space in half",
+            "steps": [
+                "Identify the full range where the problem could exist",
+                "Test the midpoint of the range",
+                "Eliminate half of the range based on the test result",
+                "Repeat until the problem is isolated"
+            ],
+            "examples": [
+                "Finding which commit introduced a bug in version control",
+                "Locating a performance bottleneck in a large codebase",
+                "Identifying which configuration parameter is causing an issue"
+            ],
+            "bestFor": [
+                "Large search spaces with clear boundaries",
+                "Problems where testing a midpoint is feasible",
+                "Situations where each test has a binary outcome (works/doesn't work)"
+            ]
+        },
+        {
+            "name": "reverse_engineering",
+            "description": "Working backward from observed behavior to understand the underlying mechanisms",
+            "steps": [
+                "Document the observed behavior in detail",
+                "Identify the expected behavior and the differences",
+                "Trace backward from the symptoms to potential causes",
+                "Test hypotheses about the internal workings"
+            ],
+            "examples": [
+                "Understanding undocumented APIs or protocols",
+                "Analyzing malware or security vulnerabilities",
+                "Debugging complex systems without source code"
+            ],
+            "bestFor": [
+                "Black-box systems with limited documentation",
+                "Understanding complex interactions between components",
+                "Situations where forward analysis is impractical"
+            ]
+        },
+        {
+            "name": "divide_conquer",
+            "description": "Breaking a complex problem into smaller, more manageable sub-problems",
+            "steps": [
+                "Decompose the problem into independent components",
+                "Test each component in isolation",
+                "Identify which components exhibit the issue",
+                "Recursively apply the approach to problematic components"
+            ],
+            "examples": [
+                "Debugging distributed systems",
+                "Troubleshooting complex software with many modules",
+                "Isolating hardware failures in computer systems"
+            ],
+            "bestFor": [
+                "Complex systems with multiple components",
+                "Problems where components can be tested independently",
+                "Situations where the issue might span multiple areas"
+            ]
+        },
+        {
+            "name": "backtracking",
+            "description": "Exploring multiple solution paths and backing up when a path leads to a dead end",
+            "steps": [
+                "Identify possible causes or solutions",
+                "Try one approach and follow it to its conclusion",
+                "If unsuccessful, revert and try an alternative approach",
+                "Keep track of attempted paths to avoid repetition"
+            ],
+            "examples": [
+                "Solving complex puzzles or optimization problems",
+                "Debugging race conditions or timing issues",
+                "Troubleshooting intermittent failures"
+            ],
+            "bestFor": [
+                "Problems with multiple potential causes",
+                "Situations where testing a hypothesis might alter the system state",
+                "Complex issues where the solution path isn't clear"
+            ]
+        },
+        {
+            "name": "cause_elimination",
+            "description": "Systematically ruling out potential causes until the actual cause is identified",
+            "steps": [
+                "List all possible causes of the problem",
+                "Prioritize causes by likelihood",
+                "Test and eliminate causes one by one",
+                "Continue until the actual cause is found"
+            ],
+            "examples": [
+                "Medical diagnosis",
+                "Network connectivity issues",
+                "Performance degradation in systems"
+            ],
+            "bestFor": [
+                "Problems with a finite set of potential causes",
+                "Situations where testing a cause is straightforward",
+                "Complex systems where multiple factors might contribute"
+            ]
+        },
+        {
+            "name": "program_slicing",
+            "description": "Focusing on only the parts of code that affect a specific variable or output",
+            "steps": [
+                "Identify the variable or output of interest",
+                "Determine which statements affect this variable",
+                "Create a 'slice' of the program containing only these statements",
+                "Analyze this smaller code segment"
+            ],
+            "examples": [
+                "Debugging data flow issues in large codebases",
+                "Understanding how a specific value is calculated",
+                "Isolating security vulnerabilities"
+            ],
+            "bestFor": [
+                "Large codebases where manual inspection is impractical",
+                "Data flow or value calculation issues",
+                "Situations where most of the code is irrelevant to the problem"
+            ]
+        }
+    ]
+}

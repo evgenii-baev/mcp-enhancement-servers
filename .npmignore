@@ -33,3 +33,38 @@ __tests__/
 .DS_Store
 *.tgz
 .env
+
+# Source files
+src/
+examples/
+tests/
+
+# Configuration files
+tsconfig.json
+.eslintrc.json
+.gitignore
+.npmignore
+
+# Development files
+*.log
+*.tsbuildinfo
+.vscode/
+.idea/
+.DS_Store
+
+# Build scripts
+*.sh
+
+# Git files
+.git/
+.github/
+
+# Temporary files
+tmp/
+temp/
+
+# Test files
+*.test.ts
+*.spec.ts
+coverage/
+.nyc_output/
