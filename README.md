@@ -4,14 +4,28 @@ A collection of servers for enhancing thinking capabilities in Model Context Pro
 
 ## Overview
 
-This package provides a set of servers that implement various thinking enhancement capabilities:
+This package provides a set of servers that implement various thinking enhancement capabilities, listed in order of priority:
 
+### 1. Initial Analysis and Approach Selection Tools
+- **First Thought Advisor Server**: Recommends initial thinking approaches for problems
+- **Model Selector Server**: Helps select the optimal model for a task
+
+### 2. Structured Thinking Tools
+- **Sequential Thinking Server**: Processes sequential thoughts in steps, branches, and revisions
 - **Mental Model Server**: Applies mental models to problems
-- **Sequential Thinking Server**: Processes sequential thoughts
 - **Debugging Approach Server**: Applies debugging approaches to issues
-- **Brainstorming Server**: Facilitates brainstorming sessions
-- **Stochastic Algorithm Server**: Applies stochastic algorithms to problems
-- **First Thought Advisor Server**: Recommends thinking approaches for problems
+
+### 3. Solution Generation and Optimization Tools
+- **Brainstorming Server**: Facilitates structured brainstorming sessions
+- **Stochastic Algorithm Server**: Applies stochastic algorithms to optimization problems
+
+### 4. Feature and Requirements Tools
+- **Feature Discussion Server**: Facilitates structured feature discussions
+- **Feature Analyzer Server**: Analyzes feature complexity and dependencies
+
+## Tool Priority
+
+We've organized the tools in a recommended priority order to help AI/users choose the appropriate tool for different tasks. For detailed guidance on when to use each tool and recommended combinations for different scenarios, see [Tool Priority Guide](docs/TOOL_PRIORITY.md).
 
 ## Installation
 
@@ -36,10 +50,9 @@ console.log(capabilities);
 
 // Handle a request to a specific server
 const response = await handleServerRequest(
-  'mentalModelServer',
-  'apply_mental_model',
+  'firstThoughtAdvisorServer',
+  'get_thinking_approach',
   {
-    modelName: 'first_principles',
     problem: 'How to optimize a web application'
   }
 );
@@ -67,6 +80,27 @@ console.log(response);
 
 ## Available Servers
 
+### First Thought Advisor Server
+
+Recommends initial thinking approaches for problems.
+
+**Capabilities:**
+- `get_thinking_approach`: Gets recommended thinking approach for a problem
+
+### Model Selector Server
+
+Helps select the optimal model for a specific task.
+
+**Capabilities:**
+- `select_model`: Selects the optimal model based on task requirements and constraints
+
+### Sequential Thinking Server
+
+Processes sequential thoughts in steps, branches, and revisions.
+
+**Capabilities:**
+- `process_sequential_thought`: Processes a sequential thought with support for branching and revision
+
 ### Mental Model Server
 
 Applies mental models to problems.
@@ -74,13 +108,6 @@ Applies mental models to problems.
 **Capabilities:**
 - `apply_mental_model`: Applies a mental model to a problem
 - `list_mental_models`: Lists all available mental models
-
-### Sequential Thinking Server
-
-Processes sequential thoughts.
-
-**Capabilities:**
-- `process_sequential_thought`: Processes a sequential thought
 
 ### Debugging Approach Server
 
@@ -92,7 +119,7 @@ Applies debugging approaches to issues.
 
 ### Brainstorming Server
 
-Facilitates brainstorming sessions.
+Facilitates structured brainstorming sessions.
 
 **Capabilities:**
 - `start_brainstorming`: Starts a brainstorming session
@@ -100,17 +127,25 @@ Facilitates brainstorming sessions.
 
 ### Stochastic Algorithm Server
 
-Applies stochastic algorithms to problems.
+Applies stochastic algorithms to optimization problems.
 
 **Capabilities:**
-- `apply_stochastic_algorithm`: Applies a stochastic algorithm to a problem
+- `apply_stochastic_algorithm`: Applies a stochastic algorithm to an optimization problem
 
-### First Thought Advisor Server
+### Feature Discussion Server
 
-Recommends thinking approaches for problems.
+Facilitates structured feature discussions.
 
 **Capabilities:**
-- `get_thinking_approach`: Gets recommended thinking approach for a problem
+- `begin_feature_discussion`: Starts a new feature discussion
+- `provide_feature_input`: Provides input to an ongoing feature discussion
+
+### Feature Analyzer Server
+
+Analyzes feature complexity and dependencies.
+
+**Capabilities:**
+- `analyze_feature`: Analyzes a feature's complexity, dependencies, and implementation challenges
 
 ## License
 
