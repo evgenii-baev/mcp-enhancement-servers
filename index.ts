@@ -7,6 +7,7 @@ import {
   // 1. Инструменты для начального анализа и выбора подхода
   FirstThoughtAdvisorServer,  // Помощь в выборе начального подхода
   ModelSelectorServer,       // Выбор оптимальной модели
+  MODEL_SELECTOR_DESCRIPTION, // Описание Model Selector для ИИ
 
   // 2. Базовые инструменты структурированного мышления
   SequentialThinkingServer,  // Основа последовательного мышления
@@ -80,7 +81,7 @@ export async function handleServerRequest(
 // Экспорт основных классов для использования в других проектах
 // 1. Инструменты для начального анализа и выбора подхода
 export { FirstThoughtAdvisorServer } from './src/servers/index.js';
-export { ModelSelectorServer } from './src/servers/index.js';
+export { ModelSelectorServer, MODEL_SELECTOR_DESCRIPTION } from './src/servers/index.js';
 
 // 2. Базовые инструменты структурированного мышления
 export { SequentialThinkingServer } from './src/servers/index.js';
@@ -105,4 +106,10 @@ export const packageInfo = {
   version: '1.0.0',
   description: 'Серверы для улучшения мышления в MCP',
   author: 'MCP Team'
+};
+
+// Экспорт информации о возможностях инструментов для ИИ-ассистентов
+export const toolDescriptions = {
+  modelSelector: MODEL_SELECTOR_DESCRIPTION
+  // Здесь можно добавлять описания других инструментов по мере их создания
 };

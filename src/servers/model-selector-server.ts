@@ -5,6 +5,63 @@
 
 import { ServerRequest, ServerResponse } from '../interfaces/server-interfaces.js';
 import { BaseServer } from './index.js';
+import { ToolDescription, createToolDescription } from '../interfaces/tool-description.js';
+
+// Экспортируемое описание инструмента для ИИ-ассистента
+export const MODEL_SELECTOR_DESCRIPTION: ToolDescription = createToolDescription({
+    name: "Model Selector",
+    purpose: "Helps select the optimal architecture, design pattern, algorithm, or data structure for programming tasks.",
+    whenToUse: [
+        "At the beginning of project design, when choosing an application architecture",
+        "When solving a specific problem that requires an appropriate design pattern",
+        "When selecting the most efficient algorithm for data processing",
+        "When choosing the optimal data structure for storing and accessing information",
+        "For comparing different approaches to solving the same task"
+    ],
+    capabilities: [
+        {
+            name: "select_model",
+            description: "Selects the optimal model based on task requirements, context, and constraints",
+            keyParameters: ["task", "context", "constraints", "preferences"]
+        },
+        {
+            name: "list_models",
+            description: "Lists available models, optionally filtered by category",
+            keyParameters: ["category"]
+        },
+        {
+            name: "compare_models",
+            description: "Compares multiple models across various aspects",
+            keyParameters: ["modelNames", "criteria"]
+        }
+    ],
+    exampleScenarios: [
+        "Developing a scalable web application with high traffic",
+        "Implementing dynamic object creation based on configuration",
+        "Efficient sorting and searching in large datasets",
+        "Designing a cache with fast lookups and automatic expiration"
+    ],
+    bestPractices: [
+        "Provide detailed task descriptions for more accurate recommendations",
+        "Specify context, constraints, and preferences for more relevant results",
+        "Use this tool in early design phases to choose the optimal approach",
+        "Consider the trade-offs highlighted in the recommendations"
+    ],
+    integration: {
+        withAI: "AI assistants should use this tool when users need help with software architecture, algorithm selection, or design patterns.",
+        examples: [
+            "When a user asks 'What's the best way to structure my e-commerce app?'",
+            "When a user needs to choose between different sorting algorithms",
+            "When deciding on a pattern for implementing a feature with multiple variations"
+        ]
+    },
+    // Дополнительные поля, специфичные для ModelSelector
+    supportedCategories: [
+        "Architecture", "Design Pattern", "Algorithm", "Data Structure",
+        "Programming Paradigm", "Code Organization", "API Design",
+        "Testing Strategy", "Optimization Strategy", "Concurrency Model"
+    ]
+});
 
 // Тип для описания модели, подхода или решения
 export interface ProgrammingModel {
