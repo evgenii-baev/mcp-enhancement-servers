@@ -3,6 +3,7 @@
  */
 
 import { Server, ServerCapability, ServerRequest, ServerResponse } from '../interfaces/server-interfaces.js';
+import { getAllMentalModelNames } from '../models/mental-models.js';
 
 // Базовый класс для серверов
 export class BaseServer implements Server {
@@ -79,17 +80,13 @@ export class MentalModelServer extends BaseServer {
                 }
             };
         } else if (request.capability === 'list_mental_models') {
-            // Заглушка для списка ментальных моделей
+            // Получаем полный список ментальных моделей
+            const modelNames = getAllMentalModelNames();
+
             return {
                 success: true,
                 data: {
-                    models: [
-                        'first_principles',
-                        'systems_thinking',
-                        'occams_razor',
-                        'bayes_theorem',
-                        'second_order_thinking'
-                    ]
+                    models: modelNames
                 }
             };
         }
