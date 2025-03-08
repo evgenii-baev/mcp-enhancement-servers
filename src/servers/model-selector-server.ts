@@ -16,13 +16,15 @@ export const MODEL_SELECTOR_DESCRIPTION: ToolDescription = createToolDescription
         "When solving a specific problem that requires an appropriate design pattern",
         "When selecting the most efficient algorithm for data processing",
         "When choosing the optimal data structure for storing and accessing information",
-        "For comparing different approaches to solving the same task"
+        "For comparing different approaches to solving the same task",
+        "When refactoring existing code and need guidance on better structures",
+        "When optimizing performance-critical parts of an application"
     ],
     capabilities: [
         {
             name: "select_model",
             description: "Selects the optimal model based on task requirements, context, and constraints",
-            keyParameters: ["task", "context", "constraints", "preferences"]
+            keyParameters: ["task", "context", "constraints", "preferences", "language", "projectScale"]
         },
         {
             name: "list_models",
@@ -39,28 +41,67 @@ export const MODEL_SELECTOR_DESCRIPTION: ToolDescription = createToolDescription
         "Developing a scalable web application with high traffic",
         "Implementing dynamic object creation based on configuration",
         "Efficient sorting and searching in large datasets",
-        "Designing a cache with fast lookups and automatic expiration"
+        "Designing a cache with fast lookups and automatic expiration",
+        "Creating a system that needs to handle multiple types of notifications",
+        "Implementing a plugin architecture for extensibility",
+        "Building a distributed system with high availability requirements"
     ],
     bestPractices: [
         "Provide detailed task descriptions for more accurate recommendations",
         "Specify context, constraints, and preferences for more relevant results",
         "Use this tool in early design phases to choose the optimal approach",
-        "Consider the trade-offs highlighted in the recommendations"
+        "Consider the trade-offs highlighted in the recommendations",
+        "For algorithms, describe the size and characteristics of your data",
+        "For architectures, mention scale, team size, and deployment considerations",
+        "Try comparing multiple models to understand trade-offs better"
     ],
     integration: {
         withAI: "AI assistants should use this tool when users need help with software architecture, algorithm selection, or design patterns.",
         examples: [
             "When a user asks 'What's the best way to structure my e-commerce app?'",
             "When a user needs to choose between different sorting algorithms",
-            "When deciding on a pattern for implementing a feature with multiple variations"
+            "When deciding on a pattern for implementing a feature with multiple variations",
+            "When a user mentions 'I need to improve my application's performance'",
+            "When a user is deciding between different architectural approaches",
+            "When implementing complex data processing pipelines",
+            "When optimizing memory-intensive applications"
         ]
     },
-    // Дополнительные поля, специфичные для ModelSelector
-    supportedCategories: [
-        "Architecture", "Design Pattern", "Algorithm", "Data Structure",
-        "Programming Paradigm", "Code Organization", "API Design",
-        "Testing Strategy", "Optimization Strategy", "Concurrency Model"
-    ]
+    modelCategories: {
+        architecture: [
+            "Microservices", "Monolithic", "Serverless", "Event-driven",
+            "MVC", "MVVM", "Clean Architecture", "Hexagonal"
+        ],
+        designPatterns: {
+            creational: ["Factory Method", "Abstract Factory", "Builder", "Singleton", "Prototype"],
+            structural: ["Adapter", "Bridge", "Composite", "Decorator", "Facade", "Flyweight", "Proxy"],
+            behavioral: ["Chain of Responsibility", "Command", "Iterator", "Mediator", "Observer", "Strategy", "Template Method"]
+        },
+        algorithms: {
+            sorting: ["QuickSort", "MergeSort", "HeapSort", "RadixSort", "TimSort"],
+            searching: ["Binary Search", "Depth-First Search", "Breadth-First Search", "A*"],
+            graph: ["Dijkstra's", "Floyd-Warshall", "Bellman-Ford", "Kruskal's", "Prim's"]
+        },
+        dataStructures: {
+            linear: ["Array", "LinkedList", "Stack", "Queue", "Deque"],
+            tree: ["Binary Tree", "AVL Tree", "Red-Black Tree", "B-Tree", "Trie"],
+            hash: ["HashMap", "HashSet", "LinkedHashMap"],
+            graph: ["Adjacency Matrix", "Adjacency List", "Edge List"]
+        },
+        paradigms: ["Object-Oriented", "Functional", "Reactive", "Event-driven", "Procedural", "Declarative"],
+        concurrency: ["Threads", "Actors", "CSP", "Software Transactional Memory", "Worker Pools"]
+    },
+    resultInterpretation: {
+        sections: [
+            "Top recommendations with explanations of why they match your needs",
+            "Pros and cons of each recommended approach",
+            "Complexity assessment (time/space for algorithms)",
+            "Common use cases where the model excels",
+            "Implementation considerations and challenges",
+            "Alternatives to consider with their trade-offs"
+        ],
+        howToUse: "Review each recommendation carefully, considering not just the primary benefits but also the potential challenges. The best model often depends on your specific context and constraints."
+    }
 });
 
 // Тип для описания модели, подхода или решения
