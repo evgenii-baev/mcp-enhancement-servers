@@ -28,6 +28,15 @@ This package provides a set of servers that implement various thinking enhanceme
 - **Enhanced Tool Descriptions**: Provides detailed documentation to help AI assistants
 - **Tool Selection Guidance**: Offers prioritized recommendations for effective tool usage
 
+## Documentation
+
+Comprehensive documentation for the MCP toolkit is available in the [docs](docs) directory:
+
+- [**Tool Arguments Reference**](docs/TOOLS_ARGUMENTS.md) - Complete reference for all tools and their arguments
+- [**Tool Priority Guide**](docs/TOOL_PRIORITY.md) - Guide on which tools to use and in what order
+- [**Model Selector Usage Guide**](docs/MODEL_SELECTOR_USAGE.md) - Detailed guide for the Model Selector tool
+- [**Documentation Index**](docs/README.md) - Overview of all available documentation
+
 ## Tool Priority
 
 We've organized the tools in a recommended priority order to help AI/users choose the appropriate tool for different tasks. For detailed guidance on when to use each tool and recommended combinations for different scenarios, see [Tool Priority Guide](docs/TOOL_PRIORITY.md).
@@ -189,8 +198,6 @@ const toolDescription = AiIntegrationLayer.getToolDescription("model_selector");
 // Generate a summary of all available tools
 const toolsSummary = AiIntegrationLayer.getToolsSummary();
 ```
-
-See [AI Integration Usage Guide](docs/AI_INTEGRATION_USAGE.md) for detailed examples and best practices.
 
 ## License
 

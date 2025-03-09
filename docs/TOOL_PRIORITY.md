@@ -1,88 +1,88 @@
-# Приоритет инструментов MCP и рекомендации по их использованию
+# MCP Tools Priority and Usage Recommendations
 
-Этот документ описывает рекомендуемый порядок рассмотрения инструментов ИИ при решении задач. Инструменты расположены в порядке убывания приоритета и сгруппированы по категориям.
+This document describes the recommended order of AI tools based on their priority when solving tasks. The tools are listed in decreasing order of priority and grouped by category.
 
-## Категории инструментов и их приоритеты
+## Tool Categories and Their Priorities
 
-### 1. Инструменты для начального анализа и выбора подхода
+### 1. Initial Analysis Tools
 
-Эти инструменты помогают определить, с чего начать и какой подход выбрать:
+These tools help determine where to start and which approach to choose:
 
-1. **First Thought Advisor (`first_thought_advisor`)** - Помощь в выборе начального подхода к проблеме. Используйте на самых ранних этапах работы с задачей, когда нужно определить направление мышления.
+1. **First Thought Advisor (`first_thought_advisor`)** - Helps select an initial approach to the problem. Use at the earliest stages of working on a task when you need to determine the direction of thinking.
 
-2. **Model Selector (`model_selector`)** - Выбор оптимальной модели для конкретной задачи. Применяйте, когда нужно определить лучший алгоритм или подход для решения определенной проблемы.
+2. **Model Selector (`model_selector`)** - Chooses the optimal model for a specific task. Apply when you need to determine the best algorithm or approach to solve a particular problem.
 
-### 2. Базовые инструменты структурированного мышления
+### 2. Basic Structured Thinking Tools
 
-Эти инструменты обеспечивают основу для структурированного мышления:
+These tools provide the foundation for structured thinking:
 
-3. **Sequential Thinking (`sequential_thinking`)** - Основа всего мыслительного процесса. Используйте этот инструмент для структурирования сложных задач в последовательность шагов, создания ветвей мыслей и пересмотра предыдущих мыслей.
+3. **Sequential Thinking (`sequential_thinking`)** - The foundation of the entire thinking process. Use this tool to structure complex tasks into a sequence of steps, create branches of thoughts, and revise previous thoughts.
 
-4. **Mental Model (`mental_model`)** - Применение проверенных ментальных моделей к задачам. Рассматривайте этот инструмент при необходимости анализа проблемы с использованием различных когнитивных фреймворков.
+4. **Mental Model (`mental_model`)** - Applies proven mental models to tasks. Consider this tool when you need to analyze a problem using various cognitive frameworks.
 
-5. **Debugging Approach (`debugging_approach`)** - Систематические подходы к отладке и решению проблем. Используйте для структурированной отладки кода, систем и процессов.
+5. **Debugging Approach (`debugging_approach`)** - Systematic approaches to debugging and problem-solving. Use for structured debugging of code, systems, and processes.
 
-### 3. Инструменты для генерации и оптимизации решений
+### 3. Solution Generation Tools
 
-Эти инструменты помогают генерировать и оптимизировать решения:
+These tools help generate and optimize solutions:
 
-6. **Brainstorming (`brainstorming`)** - Структурированный мозговой штурм для генерации идей. Применяйте, когда нужно создать множество альтернативных решений или подходов.
+6. **Brainstorming (`brainstorming`)** - Structured brainstorming for idea generation. Apply when you need to create multiple alternative solutions or approaches.
 
-7. **Stochastic Algorithm (`stochastic_algorithm`)** - Применение стохастических алгоритмов для решения сложных оптимизационных задач. Используйте для задач, связанных с неопределенностью и оптимизацией.
+7. **Stochastic Algorithm (`stochastic_algorithm`)** - Application of stochastic algorithms to solve complex optimization problems. Use for tasks involving uncertainty and optimization.
 
-### 4. Инструменты для работы с функциями и требованиями
+### 4. Tools for Working with Functions and Requirements
 
-Эти инструменты фокусируются на работе с функциями и требованиями:
+These tools focus on working with features and requirements:
 
-8. **Feature Discussion (`feature_discussion`)** - Структурированное обсуждение функций и сбор информации о них. Используйте при работе с новыми функциями или требованиями.
+8. **Feature Discussion (`feature_discussion`)** - Structured discussion of features and gathering information about them. Use when working with new features or requirements.
 
-9. **Feature Analyzer (`feature_analyzer`)** - Анализ функций и их характеристик. Применяйте для оценки сложности, выявления зависимостей и потенциальных проблем при реализации функций.
+9. **Feature Analyzer (`feature_analyzer`)** - Analysis of features and their characteristics. Apply to assess complexity, identify dependencies, and potential problems in feature implementation.
 
-## Рекомендации по выбору инструментов
+## Recommendations for Tool Selection
 
-### По типу задачи
+### By Task Type
 
-- **Для определения подхода**: First Thought Advisor, Model Selector
-- **Для структурирования мышления**: Sequential Thinking, Mental Model, Debugging Approach
-- **Для генерации и оптимизации решений**: Brainstorming, Stochastic Algorithm
-- **Для работы с требованиями**: Feature Discussion, Feature Analyzer
+- **For determining approach**: First Thought Advisor, Model Selector
+- **For structured thinking**: Sequential Thinking, Mental Model, Debugging Approach
+- **For generating and optimizing solutions**: Brainstorming, Stochastic Algorithm
+- **For working with requirements**: Feature Discussion, Feature Analyzer
 
-### По этапу работы
+### By Work Stage
 
-- **Начало работы с задачей**: First Thought Advisor, Model Selector
-- **Структурирование и анализ**: Sequential Thinking, Mental Model, Debugging Approach
-- **Генерация и оптимизация решений**: Brainstorming, Stochastic Algorithm
-- **Реализация и детализация**: Feature Discussion, Feature Analyzer
+- **Beginning work on a task**: First Thought Advisor, Model Selector
+- **Structuring and analysis**: Sequential Thinking, Mental Model, Debugging Approach
+- **Solution generation and optimization**: Brainstorming, Stochastic Algorithm
+- **Implementation and detailing**: Feature Discussion, Feature Analyzer
 
-## Примеры использования инструментов в комбинации
+## Examples of Using Tools in Combination
 
-### Сценарий 1: Решение сложной технической проблемы
+### Scenario 1: Solving a Complex Technical Problem
 
-1. Начните с `first_thought_advisor` для определения начального подхода
-2. Используйте `model_selector` для выбора подходящей методологии
-3. Примените `sequential_thinking` для структурирования процесса решения
-4. Используйте `mental_model` для анализа проблемы с разных точек зрения
-5. При необходимости отладки примените `debugging_approach`
-6. Для оптимизации решения используйте `stochastic_algorithm`
+1. Start with `first_thought_advisor` to determine the initial approach
+2. Use `model_selector` to choose an appropriate methodology
+3. Apply `sequential_thinking` to structure the solution process
+4. Use `mental_model` to analyze the problem from different perspectives
+5. Apply `debugging_approach` when debugging is necessary
+6. Use `stochastic_algorithm` to optimize the solution
 
-### Сценарий 2: Разработка новой функции
+### Scenario 2: Developing a New Feature
 
-1. Начните с `first_thought_advisor` для определения общего подхода
-2. Используйте `feature_discussion` для понимания требований
-3. Примените `sequential_thinking` для планирования процесса разработки
-4. Используйте `brainstorming` для генерации альтернативных подходов
-5. Примените `feature_analyzer` для детального анализа требований
-6. Завершите с `model_selector` для выбора конкретных технологий и архитектуры
+1. Start with `first_thought_advisor` to determine the general approach
+2. Use `feature_discussion` to understand requirements
+3. Apply `sequential_thinking` to plan the development process
+4. Use `brainstorming` to generate alternative approaches
+5. Apply `feature_analyzer` for detailed requirements analysis
+6. Finish with `model_selector` to choose specific technologies and architecture
 
-### Сценарий 3: Исследование и анализ данных
+### Scenario 3: Research and Data Analysis
 
-1. Начните с `first_thought_advisor` для определения начального подхода
-2. Используйте `model_selector` для выбора подходящих моделей анализа
-3. Примените `sequential_thinking` для структурирования процесса исследования
-4. Используйте `mental_model` для формирования гипотез
-5. Примените `stochastic_algorithm` для анализа и моделирования
-6. Завершите с `brainstorming` для интерпретации результатов и генерации выводов
+1. Start with `first_thought_advisor` to determine the initial approach
+2. Use `model_selector` to choose appropriate analysis models
+3. Apply `sequential_thinking` to structure the research process
+4. Use `mental_model` to form hypotheses
+5. Apply `stochastic_algorithm` for analysis and modeling
+6. Finish with `brainstorming` for interpreting results and generating conclusions
 
-## Заключение
+## Conclusion
 
-При выборе инструментов всегда учитывайте контекст задачи и предыдущие результаты. Оптимальный подход — начинать с инструментов для начального анализа, затем переходить к инструментам структурированного мышления, генерации решений и, наконец, к работе с конкретными требованиями. Этот порядок обеспечивает естественный рабочий процесс от общего к частному и от концептуального к конкретному. 
+When choosing tools, always consider the context of the task and previous results. The optimal approach is to start with initial analysis tools, then move to structured thinking tools, solution generation, and finally to working with specific requirements. This order provides a natural workflow from general to specific and from conceptual to concrete. 
