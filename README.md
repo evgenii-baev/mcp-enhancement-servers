@@ -23,6 +23,15 @@ This package provides a set of servers that implement various thinking enhanceme
 - **Feature Discussion Server**: Facilitates structured feature discussions
 - **Feature Analyzer Server**: Analyzes feature complexity and dependencies
 
+## Documentation
+
+Comprehensive documentation for the MCP toolkit is available in the [docs](docs) directory:
+
+- [**Tool Arguments Reference**](docs/TOOLS_ARGUMENTS.md) - Complete reference for all tools and their arguments
+- [**Tool Priority Guide**](docs/TOOL_PRIORITY.md) - Guide on which tools to use and in what order
+- [**Model Selector Usage Guide**](docs/MODEL_SELECTOR_USAGE.md) - Detailed guide for the Model Selector tool
+- [**Documentation Index**](docs/README.md) - Overview of all available documentation
+
 ## Tool Priority
 
 We've organized the tools in a recommended priority order to help AI/users choose the appropriate tool for different tasks. For detailed guidance on when to use each tool and recommended combinations for different scenarios, see [Tool Priority Guide](docs/TOOL_PRIORITY.md).
