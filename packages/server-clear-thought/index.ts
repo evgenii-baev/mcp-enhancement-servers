@@ -32,7 +32,8 @@ import {
     DEBUGGING_APPROACH_TOOL,
     SEQUENTIAL_THINKING_TOOL,
     BRAINSTORMING_TOOL,
-    MODEL_SELECTOR_TOOL
+    MODEL_SELECTOR_TOOL,
+    STOCHASTIC_ALGORITHM_TOOL
 } from "./src/tools/index.js"
 
 // Импорт классов серверов
@@ -41,7 +42,8 @@ import {
     MentalModelServer,
     DebuggingApproachServer,
     SequentialThinkingServer,
-    ModelSelectorServer
+    ModelSelectorServer,
+    StochasticAlgorithmServer
 } from './src/servers/index.js'
 
 // Create server instances
@@ -50,6 +52,7 @@ const debuggingApproachServer = new DebuggingApproachServer()
 const sequentialThinkingServer = new SequentialThinkingServer()
 const brainstormingServer = new BrainstormingServer()
 const modelSelectorServer = new ModelSelectorServer()
+const stochasticAlgorithmServer = new StochasticAlgorithmServer()
 
 // Create MCP server
 const server = new Server(
@@ -65,6 +68,7 @@ const server = new Server(
                 "debugging_approach": DEBUGGING_APPROACH_TOOL,
                 "brainstorming": BRAINSTORMING_TOOL,
                 "model_selector": MODEL_SELECTOR_TOOL,
+                "stochastic_algorithm": STOCHASTIC_ALGORITHM_TOOL,
             },
         },
     }
@@ -78,6 +82,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         SEQUENTIAL_THINKING_TOOL,
         BRAINSTORMING_TOOL,
         MODEL_SELECTOR_TOOL,
+        STOCHASTIC_ALGORITHM_TOOL
     ],
 }))
 
@@ -98,6 +103,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 return brainstormingServer.processBrainstorming(params)
             case "model_selector":
                 return modelSelectorServer.processModelSelection(params)
+            case "stochastic_algorithm":
+                return stochasticAlgorithmServer.processAlgorithm(params)
             default:
                 throw new McpError(
                     ErrorCode.MethodNotFound,

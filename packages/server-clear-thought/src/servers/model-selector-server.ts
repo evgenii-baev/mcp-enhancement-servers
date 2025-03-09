@@ -252,10 +252,11 @@ export class ModelSelectorServer {
         const goalModelMap: Record<string, string[]> = {
             "analyze": ["systems_thinking", "first_principles", "scientific_method", "sensitivity_analysis"],
             "innovate": ["lateral_thinking", "divergent_thinking", "first_principles", "thought_experiment"],
-            "optimize": ["pareto_principle", "opportunity_cost", "systems_thinking", "sensitivity_analysis"],
+            "optimize": ["pareto_principle", "opportunity_cost", "systems_thinking", "sensitivity_analysis", "mdp", "bayesian"],
             "debug": ["rubber_duck", "error_propagation", "occams_razor", "scientific_method"],
-            "decide": ["decision_tree", "bayes_theorem", "opportunity_cost", "scenario_planning"],
-            "understand": ["systems_thinking", "proximate_ultimate_causation", "thought_experiment", "scientific_method"]
+            "decide": ["decision_tree", "bayes_theorem", "opportunity_cost", "scenario_planning", "mdp", "mcts", "bandit"],
+            "understand": ["systems_thinking", "proximate_ultimate_causation", "thought_experiment", "scientific_method"],
+            "predict": ["bayes_theorem", "hmm", "bayesian", "mcts"]
         };
 
         if (goalModelMap[goal]?.includes(model.id)) {
@@ -299,6 +300,9 @@ export class ModelSelectorServer {
                 case "understand":
                     reason += `This model helps build deeper understanding by revealing underlying patterns and relationships.`;
                     break;
+                case "predict":
+                    reason += `This model is excellent for prediction tasks, using probabilistic reasoning to forecast outcomes under uncertainty.`;
+                    break;
                 default:
                     reason += `This model provides a structured approach that can help address your specific problem.`;
             }
@@ -319,9 +323,46 @@ export class ModelSelectorServer {
         // Generate advice on how to apply this model to the specific problem
         let advice = "To apply this model to your problem:\n";
 
-        // Add steps from the model
-        for (let i = 0; i < model.steps.length; i++) {
-            advice += `${i + 1}. ${model.steps[i]}\n`;
+        // For stochastic algorithms, provide special instructions
+        if (["mdp", "mcts", "bandit", "bayesian", "hmm"].includes(model.id)) {
+            advice += `Use the stochastic_algorithm tool with the following parameters:\n`;
+            advice += `{\n`;
+            advice += `  "algorithm": "${model.id}",\n`;
+            advice += `  "problem": "${data.problem}",\n`;
+            advice += `  "parameters": {\n`;
+
+            // Add algorithm-specific parameters
+            switch (model.id) {
+                case "mdp":
+                    advice += `    "states": [number of states],\n`;
+                    advice += `    "actions": [number of actions],\n`;
+                    advice += `    "discount": 0.9\n`;
+                    break;
+                case "mcts":
+                    advice += `    "iterations": 1000,\n`;
+                    advice += `    "exploration": 1.41\n`;
+                    break;
+                case "bandit":
+                    advice += `    "arms": [number of options],\n`;
+                    advice += `    "strategy": "ucb1"\n`;
+                    break;
+                case "bayesian":
+                    advice += `    "iterations": 100,\n`;
+                    advice += `    "kernel": "rbf"\n`;
+                    break;
+                case "hmm":
+                    advice += `    "states": [number of hidden states],\n`;
+                    advice += `    "observations": [number of possible observations]\n`;
+                    break;
+            }
+
+            advice += `  }\n`;
+            advice += `}\n`;
+        } else {
+            // Add steps from the model
+            for (let i = 0; i < model.steps.length; i++) {
+                advice += `${i + 1}. ${model.steps[i]}\n`;
+            }
         }
 
         // Add problem-specific advice
