@@ -181,11 +181,11 @@ The Mental Model tool applies structured mental models to problem-solving. It he
 - ecosystem
 
 **Programming-Oriented Mental Models:**
-- composition_vs_inheritance
-- single_responsibility
-- interface_segregation
-- actor_model
-- time_space_complexity
+- **composition_vs_inheritance**: Design principle that favors object composition over class inheritance for code reuse and flexibility
+- **single_responsibility**: Principle that a class or module should have only one responsibility or reason to change
+- **interface_segregation**: Separating what something does (interface) from how it does it (implementation)
+- **actor_model**: Concurrency model where independent actors communicate by message passing without shared state
+- **time_space_complexity**: Analysis of algorithm efficiency in terms of time and space requirements
 
 #### Example
 
