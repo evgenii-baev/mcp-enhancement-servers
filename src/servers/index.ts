@@ -62,8 +62,16 @@ export class MentalModelServer extends BaseServer {
                 name: 'apply_mental_model',
                 description: 'Applies a mental model to a problem',
                 parameters: {
-                    modelName: { type: 'string', required: true },
-                    problem: { type: 'string', required: true }
+                    modelName: {
+                        type: 'string',
+                        required: true,
+                        description: 'The mental model to apply. For programming problems, consider using the specialized programming models: composition_vs_inheritance, single_responsibility, interface_segregation, actor_model, or time_space_complexity.'
+                    },
+                    problem: {
+                        type: 'string',
+                        required: true,
+                        description: 'The problem to analyze using the selected mental model. For programming models, provide specific code design or architectural challenges.'
+                    }
                 }
             },
             {
@@ -111,9 +119,51 @@ export class SequentialThinkingServer extends BaseServer {
                 name: 'process_sequential_thought',
                 description: 'Processes a sequential thought',
                 parameters: {
-                    thought: { type: 'string', required: true },
-                    thoughtNumber: { type: 'number', required: true },
-                    totalThoughts: { type: 'number', required: true }
+                    thought: {
+                        type: 'string',
+                        required: true,
+                        description: 'The current thought or reasoning step'
+                    },
+                    thoughtNumber: {
+                        type: 'number',
+                        required: true,
+                        description: 'The sequential number of the current thought (starting from 1)'
+                    },
+                    totalThoughts: {
+                        type: 'number',
+                        required: true,
+                        description: 'The estimated total number of thoughts needed'
+                    },
+                    nextThoughtNeeded: {
+                        type: 'boolean',
+                        required: false,
+                        description: 'Whether additional thoughts are needed to complete the reasoning'
+                    },
+                    branchFromThought: {
+                        type: 'number',
+                        required: false,
+                        description: 'Number of the thought from which to create an alternative reasoning path'
+                    },
+                    branchId: {
+                        type: 'string',
+                        required: false,
+                        description: 'Identifier for the current reasoning branch'
+                    },
+                    revisesThought: {
+                        type: 'number',
+                        required: false,
+                        description: 'Number of the thought being revised with new information'
+                    },
+                    isRevision: {
+                        type: 'boolean',
+                        required: false,
+                        description: 'Whether this thought is a revision of a previous thought'
+                    },
+                    needsMoreThoughts: {
+                        type: 'boolean',
+                        required: false,
+                        description: 'Indicates if additional thoughts would be helpful beyond the initial estimate'
+                    }
                 }
             }
         ]);
@@ -148,8 +198,32 @@ export class DebuggingApproachServer extends BaseServer {
                 name: 'apply_debugging_approach',
                 description: 'Applies a debugging approach to an issue',
                 parameters: {
-                    approachName: { type: 'string', required: true },
-                    issue: { type: 'string', required: true }
+                    approachName: {
+                        type: 'string',
+                        required: true,
+                        description: 'The debugging methodology to apply (binary_search, reverse_engineering, divide_conquer, backtracking, cause_elimination, program_slicing)'
+                    },
+                    issue: {
+                        type: 'string',
+                        required: true,
+                        description: 'Description of the problem to be debugged'
+                    },
+                    findings: {
+                        type: 'string',
+                        required: false,
+                        description: 'Observations and patterns discovered during the debugging process'
+                    },
+                    steps: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        required: false,
+                        description: 'Specific actions taken or recommended to isolate and resolve the issue'
+                    },
+                    resolution: {
+                        type: 'string',
+                        required: false,
+                        description: 'The solution that fixed the problem, including explanation of root cause'
+                    }
                 }
             },
             {
@@ -205,16 +279,68 @@ export class BrainstormingServer extends BaseServer {
                 name: 'start_brainstorming',
                 description: 'Starts a brainstorming session',
                 parameters: {
-                    topic: { type: 'string', required: true },
-                    phase: { type: 'string', required: true }
+                    topic: {
+                        type: 'string',
+                        required: true,
+                        description: 'The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session.'
+                    },
+                    phase: {
+                        type: 'string',
+                        required: true,
+                        description: 'Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning.'
+                    },
+                    participants: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        required: false,
+                        description: 'People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities.'
+                    }
                 }
             },
             {
                 name: 'continue_brainstorming',
                 description: 'Continues an existing brainstorming session',
                 parameters: {
-                    sessionId: { type: 'string', required: true },
-                    phase: { type: 'string', required: true }
+                    sessionId: {
+                        type: 'string',
+                        required: true,
+                        description: 'Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions.'
+                    },
+                    phase: {
+                        type: 'string',
+                        required: true,
+                        description: 'Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning.'
+                    },
+                    newIdea: {
+                        type: 'string',
+                        required: false,
+                        description: 'A new idea to add to the session during the ideation phase. Should be clear, concise, and relevant to the brainstorming topic.'
+                    },
+                    category: {
+                        type: 'string',
+                        required: false,
+                        description: 'Category name for grouping related ideas during the clarification phase. Helps organize ideas by theme or type.'
+                    },
+                    ideaId: {
+                        type: 'string',
+                        required: false,
+                        description: 'Identifier for a specific idea, used when categorizing, voting for, selecting, or adding actions to an idea.'
+                    },
+                    voteForIdea: {
+                        type: 'string',
+                        required: false,
+                        description: 'ID of an idea to vote for during the evaluation phase. More votes indicate higher group preference.'
+                    },
+                    selectIdea: {
+                        type: 'string',
+                        required: false,
+                        description: 'ID of an idea to mark as selected during the selection phase. Selected ideas move forward to action planning.'
+                    },
+                    action: {
+                        type: 'string',
+                        required: false,
+                        description: 'Action step to add to a selected idea during the action planning phase. Should be specific and actionable.'
+                    }
                 }
             }
         ]);
@@ -260,9 +386,26 @@ export class StochasticAlgorithmServer extends BaseServer {
                 name: 'apply_stochastic_algorithm',
                 description: 'Applies a stochastic algorithm to a problem',
                 parameters: {
-                    algorithm: { type: 'string', required: true },
-                    problem: { type: 'string', required: true },
-                    parameters: { type: 'object', required: true }
+                    algorithm: {
+                        type: 'string',
+                        required: true,
+                        description: 'The stochastic algorithm to apply. Each algorithm is suited to different types of decision problems.'
+                    },
+                    problem: {
+                        type: 'string',
+                        required: true,
+                        description: 'The decision problem to solve. Describe the uncertainty, options, and desired outcome.'
+                    },
+                    parameters: {
+                        type: 'object',
+                        required: true,
+                        description: 'Algorithm-specific parameters for customization. Each algorithm has its own parameter set.'
+                    },
+                    result: {
+                        type: 'string',
+                        required: false,
+                        description: 'Optional result from algorithm application, typically filled in response.'
+                    }
                 }
             }
         ]);
