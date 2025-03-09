@@ -15,9 +15,9 @@ export interface ModelCategory {
 }
 
 /**
- * Interface for model selector input data
+ * Interface for first thought advisor input data
  */
-export interface ModelSelectorData {
+export interface FirstThoughtAdvisorData {
     /** The problem to solve */
     problem: string;
     /** Optional domain of the problem */
@@ -46,4 +46,4 @@ export interface ModelRecommendation {
     reason: string;
     /** Instructions on how to apply the model */
     howToApply: string;
-}
+} 

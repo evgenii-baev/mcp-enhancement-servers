@@ -1,4 +1,4 @@
-import { ModelCategory } from '../interfaces/model-selector-data.js';
+import { ModelCategory } from '../interfaces/first-thought-advisor-data.js';
 
 /**
  * Predefined categories of mental models
