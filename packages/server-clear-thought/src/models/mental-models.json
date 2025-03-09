@@ -817,6 +817,153 @@
         "Overlooking resource limitations",
         "Failing to consider long-term sustainability"
       ]
+    },
+    {
+      "id": "composition_vs_inheritance",
+      "name": "Composition vs. Inheritance",
+      "always_consider": false,
+      "definition": "A design principle that favors object composition over class inheritance for code reuse and flexibility.",
+      "when_to_use": [
+        "Designing class hierarchies and relationships",
+        "When you need to reuse code across different classes",
+        "Refactoring rigid inheritance hierarchies",
+        "When behavior needs to change dynamically at runtime",
+        "Dealing with the 'fragile base class' problem"
+      ],
+      "steps": [
+        "Identify what functionality needs to be shared",
+        "Consider if the relationship is truly 'is-a' (inheritance) or 'has-a' (composition)",
+        "For 'has-a' relationships, implement through composition by containing instances of other classes",
+        "Use interfaces to standardize behavior across composed objects",
+        "Implement delegation methods as needed to expose inner object functionality"
+      ],
+      "example": "Instead of creating a 'Vehicle' base class with 'Car' and 'Truck' subclasses, create separate 'Engine', 'Transmission', and 'Chassis' classes that can be composed in different ways to create various vehicle types.",
+      "pitfalls": [
+        "Overcomplicating simple relationships that could use inheritance",
+        "Creating too many small objects that increase complexity",
+        "Performance overhead of delegation in some cases",
+        "Not considering the benefits of polymorphism that inheritance provides",
+        "Creating deep delegation chains that are hard to follow"
+      ]
+    },
+    {
+      "id": "single_responsibility",
+      "name": "Single Responsibility Principle (SRP)",
+      "always_consider": true,
+      "definition": "A class or module should have one, and only one, reason to change, meaning it should have only one job or responsibility.",
+      "when_to_use": [
+        "Designing new classes, modules, or functions",
+        "Refactoring complex code with multiple responsibilities",
+        "When code becomes difficult to test or maintain",
+        "When changes to one part of the functionality affect other parts",
+        "Creating reusable components"
+      ],
+      "steps": [
+        "Identify all the responsibilities of a class or module",
+        "For each responsibility, ask if it belongs together with the others",
+        "Extract separate responsibilities into their own classes or modules",
+        "Ensure each unit has high cohesion (its methods and properties are closely related)",
+        "Use composition to combine functionality when needed"
+      ],
+      "example": "Instead of a 'User' class that handles authentication, profile management, and data persistence, create separate 'UserAuthenticator', 'UserProfileManager', and 'UserRepository' classes each with a single responsibility.",
+      "pitfalls": [
+        "Creating too many tiny classes that increase system complexity",
+        "Breaking cohesive functionality that should stay together",
+        "Introducing unnecessary abstractions",
+        "Misidentifying responsibilities (either too broad or too narrow)",
+        "Increasing coupling between classes to compensate for the separation"
+      ]
+    },
+    {
+      "id": "interface_segregation",
+      "name": "Interface-Implementation Separation",
+      "always_consider": false,
+      "definition": "The principle of separating what something does (interface) from how it does it (implementation), allowing for flexibility and easier maintenance.",
+      "when_to_use": [
+        "Designing APIs or libraries for others to use",
+        "Creating extensible systems that might change implementation details",
+        "When multiple implementations of the same behavior are needed",
+        "When you need to mock components for testing",
+        "When dependencies need to be managed carefully"
+      ],
+      "steps": [
+        "Define clear interfaces that specify what operations are available",
+        "Keep interfaces focused and cohesive (Interface Segregation Principle)",
+        "Implement concrete classes that fulfill the interface requirements",
+        "Hide implementation details from client code",
+        "Use dependency injection to provide implementations to clients",
+        "Program to interfaces, not implementations"
+      ],
+      "example": "A 'PaymentProcessor' interface defines methods for processing payments, while concrete classes like 'CreditCardProcessor', 'PayPalProcessor', and 'CryptoCurrencyProcessor' provide specific implementations that can be swapped without changing client code.",
+      "pitfalls": [
+        "Creating overly generic interfaces that don't provide useful abstractions",
+        "Interface bloat with too many methods",
+        "Premature abstraction before understanding the problem domain",
+        "Leaking implementation details through the interface",
+        "Over-engineering simple problems that don't need abstraction"
+      ]
+    },
+    {
+      "id": "actor_model",
+      "name": "Actor Model for Concurrency",
+      "always_consider": false,
+      "definition": "A mathematical model for concurrent computation where 'actors' are the universal primitives of computation, communicating through message passing rather than shared state.",
+      "when_to_use": [
+        "Building highly concurrent systems",
+        "Distributed computing applications",
+        "When shared state creates race conditions or deadlocks",
+        "Systems requiring fault isolation and tolerance",
+        "Applications with natural actor-like entities (users, devices, services)",
+        "Reactive systems responding to external events"
+      ],
+      "steps": [
+        "Identify the actors in your system (autonomous entities with state and behavior)",
+        "Define the messages that actors will exchange",
+        "Design each actor to process messages sequentially (avoiding shared mutable state)",
+        "Implement message-handling logic for each actor type",
+        "Set up supervision hierarchies for error handling",
+        "Use location transparency to enable distribution"
+      ],
+      "example": "A chat application uses actors to represent users, chat rooms, and connections. When a user sends a message, it's passed to the chat room actor, which then distributes it to all connected user actors. Each actor processes messages sequentially, eliminating race conditions.",
+      "pitfalls": [
+        "Complexity in debugging and tracing message flows",
+        "Potential message delivery issues in distributed systems",
+        "Performance overhead of message passing for fine-grained operations",
+        "Accidental shared state introducing concurrency bugs",
+        "Actor proliferation leading to system overhead",
+        "Difficulty in implementing transactions across multiple actors"
+      ]
+    },
+    {
+      "id": "time_space_complexity",
+      "name": "Time and Space Complexity Analysis",
+      "always_consider": true,
+      "definition": "A method to analyze and quantify how algorithm resource requirements (time and memory) scale with input size, typically using Big O notation.",
+      "when_to_use": [
+        "Evaluating algorithm efficiency",
+        "Choosing between alternative implementation approaches",
+        "Optimizing performance-critical code",
+        "Working with large datasets",
+        "Dealing with resource constraints",
+        "Anticipating performance issues before they occur"
+      ],
+      "steps": [
+        "Identify the key operations in your algorithm",
+        "Determine how many times each operation executes relative to input size",
+        "Identify the dominant term (highest growth rate)",
+        "Express the complexity using Big O notation (O(n), O(n²), etc.)",
+        "Consider both average and worst-case scenarios",
+        "Analyze space requirements separately from time"
+      ],
+      "example": "When choosing a sorting algorithm, you analyze that Quicksort has average-case time complexity of O(n log n) but worst-case O(n²), while Merge Sort guarantees O(n log n) in all cases but requires O(n) extra space.",
+      "pitfalls": [
+        "Premature optimization based on theoretical complexity alone",
+        "Ignoring constant factors that matter for practical performance",
+        "Overlooking space complexity when focusing on time",
+        "Not considering actual input patterns and sizes",
+        "Using asymptotic analysis when actual inputs are always small",
+        "Overcomplicating code to achieve better theoretical complexity"
+      ]
     }
   ]
-} 
+}
