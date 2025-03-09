@@ -1,5 +1,5 @@
 {
-    "name": "@chrisperfer/clear-thought",
+    "name": "mcp-clear-thought",
     "version": "0.0.2",
     "description": "MCP server for systematic thinking, mental models, debugging approaches, and memory management",
     "license": "MIT",
@@ -16,7 +16,7 @@
         "LICENSE"
     ],
     "scripts": {
-        "build": "npx tsc --listFiles --project tsconfig.json && mkdir -p dist/src/models && mkdir -p dist/src/servers && cp src/models/*.json dist/src/models/ && cp src/servers/*.js dist/src/servers/ && cp src/servers/*.d.ts dist/src/servers/ && chmod +x dist/*.js",
+        "build": "npx tsc --listFiles --project tsconfig.json && mkdir -p dist/src/models && mkdir -p dist/src/servers && mkdir -p dist/src/interfaces && cp src/models/*.json dist/src/models/ && cp src/servers/*.js dist/src/servers/ && cp src/servers/*.d.ts dist/src/servers/ && cp src/interfaces/*.js dist/src/interfaces/ && chmod +x dist/*.js",
         "prepare": "npm run build",
         "watch": "npx tsc --watch",
         "clean": "rm -rf dist",

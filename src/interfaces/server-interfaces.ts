@@ -78,6 +78,7 @@ export {
     BrainstormingData,
     StochasticAlgorithmData,
     FirstThoughtAdvisorData,
+    FirstThoughtAdvisorResult,
     FeatureDiscussionData,
     FeatureAnalyzerData,
     ArchitectureAdvisorData,

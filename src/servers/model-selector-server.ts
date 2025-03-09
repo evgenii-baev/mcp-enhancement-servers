@@ -275,32 +275,88 @@ export class ModelSelectorServer extends BaseServer {
                 name: 'select_model',
                 description: 'Selects the optimal model/approach for a programming task',
                 parameters: {
-                    task: { type: 'string', required: true },
-                    context: { type: 'string', required: false },
-                    language: { type: 'string', required: false },
-                    framework: { type: 'string', required: false },
-                    constraints: { type: 'array', required: false },
-                    preferences: { type: 'array', required: false },
-                    requiredFeatures: { type: 'array', required: false },
-                    optimizationGoals: { type: 'array', required: false },
-                    teamExperience: { type: 'string', required: false },
-                    projectScale: { type: 'string', required: false },
-                    timeConstraints: { type: 'string', required: false }
+                    task: {
+                        type: 'string',
+                        required: true,
+                        description: 'The specific programming task or problem that requires a model/approach recommendation'
+                    },
+                    context: {
+                        type: 'string',
+                        required: false,
+                        description: 'Additional context about the project, environment, or requirements'
+                    },
+                    language: {
+                        type: 'string',
+                        required: false,
+                        description: 'Programming language being used (to provide language-specific recommendations)'
+                    },
+                    framework: {
+                        type: 'string',
+                        required: false,
+                        description: 'Framework or platform being used (to ensure compatibility with recommendations)'
+                    },
+                    constraints: {
+                        type: 'array',
+                        required: false,
+                        description: 'Any limitations or requirements that might affect the choice of model/approach'
+                    },
+                    preferences: {
+                        type: 'array',
+                        required: false,
+                        description: 'Desired qualities or characteristics that the selected model/approach should have'
+                    },
+                    requiredFeatures: {
+                        type: 'array',
+                        required: false,
+                        description: 'Specific features or capabilities that must be supported by the recommended model'
+                    },
+                    optimizationGoals: {
+                        type: 'array',
+                        required: false,
+                        description: 'Aspects of the solution that should be optimized (e.g., performance, memory usage, maintainability)'
+                    },
+                    teamExperience: {
+                        type: 'string',
+                        required: false,
+                        description: 'Level of experience the team has with different technologies and approaches'
+                    },
+                    projectScale: {
+                        type: 'string',
+                        required: false,
+                        description: 'Size of the project (Small, Medium, Large, Enterprise) to influence architectural recommendations'
+                    },
+                    timeConstraints: {
+                        type: 'string',
+                        required: false,
+                        description: 'Time available for implementation, which may affect complexity of recommended solutions'
+                    }
                 }
             },
             {
                 name: 'list_models',
                 description: 'Lists all available models/approaches in a specific category',
                 parameters: {
-                    category: { type: 'string', required: false }
+                    category: {
+                        type: 'string',
+                        required: false,
+                        description: 'Category of models to list (e.g., Architecture, Design Pattern, Algorithm, Data Structure). If omitted, all models are returned.'
+                    }
                 }
             },
             {
                 name: 'compare_models',
                 description: 'Compares two or more models/approaches',
                 parameters: {
-                    modelNames: { type: 'array', required: true },
-                    criteria: { type: 'array', required: false }
+                    modelNames: {
+                        type: 'array',
+                        required: true,
+                        description: 'Array of model names to compare (e.g., ["Microservices", "Monolithic", "Serverless"])'
+                    },
+                    criteria: {
+                        type: 'array',
+                        required: false,
+                        description: 'Specific aspects to compare (e.g., ["scalability", "complexity", "maintainability"]). If omitted, all relevant aspects are compared.'
+                    }
                 }
             }
         ]);

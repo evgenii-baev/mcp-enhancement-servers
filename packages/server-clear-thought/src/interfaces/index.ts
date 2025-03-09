@@ -2,6 +2,12 @@
  * Экспорт всех интерфейсов
  */
 
-export * from './server-interfaces';
-export * from './tool-metadata';
-export * from './thought-data'; 
+export * from './server-interfaces.js';
+export * from './tool-metadata.js';
+export * from './thought-data.js';
+export * from './mental-model-data.js';
+export * from './debugging-approach-data.js';
+export * from './brainstorming-data.js';
+export * from './first-thought-advisor-data.js';
+export * from './stochastic-algorithm-data.js';
+export * from './parameter-descriptions.js';

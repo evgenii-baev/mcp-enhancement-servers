@@ -181,11 +181,11 @@ The Mental Model tool applies structured mental models to problem-solving. It he
 - ecosystem
 
 **Programming-Oriented Mental Models:**
-- composition_vs_inheritance
-- single_responsibility
-- interface_segregation
-- actor_model
-- time_space_complexity
+- **composition_vs_inheritance**: Design principle that favors object composition over class inheritance for code reuse and flexibility
+- **single_responsibility**: Principle that a class or module should have only one responsibility or reason to change
+- **interface_segregation**: Separating what something does (interface) from how it does it (implementation)
+- **actor_model**: Concurrency model where independent actors communicate by message passing without shared state
+- **time_space_complexity**: Analysis of algorithm efficiency in terms of time and space requirements
 
 #### Example
 
@@ -218,25 +218,86 @@ The Brainstorming tool facilitates structured brainstorming sessions. It guides 
 | Argument | Type | Required | Description |
 |----------|------|----------|-------------|
 | phase | string | No | The current phase of brainstorming |
-| topic | string | No | The topic for brainstorming |
+| topic | string | Yes (for new sessions) | The topic for brainstorming |
 | sessionId | string | No | Identifier for the brainstorming session |
+| newIdea | string | No | New idea to add during ideation phase |
+| ideas | array of objects | No | Collection of generated ideas |
+| ideaId | string | No | Identifier for a specific idea for operations |
+| category | string | No | Category name for grouping related ideas |
+| voteForIdea | string | No | ID of an idea to vote for |
+| selectIdea | string | No | ID of an idea to mark as selected |
+| action | string | No | Action step to add to a selected idea |
+| constraints | array of strings | No | Limitations or requirements to consider |
+| participants | array of strings | No | People involved in the session |
 
 #### Available Phases
 
-- preparation
-- ideation
-- clarification
-- evaluation
-- selection
-- action_planning
+- **preparation**: Define the problem, establish constraints, identify participants
+- **ideation**: Generate as many ideas as possible without judgment
+- **clarification**: Group similar ideas, clarify ambiguities, combine concepts
+- **evaluation**: Rate ideas against criteria, consider feasibility, vote on options
+- **selection**: Select top ideas to pursue, verify alignment with goals
+- **action_planning**: Define next steps, assign responsibilities, set timelines
+
+#### Session Persistence
+
+The Brainstorming tool supports persistent sessions, allowing you to continue the same brainstorming process across multiple interactions. To continue a previous session, provide the same `sessionId`.
+
+#### Idea Management
+
+Ideas evolve through the different phases:
+- During **ideation**, ideas are simple text entries
+- In **clarification**, ideas can be categorized
+- During **evaluation**, ideas receive votes
+- In **selection**, ideas are marked as selected
+- During **action_planning**, actions are added to selected ideas
 
 #### Example
 
+Creating a new session:
 ```json
 {
-  "phase": "ideation",
+  "phase": "preparation",
   "topic": "Improving application performance during peak hours",
-  "sessionId": "perf-improvement-2023-03-15"
+  "constraints": ["Must be implementable within 2 weeks", "Cannot affect API contracts"]
+}
+```
+
+Adding ideas during ideation:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "ideation",
+  "newIdea": "Implement Redis cache for frequently accessed data"
+}
+```
+
+Categorizing ideas during clarification:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "clarification",
+  "ideaId": "idea123",
+  "category": "Caching Solutions"
+}
+```
+
+Voting during evaluation:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "evaluation",
+  "voteForIdea": "idea123"
+}
+```
+
+Adding actions during action planning:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "action_planning",
+  "ideaId": "idea123",
+  "action": "Research Redis client libraries and benchmark performance"
 }
 ```
 
@@ -255,14 +316,51 @@ The Stochastic Algorithm tool applies probabilistic algorithms to decision-makin
 
 #### Available Algorithms
 
-- mdp (Markov Decision Process)
-- mcts (Monte Carlo Tree Search)
-- bandit (Multi-armed Bandit)
-- bayesian (Bayesian Optimization)
-- hmm (Hidden Markov Model)
+Each stochastic algorithm has unique characteristics and parameter requirements:
+
+##### Markov Decision Process (mdp)
+- **Description**: Optimizes policies over sequences of decisions with state transitions
+- **Parameters**:
+  - `states`: Number of states in the model
+  - `actions`: Number of actions available
+  - `discountFactor`: Weight of future rewards (0-1)
+  - `iterations`: Number of iterations to run
+
+##### Monte Carlo Tree Search (mcts)
+- **Description**: Explores large decision spaces by simulating future action sequences
+- **Parameters**:
+  - `iterations`: Number of simulations to run
+  - `explorationFactor`: Controls exploration vs exploitation
+  - `maxDepth`: Maximum depth of simulation
+  - `timeLimit`: Optional time limit in milliseconds
+
+##### Multi-Armed Bandit (bandit)
+- **Description**: Balances exploration vs exploitation in action selection
+- **Parameters**:
+  - `arms`: Number of possible actions (arms)
+  - `strategy`: Strategy type (e.g., "epsilon-greedy", "UCB", "Thompson")
+  - `epsilon`: Exploration probability for epsilon-greedy
+  - `alpha`: Learning rate for reward updates
+
+##### Bayesian Optimization (bayesian)
+- **Description**: Optimizes decisions with probabilistic inference and surrogate models
+- **Parameters**:
+  - `iterations`: Number of optimization iterations
+  - `kernel`: Kernel function (e.g., "rbf", "matern")
+  - `acquisitionFunction`: How to select next points (e.g., "ei", "ucb")
+  - `bounds`: Parameter range bounds
+
+##### Hidden Markov Model (hmm)
+- **Description**: Infers latent states affecting decision outcomes
+- **Parameters**:
+  - `states`: Number of hidden states
+  - `observations`: Number of observation types
+  - `sequenceLength`: Length of observation sequence
+  - `method`: Inference method (e.g., "forward", "viterbi")
 
 #### Example
 
+Using Monte Carlo Tree Search for path planning:
 ```json
 {
   "algorithm": "mcts",
@@ -271,6 +369,19 @@ The Stochastic Algorithm tool applies probabilistic algorithms to decision-makin
     "iterations": 1000,
     "explorationFactor": 1.414,
     "maxDepth": 10
+  }
+}
+```
+
+Using Multi-Armed Bandit for online advertising:
+```json
+{
+  "algorithm": "bandit",
+  "problem": "Selecting the best advertisement to show to maximize click-through rate",
+  "parameters": {
+    "arms": 5,
+    "strategy": "epsilon-greedy",
+    "epsilon": 0.1
   }
 }
 ```

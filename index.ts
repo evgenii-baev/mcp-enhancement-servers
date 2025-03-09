@@ -8,6 +8,7 @@ import {
   FirstThoughtAdvisorServer,  // Помощь в выборе начального подхода
   ModelSelectorServer,       // Выбор оптимальной модели
   MODEL_SELECTOR_DESCRIPTION, // Описание Model Selector для ИИ
+  FIRST_THOUGHT_ADVISOR_DESCRIPTION, // Описание FirstThoughtAdvisor для ИИ
 
   // 2. Базовые инструменты структурированного мышления
   SequentialThinkingServer,  // Основа последовательного мышления
@@ -18,6 +19,18 @@ import {
   BrainstormingServer,  // Структурированный мозговой штурм
   StochasticAlgorithmServer  // Стохастические алгоритмы
 } from './src/servers/index.js';
+
+// Импорт описаний инструментов для IDE
+import {
+  MENTAL_MODEL_TOOL_DESCRIPTION,
+  SEQUENTIAL_THINKING_TOOL_DESCRIPTION,
+  DEBUGGING_APPROACH_TOOL_DESCRIPTION,
+  BRAINSTORMING_TOOL_DESCRIPTION,
+  STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION,
+  FEATURE_DISCUSSION_TOOL_DESCRIPTION,
+  FEATURE_ANALYZER_TOOL_DESCRIPTION,
+  MODEL_SELECTOR_TOOL_DESCRIPTION
+} from './src/tool-descriptions/improved-descriptions.js';
 
 // Создание экземпляров серверов
 // 1. Инструменты для начального анализа и выбора подхода
@@ -36,26 +49,29 @@ const stochasticAlgorithmServer = new StochasticAlgorithmServer();
 // Экспорт серверов
 export const servers = {
   // 1. Инструменты для начального анализа и выбора подхода
-  firstThoughtAdvisorServer,
-  modelSelectorServer,
+  firstThoughtAdvisor: firstThoughtAdvisorServer,
+  modelSelector: modelSelectorServer,
 
   // 2. Базовые инструменты структурированного мышления
-  sequentialThinkingServer,
-  mentalModelServer,
-  debuggingApproachServer,
+  sequentialThinking: sequentialThinkingServer,
+  mentalModel: mentalModelServer,
+  debuggingApproach: debuggingApproachServer,
 
   // 3. Инструменты для генерации и оптимизации решений
-  brainstormingServer,
-  stochasticAlgorithmServer
+  brainstorming: brainstormingServer,
+  stochasticAlgorithm: stochasticAlgorithmServer
 };
 
 // Функция для получения всех возможностей серверов
 export function getAllCapabilities(): Record<string, ServerCapability[]> {
   const capabilities: Record<string, ServerCapability[]> = {};
 
-  for (const [name, server] of Object.entries(servers)) {
-    capabilities[name] = server.capabilities;
-  }
+  // Добавление возможностей из всех серверов
+  Object.entries(servers).forEach(([name, server]) => {
+    if (typeof server.getCapabilities === 'function') {
+      capabilities[name] = server.getCapabilities();
+    }
+  });
 
   return capabilities;
 }
@@ -78,19 +94,16 @@ export async function handleServerRequest(
   });
 }
 
-// Экспорт основных классов для использования в других проектах
-// 1. Инструменты для начального анализа и выбора подхода
-export { FirstThoughtAdvisorServer } from './src/servers/index.js';
-export { ModelSelectorServer, MODEL_SELECTOR_DESCRIPTION } from './src/servers/index.js';
-
-// 2. Базовые инструменты структурированного мышления
-export { SequentialThinkingServer } from './src/servers/index.js';
-export { MentalModelServer } from './src/servers/index.js';
-export { DebuggingApproachServer } from './src/servers/index.js';
-
-// 3. Инструменты для генерации и оптимизации решений
-export { BrainstormingServer } from './src/servers/index.js';
-export { StochasticAlgorithmServer } from './src/servers/index.js';
+// Экспорт серверных классов для использования в других модулях
+export {
+  FirstThoughtAdvisorServer,
+  ModelSelectorServer,
+  SequentialThinkingServer,
+  MentalModelServer,
+  DebuggingApproachServer,
+  BrainstormingServer,
+  StochasticAlgorithmServer
+};
 
 // Экспорт интерфейсов
 export {
@@ -110,6 +123,13 @@ export const packageInfo = {
 
 // Экспорт информации о возможностях инструментов для ИИ-ассистентов
 export const toolDescriptions = {
-  modelSelector: MODEL_SELECTOR_DESCRIPTION
-  // Здесь можно добавлять описания других инструментов по мере их создания
+  modelSelector: MODEL_SELECTOR_TOOL_DESCRIPTION,
+  firstThoughtAdvisor: FIRST_THOUGHT_ADVISOR_DESCRIPTION,
+  mentalModel: MENTAL_MODEL_TOOL_DESCRIPTION,
+  sequentialThinking: SEQUENTIAL_THINKING_TOOL_DESCRIPTION,
+  debuggingApproach: DEBUGGING_APPROACH_TOOL_DESCRIPTION,
+  brainstorming: BRAINSTORMING_TOOL_DESCRIPTION,
+  stochasticAlgorithm: STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION,
+  featureDiscussion: FEATURE_DISCUSSION_TOOL_DESCRIPTION,
+  featureAnalyzer: FEATURE_ANALYZER_TOOL_DESCRIPTION
 };
