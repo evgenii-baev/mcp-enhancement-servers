@@ -66,9 +66,12 @@ export const servers = {
 export function getAllCapabilities(): Record<string, ServerCapability[]> {
   const capabilities: Record<string, ServerCapability[]> = {};
 
-  for (const [name, server] of Object.entries(servers)) {
-    capabilities[name] = server.capabilities;
-  }
+  // Добавление возможностей из всех серверов
+  Object.entries(servers).forEach(([name, server]) => {
+    if (typeof server.getCapabilities === 'function') {
+      capabilities[name] = server.getCapabilities();
+    }
+  });
 
   return capabilities;
 }
