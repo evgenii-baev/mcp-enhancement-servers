@@ -53,27 +53,50 @@ export class MentalModelServer {
                 definition: `Problem: ${problem}\n${model.definition}`,
             }
 
+            // Generate formatted output for console debugging
             const formattedOutput = formatMentalModelOutput(modelWithProblem)
             console.error(formattedOutput)
+
+            // Create a more structured and simplified response
+            // This should avoid issues with special characters in the JSON
+            const responseObj = {
+                modelName: model.name,
+                modelId: model.id,
+                status: "success",
+                steps: model.steps,
+                when_to_use: model.when_to_use,
+                example: model.example,
+                pitfalls: model.pitfalls,
+                problem: problem,
+                analysis: `Using the ${model.name} mental model to analyze: "${problem}"\n\n${model.definition}`
+            }
+
+            // Stringify with proper error handling
+            let responseText = ""
+            try {
+                responseText = JSON.stringify(responseObj, null, 2)
+            } catch (jsonError) {
+                console.error("Error stringifying response:", jsonError)
+                // Fallback to a simplified response if JSON stringify fails
+                responseText = JSON.stringify({
+                    modelName: model.name,
+                    status: "success",
+                    hasSteps: model.steps.length > 0,
+                    problem: problem
+                }, null, 2)
+            }
 
             return {
                 content: [
                     {
                         type: "text",
-                        text: JSON.stringify(
-                            {
-                                modelName: model.name,
-                                status: "success",
-                                hasSteps: model.steps.length > 0,
-                                problem,
-                            },
-                            null,
-                            2
-                        ),
+                        text: responseText
                     },
                 ],
             }
         } catch (error) {
+            console.error("Mental model server error:", error)
+
             return {
                 content: [
                     {

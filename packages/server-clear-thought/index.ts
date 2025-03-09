@@ -91,35 +91,77 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const name = request.params.name
     const params = request.params.arguments
 
+    console.error(`Handling request for tool: ${name}`)
+    console.error(`Request parameters: ${JSON.stringify(params, null, 2)}`)
+
     try {
+        let response
+
         switch (name) {
             case "mental_model":
-                return mentalModelServer.processModel(params)
+                response = mentalModelServer.processModel(params)
+                break
             case "debugging_approach":
-                return debuggingApproachServer.processApproach(params)
+                response = debuggingApproachServer.processApproach(params)
+                break
             case "sequential_thinking":
-                return sequentialThinkingServer.processThought(params)
+                response = sequentialThinkingServer.processThought(params)
+                break
             case "brainstorming":
-                return brainstormingServer.processBrainstorming(params)
+                response = brainstormingServer.processBrainstorming(params)
+                break
             case "first_thought_advisor":
-                return firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
+                response = firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
+                break
             case "stochastic_algorithm":
-                return stochasticAlgorithmServer.processAlgorithm(params)
+                response = stochasticAlgorithmServer.processAlgorithm(params)
+                break
             default:
                 throw new McpError(
                     ErrorCode.MethodNotFound,
                     `Unknown tool: ${name}`
                 )
         }
+
+        // Проверка ответа на корректность
+        if (!response || !response.content || !Array.isArray(response.content)) {
+            console.error(`Invalid response format for tool ${name}: ${JSON.stringify(response)}`)
+            throw new Error(`Invalid response format returned from ${name} server`)
+        }
+
+        return response
     } catch (error) {
+        console.error(`Error handling request for tool ${name}:`, error)
+
+        // Проверяем, есть ли stack trace
+        if (error instanceof Error && error.stack) {
+            console.error(`Stack trace: ${error.stack}`)
+        }
+
+        // Убедимся, что объект ошибки преобразуется в строку корректно
+        let errorMessage = "Unknown error"
+
+        try {
+            if (error instanceof Error) {
+                errorMessage = error.message
+            } else if (typeof error === 'string') {
+                errorMessage = error
+            } else {
+                errorMessage = JSON.stringify(error)
+            }
+        } catch (jsonError) {
+            errorMessage = "Error cannot be converted to string"
+        }
+
         return {
             content: [
                 {
                     type: "text",
                     text: JSON.stringify({
-                        error: error instanceof Error ? error.message : String(error),
+                        error: errorMessage,
                         status: "failed",
-                    })
+                        tool: name
+                    }, null, 2)
                 }
             ],
             isError: true
@@ -127,11 +169,27 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 })
 
+// Error handler for uncaught exceptions
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught exception:', error)
+
+    // Не завершаем процесс, чтобы сервер продолжил работу
+    // Но записываем ошибку в лог
+})
+
 // Start server
 async function runServer() {
-    const transport = new StdioServerTransport()
-    await server.connect(transport)
-    console.error("MCP Clear Thought Server running on stdio")
+    try {
+        const transport = new StdioServerTransport()
+        await server.connect(transport)
+        console.error("MCP Clear Thought Server running on stdio")
+    } catch (error) {
+        console.error("Failed to start server:", error)
+        process.exit(1)
+    }
 }
 
-runServer().catch(console.error)
+runServer().catch((error) => {
+    console.error("Server startup error:", error)
+    process.exit(1)
+})
