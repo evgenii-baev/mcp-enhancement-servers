@@ -39,6 +39,29 @@ import {
 const MENTAL_MODEL_TOOL: Tool = {
     name: "mental_model",
     description: "A tool for applying structured mental models to problem-solving.",
+    details: `
+        This tool helps apply mental models to analyze problems systematically.
+        
+        ## Programming-Oriented Mental Models
+        The following new mental models are available specifically for programming tasks:
+        
+        - **composition_vs_inheritance**: Analyze when to use object composition vs inheritance for code reuse and flexibility
+        - **single_responsibility**: Apply the Single Responsibility Principle to improve code modularity and maintainability
+        - **interface_segregation**: Evaluate separation of interfaces from implementations for better abstraction and testing
+        - **actor_model**: Design concurrent systems using the actor model to eliminate shared state problems
+        - **time_space_complexity**: Analyze algorithm efficiency in terms of time and space requirements
+        
+        ## How to use programming models
+        When faced with programming design decisions or optimization challenges, select the appropriate model based on your specific problem:
+        
+        - For class/object design questions → use composition_vs_inheritance or single_responsibility
+        - For API/abstraction design → use interface_segregation
+        - For concurrency/parallelism issues → use actor_model
+        - For algorithm performance analysis → use time_space_complexity
+        
+        ## Example prompt
+        "Apply the single_responsibility mental model to analyze our current UserManager class that handles authentication, database access, and email notifications."
+    `,
     inputSchema: {
         type: "object",
         properties: {
@@ -71,10 +94,20 @@ const MENTAL_MODEL_TOOL: Tool = {
                     "scenario_planning",
                     "simulation",
                     "catalysis",
-                    "ecosystem"
-                ]
+                    "ecosystem",
+                    // New programming-oriented mental models
+                    "composition_vs_inheritance",
+                    "single_responsibility",
+                    "interface_segregation",
+                    "actor_model",
+                    "time_space_complexity"
+                ],
+                description: "The mental model to apply. For programming problems, consider using the specialized programming models: composition_vs_inheritance, single_responsibility, interface_segregation, actor_model, or time_space_complexity."
             },
-            problem: { type: "string" }
+            problem: {
+                type: "string",
+                description: "The problem to analyze using the selected mental model. For programming models, provide specific code design or architectural challenges."
+            }
         },
         required: ["modelName", "problem"]
     }
