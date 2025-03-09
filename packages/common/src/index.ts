@@ -16,6 +16,11 @@ export type MentalModelName =
     | "rubber_duck"
     | "pareto_principle"
     | "occams_razor"
+    | "composition_vs_inheritance"
+    | "single_responsibility"
+    | "interface_segregation"
+    | "actor_model"
+    | "time_space_complexity"
 
 // Debugging Approach Types
 export interface DebuggingApproachData {
@@ -59,6 +64,11 @@ export function validateModelName(name: string): asserts name is MentalModelName
         "rubber_duck",
         "pareto_principle",
         "occams_razor",
+        "composition_vs_inheritance",
+        "single_responsibility",
+        "interface_segregation",
+        "actor_model",
+        "time_space_complexity",
     ]
 
     if (!validNames.includes(name)) {
@@ -109,6 +119,11 @@ export const mentalModelSchema = {
                 "rubber_duck",
                 "pareto_principle",
                 "occams_razor",
+                "composition_vs_inheritance",
+                "single_responsibility",
+                "interface_segregation",
+                "actor_model",
+                "time_space_complexity",
             ],
         },
         problem: { type: "string" },

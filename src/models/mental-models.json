@@ -1,0 +1,124 @@
+{
+    "models": [
+        {
+            "name": "first_principles",
+            "description": "Breaking down complex problems into basic elements and reassembling them from the ground up",
+            "steps": [
+                "Identify and define your current assumptions",
+                "Break down the problem into its fundamental principles",
+                "Create new solutions from scratch",
+                "Validate your solutions against the original problem"
+            ],
+            "examples": [
+                "SpaceX's approach to building reusable rockets",
+                "Tesla's battery technology development",
+                "Amazon's AWS infrastructure design"
+            ]
+        },
+        {
+            "name": "systems_thinking",
+            "description": "Analyzing how parts of a system interrelate and how systems work over time and within larger systems",
+            "steps": [
+                "Identify the system boundaries and components",
+                "Map the relationships between components",
+                "Identify feedback loops and system behaviors",
+                "Find leverage points for system intervention"
+            ],
+            "examples": [
+                "Climate change analysis",
+                "Urban planning and traffic management",
+                "Organizational restructuring"
+            ]
+        },
+        {
+            "name": "occams_razor",
+            "description": "Among competing hypotheses, the one with the fewest assumptions should be selected",
+            "steps": [
+                "List all possible explanations",
+                "Identify the assumptions required for each explanation",
+                "Compare the number and complexity of assumptions",
+                "Select the explanation with fewest/simplest assumptions"
+            ],
+            "examples": [
+                "Debugging software issues",
+                "Medical diagnosis",
+                "Scientific theory selection"
+            ]
+        },
+        {
+            "name": "bayes_theorem",
+            "description": "A mathematical formula for determining conditional probability based on prior knowledge",
+            "steps": [
+                "Identify your prior probability (initial belief)",
+                "Gather new evidence",
+                "Calculate how likely you would see this evidence given your belief",
+                "Update your belief based on the new evidence"
+            ],
+            "examples": [
+                "Spam email filtering",
+                "Medical testing interpretation",
+                "Risk assessment in projects"
+            ]
+        },
+        {
+            "name": "second_order_thinking",
+            "description": "Considering the consequences of the consequences of a decision",
+            "steps": [
+                "Identify first-order consequences (immediate effects)",
+                "For each first-order consequence, identify second-order consequences",
+                "Continue to third-order and beyond if necessary",
+                "Evaluate the complete chain of consequences"
+            ],
+            "examples": [
+                "Policy making and regulation",
+                "Investment decisions",
+                "Environmental impact assessment"
+            ]
+        },
+        {
+            "name": "inversion",
+            "description": "Approaching problems backward by focusing on avoiding what you don't want",
+            "steps": [
+                "Instead of thinking about success, define what would make this fail",
+                "Identify actions, behaviors, and conditions that lead to failure",
+                "Develop strategies to avoid these failure modes",
+                "Reframe your approach to eliminate obstacles to success"
+            ],
+            "examples": [
+                "Product design (avoiding user frustration)",
+                "Risk management in projects",
+                "Personal productivity improvement"
+            ]
+        },
+        {
+            "name": "opportunity_cost",
+            "description": "Evaluating what you give up to pursue a particular path",
+            "steps": [
+                "Identify all available alternatives",
+                "Determine the value of the best alternative not chosen",
+                "Compare this value to your chosen option",
+                "Consider both tangible and intangible costs"
+            ],
+            "examples": [
+                "Investment decisions",
+                "Career choices",
+                "Time management decisions"
+            ]
+        },
+        {
+            "name": "thought_experiment",
+            "description": "Using hypothetical scenarios to explore consequences of principles or systems",
+            "steps": [
+                "Create a clearly defined hypothetical scenario",
+                "Apply relevant principles or systems to the scenario",
+                "Follow the logical consequences step by step",
+                "Extract insights applicable to real-world situations"
+            ],
+            "examples": [
+                "Einstein's relativity thought experiments",
+                "Schrödinger's cat in quantum mechanics",
+                "The trolley problem in ethics"
+            ]
+        }
+    ]
+}
