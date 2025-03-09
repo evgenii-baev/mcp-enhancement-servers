@@ -42,19 +42,58 @@ We've implemented several improvements to make the tool more robust:
    - Included stack traces for errors
    - Added validation checks for response format
 
+## Enhancing the Sequential Thinking Tool
+
+### Problem
+
+The `sequential_thinking` tool had similar issues with error handling and could fail when:
+
+1. Optional parameters had incorrect types
+2. Logical validation was missing for related parameters
+3. Special characters or formatting issues occurred
+4. Error handling was insufficient for complex scenarios
+
+### Solution
+
+We've made the following improvements:
+
+1. **Enhanced Validation**:
+   - Added type checking for all optional parameters
+   - Implemented logical validation between related parameters
+   - Made sure required parameters are present when certain options are used
+
+2. **Improved Error Handling**:
+   - Added try/catch blocks around formatting and JSON serialization
+   - Improved error reporting with specific messages
+   - Implemented fallback responses for error conditions
+
+3. **Better Response Structure**:
+   - Simplified the response format
+   - Added additional useful fields in the response
+   - Ensured all responses follow a consistent pattern
+
+4. **Robust Console Output**:
+   - Added error handling around console formatting
+   - Ensured formatting errors don't crash the application
+   - Improved debug information
+
 ## Testing
 
-A test script has been added to verify the functionality of the mental model tool:
+Test scripts have been added to verify the functionality of both tools:
 
 ```bash
+# Test the mental model tool
 npm run test:mental-model
+
+# Test the sequential thinking tool
+npm run test:sequential-thinking
 ```
 
-This script tests various scenarios including:
-- Valid model requests
-- Invalid model names
-- Missing parameters
-- Error handling
+These scripts test various scenarios including:
+- Valid inputs with different parameters
+- Invalid inputs with missing or incorrect data
+- Edge cases with special characters
+- Error handling mechanisms
 
 ## Usage
 
