@@ -1,7 +1,8 @@
 // Export server classes
 import { BrainstormingServer } from './brainstorming-server.js';
+import { StochasticAlgorithmServer } from './stochastic-algorithm-server.js';
 
-export { BrainstormingServer };
+export { BrainstormingServer, StochasticAlgorithmServer };
 
 export class FirstThoughtAdvisorServer {
     processAdvice(input) {
@@ -23,14 +24,6 @@ export class FeatureAnalyzerServer {
     processAnalysis(input) {
         return {
             content: [{ type: "text", text: `Processed feature analysis: ${JSON.stringify(input)}` }]
-        };
-    }
-}
-
-export class StochasticAlgorithmServer {
-    processAlgorithm(input) {
-        return {
-            content: [{ type: "text", text: `Processed stochastic algorithm: ${JSON.stringify(input)}` }]
         };
     }
 } 

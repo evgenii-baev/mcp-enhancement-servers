@@ -273,19 +273,40 @@ const BRAINSTORMING_TOOL: Tool = {
 const STOCHASTIC_ALGORITHM_TOOL: Tool = {
     name: "stochastic_algorithm",
     description: "A tool for applying stochastic algorithms to decision-making problems.",
+    details: `
+    This tool applies probabilistic algorithms to help with decision-making under uncertainty or randomness.
+    
+    Available Algorithms:
+    - Markov Decision Processes (MDP): Optimize policies over sequences of decisions
+    - Monte Carlo Tree Search (MCTS): Explore decision spaces by simulating future actions
+    - Multi-Armed Bandit: Balance exploration vs exploitation in action selection
+    - Bayesian Optimization: Optimize decisions using probabilistic inference
+    - Hidden Markov Models (HMM): Infer hidden states affecting decision outcomes
+    
+    Each algorithm helps navigate uncertainty through different statistical approaches.
+    
+    Use for: Decision optimization, sequential planning, exploration vs exploitation tradeoffs.
+    `,
     inputSchema: {
         type: "object",
         properties: {
             algorithm: {
                 type: "string",
-                enum: ["mdp", "mcts", "bandit", "bayesian", "hmm"]
+                enum: ["mdp", "mcts", "bandit", "bayesian", "hmm"],
+                description: "The stochastic algorithm to apply. Each algorithm is suited to different types of decision problems."
             },
-            problem: { type: "string" },
+            problem: {
+                type: "string",
+                description: "The decision problem to solve. Describe the uncertainty, options, and desired outcome."
+            },
             parameters: {
                 type: "object",
-                additionalProperties: true
+                description: "Algorithm-specific parameters for customization. Each algorithm has its own parameter set."
             },
-            result: { type: "string" }
+            result: {
+                type: "string",
+                description: "Optional result from algorithm application, typically filled in response."
+            }
         },
         required: ["algorithm", "problem", "parameters"]
     }
