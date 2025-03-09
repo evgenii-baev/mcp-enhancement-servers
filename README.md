@@ -23,6 +23,11 @@ This package provides a set of servers that implement various thinking enhanceme
 - **Feature Discussion Server**: Facilitates structured feature discussions
 - **Feature Analyzer Server**: Analyzes feature complexity and dependencies
 
+### 5. AI Integration Layer (New)
+- **AI Tool Recommendation**: Recommends appropriate MCP tools based on context
+- **Enhanced Tool Descriptions**: Provides detailed documentation to help AI assistants
+- **Tool Selection Guidance**: Offers prioritized recommendations for effective tool usage
+
 ## Tool Priority
 
 We've organized the tools in a recommended priority order to help AI/users choose the appropriate tool for different tasks. For detailed guidance on when to use each tool and recommended combinations for different scenarios, see [Tool Priority Guide](docs/TOOL_PRIORITY.md).
@@ -150,6 +155,42 @@ Analyzes feature complexity and dependencies.
 
 **Capabilities:**
 - `analyze_feature`: Analyzes a feature's complexity, dependencies, and implementation challenges
+
+### AI Integration Server (New)
+
+Provides enhanced tool descriptions, recommendations, and guidance for AI assistants to better utilize the MCP tools.
+
+**Capabilities:**
+- `ai_tool_recommendation`: Recommends appropriate tools based on context
+- `get_tool_description`: Provides detailed information about a specific tool
+- `get_all_tool_descriptions`: Lists all available tools with descriptions
+
+**Usage:**
+```typescript
+// Start the AI Integration Server
+import { startAiIntegrationServer } from 'mcp-enhancement-servers/ai-integration';
+
+// Start the server
+startAiIntegrationServer();
+
+// Or use the API directly in your code
+import { AiIntegrationLayer } from 'mcp-enhancement-servers/ai-integration';
+
+// Get tool recommendations based on context
+const recommendations = AiIntegrationLayer.recommendTools({
+  problemStatement: "Need to design a scalable architecture for a web application",
+  domain: "programming",
+  complexity: "complex"
+});
+
+// Get detailed information about a specific tool
+const toolDescription = AiIntegrationLayer.getToolDescription("model_selector");
+
+// Generate a summary of all available tools
+const toolsSummary = AiIntegrationLayer.getToolsSummary();
+```
+
+See [AI Integration Usage Guide](docs/AI_INTEGRATION_USAGE.md) for detailed examples and best practices.
 
 ## License
 
