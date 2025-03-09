@@ -35,6 +35,19 @@ import {
     StochasticAlgorithmServer
 } from './src/servers/index.js'
 
+// Импорт улучшенных определений инструментов
+import {
+    MENTAL_MODEL_TOOL,
+    SEQUENTIAL_THINKING_TOOL,
+    DEBUGGING_APPROACH_TOOL,
+    BRAINSTORMING_TOOL,
+    STOCHASTIC_ALGORITHM_TOOL,
+    FEATURE_DISCUSSION_TOOL,
+    FEATURE_ANALYZER_TOOL,
+    MODEL_SELECTOR_TOOL,
+    FIRST_THOUGHT_ADVISOR_TOOL
+} from './src/tool-definitions.js'
+
 // Tool Definitions
 const MENTAL_MODEL_TOOL: Tool = {
     name: "mental_model",
@@ -128,26 +141,15 @@ const DEBUGGING_APPROACH_TOOL: Tool = {
                     "backtracking",
                     "cause_elimination",
                     "program_slicing"
-                ],
-                description: "The debugging methodology to apply (binary_search, reverse_engineering, divide_conquer, backtracking, cause_elimination, program_slicing)"
+                ]
             },
-            issue: {
-                type: "string",
-                description: "Description of the problem to be debugged"
-            },
+            issue: { type: "string" },
             steps: {
                 type: "array",
-                items: { type: "string" },
-                description: "Specific actions taken or recommended to isolate and resolve the issue"
+                items: { type: "string" }
             },
-            findings: {
-                type: "string",
-                description: "Observations and patterns discovered during the debugging process"
-            },
-            resolution: {
-                type: "string",
-                description: "The solution that fixed the problem, including explanation of root cause"
-            }
+            findings: { type: "string" },
+            resolution: { type: "string" }
         },
         required: ["approachName", "issue"]
     }
@@ -159,46 +161,27 @@ const SEQUENTIAL_THINKING_TOOL: Tool = {
     inputSchema: {
         type: "object",
         properties: {
-            thought: {
-                type: "string",
-                description: "The current thought or reasoning step"
-            },
+            thought: { type: "string" },
             thoughtNumber: {
                 type: "integer",
-                minimum: 1,
-                description: "The sequential number of the current thought (starting from 1)"
+                minimum: 1
             },
             totalThoughts: {
                 type: "integer",
-                minimum: 1,
-                description: "The estimated total number of thoughts needed"
+                minimum: 1
             },
-            nextThoughtNeeded: {
-                type: "boolean",
-                description: "Whether additional thoughts are needed to complete the reasoning"
-            },
-            isRevision: {
-                type: "boolean",
-                description: "Whether this thought is a revision of a previous thought"
-            },
+            nextThoughtNeeded: { type: "boolean" },
+            isRevision: { type: "boolean" },
             revisesThought: {
                 type: "integer",
-                minimum: 1,
-                description: "Number of the thought being revised with new information"
+                minimum: 1
             },
             branchFromThought: {
                 type: "integer",
-                minimum: 1,
-                description: "Number of the thought from which to create an alternative reasoning path"
+                minimum: 1
             },
-            branchId: {
-                type: "string",
-                description: "Identifier for the current reasoning branch"
-            },
-            needsMoreThoughts: {
-                type: "boolean",
-                description: "Indicates if additional thoughts would be helpful beyond the initial estimate"
-            }
+            branchId: { type: "string" },
+            needsMoreThoughts: { type: "boolean" }
         },
         required: ["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"]
     }
@@ -348,31 +331,17 @@ const FIRST_THOUGHT_ADVISOR_TOOL: Tool = {
     inputSchema: {
         type: "object",
         properties: {
-            problem: {
-                type: "string",
-                description: "The specific problem or challenge that requires analysis. Be detailed and precise to receive the most relevant mental model recommendation."
-            },
-            goal: {
-                type: "string",
-                description: "The specific outcome or objective you're trying to achieve. A clear goal statement helps focus recommendations on solutions that directly address your desired end result."
-            },
-            domain: {
-                type: "string",
-                description: "The field or context in which the problem exists (e.g., 'software engineering', 'machine learning', 'business strategy'). This helps tailor recommendations to domain-specific approaches."
-            },
-            complexity: {
-                type: "string",
-                description: "Assessment of problem difficulty on a scale from 'low' to 'high'. This helps calibrate the sophistication level of the recommended mental models."
-            },
+            problem: { type: "string" },
+            goal: { type: "string" },
+            domain: { type: "string" },
+            complexity: { type: "string" },
             constraints: {
                 type: "array",
-                items: { type: "string" },
-                description: "Any limitations, boundaries, or requirements that affect potential solutions. Each constraint should be expressed as a separate array element."
+                items: { type: "string" }
             },
             previousApproaches: {
                 type: "array",
-                items: { type: "string" },
-                description: "Methods or strategies already attempted, allowing the advisor to suggest novel alternatives. Each approach should be listed as a separate array element."
+                items: { type: "string" }
             }
         },
         required: ["problem"]
@@ -385,14 +354,8 @@ const FEATURE_DISCUSSION_TOOL: Tool = {
     inputSchema: {
         type: "object",
         properties: {
-            featureId: {
-                type: "string",
-                description: "Identifier for the feature being discussed"
-            },
-            response: {
-                type: "string",
-                description: "Your response to the current prompt about the feature"
-            }
+            featureId: { type: "string" },
+            response: { type: "string" }
         },
         required: ["featureId", "response"]
     }
@@ -404,14 +367,8 @@ const FEATURE_ANALYZER_TOOL: Tool = {
     inputSchema: {
         type: "object",
         properties: {
-            featureName: {
-                type: "string",
-                description: "The name of the feature to analyze"
-            },
-            featureDescription: {
-                type: "string",
-                description: "Detailed description of the feature's purpose, functionality, and requirements"
-            }
+            featureName: { type: "string" },
+            featureDescription: { type: "string" }
         },
         required: ["featureName"]
     }
