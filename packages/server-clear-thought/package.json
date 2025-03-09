@@ -1,5 +1,5 @@
 {
-    "name": "@chrisperfer/clear-thought",
+    "name": "mcp-clear-thought",
     "version": "0.0.2",
     "description": "MCP server for systematic thinking, mental models, debugging approaches, and memory management",
     "license": "MIT",
