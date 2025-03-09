@@ -50,9 +50,25 @@ export interface FirstThoughtAdvisorData {
     problem: string;
     goal?: string;
     domain?: string;
-    complexity?: 'low' | 'medium' | 'high';
+    complexity?: string;
     constraints?: string[];
     previousApproaches?: string[];
+}
+
+// Интерфейс для результата работы советника по первым мыслям
+export interface FirstThoughtAdvisorResult {
+    problem: string;
+    goal?: string;
+    domain?: string;
+    complexity?: string;
+    constraints?: string[];
+    previousApproaches?: string[];
+    recommendedApproaches: Array<{
+        name: string;
+        confidence: number;
+        reason: string;
+    }>;
+    timestamp: string;
 }
 
 // Интерфейс для обсуждения функций

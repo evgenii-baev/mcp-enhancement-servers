@@ -239,12 +239,13 @@ HOW TO USE:
 5. The tool will analyze your inputs and recommend appropriate models
 6. Review the recommendations and their rationales to make an informed decision`;
 
-export const FIRST_THOUGHT_ADVISOR_TOOL_DESCRIPTION = `An intelligent recommendation tool for identifying the optimal mental model, algorithm, or approach for any problem.
+export const FIRST_THOUGHT_ADVISOR_TOOL_DESCRIPTION = `A sophisticated decision-making tool that analyzes problem characteristics and intelligently recommends the optimal mental model, algorithm, or thinking approach best suited to tackle your specific challenge. This tool leverages pattern recognition across domains to identify the most effective cognitive frameworks for your unique situation.
 
 WHAT IT DOES:
-This tool analyzes your problem statement, goals, and constraints to recommend the most effective
-first approach to tackle the challenge. It helps you choose the right mental framework before
-diving into detailed problem-solving.
+This tool analyzes your problem statement, goals, domain context, complexity level, constraints, 
+and previous approaches to recommend the most effective thinking framework or approach for 
+your specific situation. It helps you select the right mental model before diving into 
+detailed problem-solving.
 
 WHEN TO USE:
 - At the beginning of approaching a new problem
@@ -261,24 +262,29 @@ KEY FEATURES:
 - Learning from previously attempted approaches to avoid repeating ineffective strategies
 
 PARAMETERS EXPLAINED:
-- problem: Description of the problem you're trying to solve
-- goal: What you're trying to achieve (optional but recommended)
-- domain: The field or area the problem belongs to (optional)
-- complexity: How complex or large the problem is (optional)
-- constraints: Any limitations that might restrict certain approaches (optional)
-- previousApproaches: Approaches you've already tried that didn't work (optional)
+- problem: The specific problem or challenge that requires analysis. Be detailed and precise to receive the most relevant mental model recommendation.
+- goal: The specific outcome or objective you're trying to achieve. A clear goal statement helps focus recommendations on solutions that directly address your desired end result.
+- domain: The field or context in which the problem exists (e.g., 'software engineering', 'machine learning', 'business strategy'). This helps tailor recommendations to domain-specific approaches.
+- complexity: Assessment of problem difficulty on a scale from 'low' to 'high'. This helps calibrate the sophistication level of the recommended mental models.
+- constraints: Any limitations, boundaries, or requirements that affect potential solutions. Each constraint should be expressed as a separate array element.
+- previousApproaches: Methods or strategies already attempted, allowing the advisor to suggest novel alternatives. Each approach should be listed as a separate array element.
 
-HOW TO USE:
-1. Provide a clear description of your problem
-2. Add optional details about goals, domain, complexity, and constraints
-3. If applicable, mention any approaches you've already tried
-4. The tool will analyze your inputs and recommend the most appropriate first approach
-5. Consider the recommendation and its rationale before proceeding with problem-solving
+EXAMPLE USAGE:
+```json
+{
+   "problem": "Design a scalable notification system for a social media platform",
+      "domain": "software architecture",
+         "complexity": "high",
+            "goal": "Handle 10M+ daily notifications with < 100ms latency",
+               "constraints": ["Cloud-based solution", "Limited budget", "Must integrate with legacy systems"],
+                  "previousApproaches": ["Monolithic event processor", "Simple queue system"]
+}
+```
 
-EXAMPLE:
-Input: { "problem": "Need to optimize database queries that are causing slow response times" }
-Output: A recommendation to first apply the "performance profiling" approach to identify the specific
-queries causing bottlenecks, followed by potential optimization strategies based on the findings.`;
+INTERPRETING RESULTS:
+The response includes recommended mental models or approaches, confidence levels, rationales
+for each recommendation, and potential next steps. Use these insights to guide your approach
+to the original problem and apply the most suitable thinking framework.`;
 
 export const FEATURE_DISCUSSION_TOOL_DESCRIPTION = `A structured tool for facilitating feature discussions and gathering requirements.
 
