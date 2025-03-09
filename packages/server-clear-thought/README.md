@@ -1,8 +1,93 @@
-# Clear Thought MCP Server
+# MCP Clear Thought Server
 
-[![smithery badge](https://smithery.ai/badge/@waldzellai/clear-thought)](https://smithery.ai/server/@waldzellai/clear-thought)
+This server provides cognitive enhancement tools for AI assistants, including:
 
-A Model Context Protocol (MCP) server that provides systematic thinking, mental models, and debugging approaches for enhanced problem-solving capabilities.
+- Mental Models
+- Sequential Thinking
+- Debugging Approaches
+- Brainstorming
+- First Thought Advisor
+- Stochastic Algorithms
+
+## Debugging the Mental Model Tool
+
+### Problem
+
+The `mental_model` tool was experiencing issues with JSON formatting and error handling, causing failures when:
+
+1. Special characters were present in the model output
+2. Error conditions were not properly handled
+3. JSON parsing failed due to invalid input
+
+### Solution
+
+We've implemented several improvements to make the tool more robust:
+
+1. **Enhanced Error Handling**:
+   - Added try/catch blocks around JSON parsing
+   - Improved error reporting with detailed messages
+   - Added fallback responses when errors occur
+
+2. **Caching for Performance**:
+   - Implemented model caching to avoid repeated file reads
+   - Added validation of loaded models
+
+3. **Robust Response Formatting**:
+   - Simplified response structure
+   - Added additional error checking
+   - Improved JSON serialization with proper error handling
+
+4. **Logging for Debugging**:
+   - Added detailed logs for request parameters
+   - Included stack traces for errors
+   - Added validation checks for response format
+
+## Testing
+
+A test script has been added to verify the functionality of the mental model tool:
+
+```bash
+npm run test:mental-model
+```
+
+This script tests various scenarios including:
+- Valid model requests
+- Invalid model names
+- Missing parameters
+- Error handling
+
+## Usage
+
+To use the mental model tool:
+
+```javascript
+{
+  "modelName": "first_principles",
+  "problem": "Our application is slow and users are complaining"
+}
+```
+
+Available models include:
+- first_principles
+- occams_razor
+- systems_thinking
+- rubber_duck
+- pareto_principle
+- and many more...
+
+## Development
+
+To build the server:
+
+```bash
+npm run build
+```
+
+To start the server:
+
+```bash
+npm start
+```
 
 ## Features
 
@@ -130,44 +215,6 @@ Or run with npx:
 
 ```bash
 npx @waldzellai/clear-thought
-```
-
-## Usage
-
-### Mental Models
-```typescript
-const response = await mcp.callTool("mentalmodel", {
-  modelName: "first_principles",
-  problem: "How to implement a new feature?",
-  steps: [
-    "Break down the problem",
-    "Analyze components",
-    "Build solution"
-  ]
-});
-```
-
-### Debugging Approaches
-```typescript
-const response = await mcp.callTool("debuggingapproach", {
-  approachName: "binary_search",
-  issue: "Performance degradation in the system",
-  steps: [
-    "Identify performance metrics",
-    "Locate bottleneck",
-    "Implement solution"
-  ]
-});
-```
-
-### Sequential Thinking
-```typescript
-const response = await mcp.callTool("sequentialthinking", {
-  thought: "Initial analysis of the problem",
-  thoughtNumber: 1,
-  totalThoughts: 3,
-  nextThoughtNeeded: true
-});
 ```
 
 ## Docker
