@@ -28,30 +28,30 @@ import {
 
 // Импорт определений инструментов
 import {
-    MENTAL_MODEL_TOOL,
-    DEBUGGING_APPROACH_TOOL,
-    SEQUENTIAL_THINKING_TOOL,
-    BRAINSTORMING_TOOL,
     FIRST_THOUGHT_ADVISOR_TOOL,
+    MENTAL_MODEL_TOOL,
+    SEQUENTIAL_THINKING_TOOL,
+    DEBUGGING_APPROACH_TOOL,
+    BRAINSTORMING_TOOL,
     STOCHASTIC_ALGORITHM_TOOL
 } from "./src/tools/index.js"
 
 // Импорт классов серверов
 import {
-    BrainstormingServer,
-    MentalModelServer,
-    DebuggingApproachServer,
-    SequentialThinkingServer,
     FirstThoughtAdvisorServer,
+    MentalModelServer,
+    SequentialThinkingServer,
+    DebuggingApproachServer,
+    BrainstormingServer,
     StochasticAlgorithmServer
 } from './src/servers/index.js'
 
 // Create server instances
-const mentalModelServer = new MentalModelServer()
-const debuggingApproachServer = new DebuggingApproachServer()
-const sequentialThinkingServer = new SequentialThinkingServer()
-const brainstormingServer = new BrainstormingServer()
 const firstThoughtAdvisorServer = new FirstThoughtAdvisorServer()
+const mentalModelServer = new MentalModelServer()
+const sequentialThinkingServer = new SequentialThinkingServer()
+const debuggingApproachServer = new DebuggingApproachServer()
+const brainstormingServer = new BrainstormingServer()
 const stochasticAlgorithmServer = new StochasticAlgorithmServer()
 
 // Create MCP server
@@ -63,11 +63,11 @@ const server = new Server(
     {
         capabilities: {
             tools: {
+                "first_thought_advisor": FIRST_THOUGHT_ADVISOR_TOOL,
                 "mental_model": MENTAL_MODEL_TOOL,
                 "sequential_thinking": SEQUENTIAL_THINKING_TOOL,
                 "debugging_approach": DEBUGGING_APPROACH_TOOL,
                 "brainstorming": BRAINSTORMING_TOOL,
-                "first_thought_advisor": FIRST_THOUGHT_ADVISOR_TOOL,
                 "stochastic_algorithm": STOCHASTIC_ALGORITHM_TOOL,
             },
         },
@@ -77,11 +77,11 @@ const server = new Server(
 // Register tools
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: [
-        MENTAL_MODEL_TOOL,
-        DEBUGGING_APPROACH_TOOL,
-        SEQUENTIAL_THINKING_TOOL,
-        BRAINSTORMING_TOOL,
         FIRST_THOUGHT_ADVISOR_TOOL,
+        MENTAL_MODEL_TOOL,
+        SEQUENTIAL_THINKING_TOOL,
+        DEBUGGING_APPROACH_TOOL,
+        BRAINSTORMING_TOOL,
         STOCHASTIC_ALGORITHM_TOOL
     ],
 }))
@@ -98,20 +98,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         let response
 
         switch (name) {
+            case "first_thought_advisor":
+                response = firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
+                break
             case "mental_model":
                 response = mentalModelServer.processModel(params)
-                break
-            case "debugging_approach":
-                response = debuggingApproachServer.processApproach(params)
                 break
             case "sequential_thinking":
                 response = sequentialThinkingServer.processThought(params)
                 break
+            case "debugging_approach":
+                response = debuggingApproachServer.processApproach(params)
+                break
             case "brainstorming":
                 response = brainstormingServer.processBrainstorming(params)
-                break
-            case "first_thought_advisor":
-                response = firstThoughtAdvisorServer.processFirstThoughtAdvice(params)
                 break
             case "stochastic_algorithm":
                 response = stochasticAlgorithmServer.processAlgorithm(params)
