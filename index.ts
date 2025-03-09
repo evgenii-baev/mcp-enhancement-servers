@@ -19,6 +19,22 @@ import {
   StochasticAlgorithmServer  // Стохастические алгоритмы
 } from './src/servers/index.js';
 
+// Импорт описаний инструментов для IDE
+import {
+  MENTAL_MODEL_TOOL_DESCRIPTION,
+  SEQUENTIAL_THINKING_TOOL_DESCRIPTION,
+  DEBUGGING_APPROACH_TOOL_DESCRIPTION,
+  BRAINSTORMING_TOOL_DESCRIPTION,
+  STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION,
+  FIRST_THOUGHT_ADVISOR_TOOL_DESCRIPTION,
+  FEATURE_DISCUSSION_TOOL_DESCRIPTION,
+  FEATURE_ANALYZER_TOOL_DESCRIPTION,
+  MODEL_SELECTOR_TOOL_DESCRIPTION
+} from './src/tool-descriptions/improved-descriptions.js';
+
+// Импорт описания FirstThoughtAdvisor из отдельного файла
+import { FIRST_THOUGHT_ADVISOR_DESCRIPTION } from './src/tool-descriptions/first-thought-advisor-description.js';
+
 // Создание экземпляров серверов
 // 1. Инструменты для начального анализа и выбора подхода
 const firstThoughtAdvisorServer = new FirstThoughtAdvisorServer();
@@ -110,6 +126,13 @@ export const packageInfo = {
 
 // Экспорт информации о возможностях инструментов для ИИ-ассистентов
 export const toolDescriptions = {
-  modelSelector: MODEL_SELECTOR_DESCRIPTION
-  // Здесь можно добавлять описания других инструментов по мере их создания
+  modelSelector: MODEL_SELECTOR_TOOL_DESCRIPTION,
+  firstThoughtAdvisor: FIRST_THOUGHT_ADVISOR_DESCRIPTION,
+  mentalModel: MENTAL_MODEL_TOOL_DESCRIPTION,
+  sequentialThinking: SEQUENTIAL_THINKING_TOOL_DESCRIPTION,
+  debuggingApproach: DEBUGGING_APPROACH_TOOL_DESCRIPTION,
+  brainstorming: BRAINSTORMING_TOOL_DESCRIPTION,
+  stochasticAlgorithm: STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION,
+  featureDiscussion: FEATURE_DISCUSSION_TOOL_DESCRIPTION,
+  featureAnalyzer: FEATURE_ANALYZER_TOOL_DESCRIPTION
 };

@@ -8,6 +8,11 @@ import { getAllMentalModelNames } from '../models/mental-models.js';
 // Импортируем ModelSelectorServer и его описание
 export { ModelSelectorServer, MODEL_SELECTOR_DESCRIPTION } from './model-selector-server.js';
 
+// Импорт описания FirstThoughtAdvisor
+import { FIRST_THOUGHT_ADVISOR_DESCRIPTION } from '../tool-descriptions/first-thought-advisor-description.js';
+// Реэкспорт для использования в других модулях
+export { FIRST_THOUGHT_ADVISOR_DESCRIPTION };
+
 // Базовый класс для серверов
 export class BaseServer implements Server {
     name: string;
@@ -300,7 +305,7 @@ export class FirstThoughtAdvisorServer extends BaseServer {
                     goal: {
                         type: 'string',
                         required: false,
-                        description: 'The specific outcome or objective you're trying to achieve.A clear goal statement helps focus recommendations on solutions that directly address your desired end result.'
+                        description: 'The specific outcome or objective you are trying to achieve. A clear goal statement helps focus recommendations on solutions that directly address your desired end result.'
                     },
                     domain: {
                         type: 'string',
@@ -519,5 +524,4 @@ export const servers = {
     BrainstormingServer,
     StochasticAlgorithmServer,
     FirstThoughtAdvisorServer
-}; 
 }; 

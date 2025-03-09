@@ -1,396 +1,558 @@
-// Enhanced tool descriptions for AI assistants
-// This file contains improved descriptions for MCP tools to help AI assistants better understand their purpose and usage
-
-export const MENTAL_MODEL_TOOL_DESCRIPTION = `A comprehensive tool for applying structured mental models to problem-solving.
-
-WHAT IT DOES:
-This tool applies systematic mental models to analyze problems from different perspectives,
-helping to break down complex issues into manageable components and revealing insights
-that might otherwise be missed.
-
-WHEN TO USE:
-- When facing complex or ambiguous problems
-- When standard approaches aren't yielding results
-- When you need a fresh perspective on a problem
-- When you want to ensure thorough analysis of all aspects
-- When you need to overcome cognitive biases
-- When communicating complex reasoning to others
-
-AVAILABLE MODELS:
-- First Principles: Breaking down complex problems into basic elements and reassembling them
-- Opportunity Cost: Evaluating what you give up when making a choice
-- Error Propagation: Analyzing how errors spread and magnify through systems
-- Rubber Duck: Explaining problems step-by-step to identify flaws in understanding
-- Pareto Principle: Focusing on the vital few causes that produce the majority of effects
-- Occam's Razor: Preferring simpler explanations unless complexity is justified
-- And many more, including specialized programming models
-
-HOW TO USE:
-1. Select the most appropriate mental model for your problem
-2. Clearly define your problem statement
-3. The tool will apply the model's framework to your problem
-4. Review the structured analysis and insights
-5. Apply the conclusions to your original problem
-
-EXAMPLE:
-Input: { "modelName": "first_principles", "problem": "Our application is too slow" }
-Output: A breakdown of the performance issue into fundamental components, questioning
-assumptions about what causes slowness, and building a solution from basic truths.
-
-PROGRAMMING-SPECIFIC MODELS:
-- composition_vs_inheritance: Analyze when to use object composition vs inheritance
-- single_responsibility: Apply SRP to improve code modularity and maintainability
-- interface_segregation: Evaluate separation of interfaces for better abstraction
-- actor_model: Design concurrent systems using the actor model
-- time_space_complexity: Analyze algorithm efficiency in terms of time and space
-
-INTERPRETING RESULTS:
-The response includes the model name, problem statement, structured analysis steps,
-and conclusions. Use these insights to guide your approach to the original problem.`;
-
-export const DEBUGGING_APPROACH_TOOL_DESCRIPTION = `A powerful tool for applying systematic debugging approaches to solve technical issues.
-
-WHAT IT DOES:
-This tool provides structured methodologies for identifying, isolating, and resolving
-technical problems by applying proven debugging strategies tailored to different types of issues.
-
-WHEN TO USE:
-- When facing complex technical problems
-- When standard debugging isn't yielding results
-- When you need a systematic approach to troubleshooting
-- When you want to document your debugging process
-- When teaching others about structured problem-solving
-
-AVAILABLE APPROACHES:
-
-1. Binary Search:
-   A divide-and-conquer approach that systematically narrows down the problem space
-   by testing the midpoint and eliminating half the remaining possibilities each time.
-   Best for: Linear problems with clear test criteria (e.g., finding which commit introduced a bug).
-
-2. Reverse Engineering:
-   Working backward from observed behavior to understand underlying mechanisms.
-   Best for: Understanding undocumented systems or unexpected behaviors.
-
-3. Divide and Conquer:
-   Breaking a complex problem into smaller, more manageable sub-problems.
-   Best for: Large, complex systems with multiple potential failure points.
-
-4. Backtracking:
-   Exploring multiple solution paths and backing out when a path proves unsuccessful.
-   Best for: Problems with multiple possible solutions where some paths may be dead ends.
-
-5. Cause Elimination:
-   Systematically identifying and ruling out potential causes until the actual cause is found.
-   Best for: Issues with multiple potential causes that can be individually tested.
-
-6. Program Slicing:
-   Isolating the specific parts of code that could affect a particular variable or behavior.
-   Best for: Understanding data flow and dependencies in complex codebases.
-
-HOW TO USE:
-1. Select the most appropriate debugging approach for your issue
-2. Clearly define the problem you're experiencing
-3. Follow the structured steps provided by the approach
-4. Document your findings at each step
-5. Apply the resolution based on your analysis
-
-EXAMPLE:
-Input: { "approachName": "binary_search", "issue": "Performance regression in recent release" }
-Output: A structured approach to identify which change caused the regression by testing
-midpoints in your commit history until the problematic change is isolated.`;
-
-export const SEQUENTIAL_THINKING_TOOL_DESCRIPTION = `A sophisticated tool for dynamic and reflective problem-solving through sequential thoughts.
-
-WHAT IT DOES:
-This tool facilitates a flexible thinking process that mimics human cognition by allowing
-thoughts to build upon, question, or revise previous insights as understanding deepens.
-It enables non-linear exploration of problem spaces with the ability to branch, revise,
-and extend thinking paths as needed.
-
-WHEN TO USE:
-- Breaking down complex problems into manageable steps
-- Planning and design processes that require flexibility for revision
-- Analysis that might need course correction as new information emerges
-- Problems where the full scope might not be clear initially
-- Problems that require a multi-step solution with dependencies between steps
-- Tasks that need to maintain context over multiple reasoning steps
-- Situations where irrelevant information needs to be filtered out
-- When you need to document your reasoning process for others
-
-KEY FEATURES:
-- Dynamic adjustment of thought quantity as understanding evolves
-- Ability to question or revise previous thoughts when new insights emerge
-- Flexible extension of thinking even after reaching what seemed like the end
-- Expression of uncertainty and exploration of alternative approaches
-- Non-linear thinking with branching and backtracking capabilities
-- Hypothesis generation and verification through structured reasoning
-- Progressive refinement of solutions through iterative thinking
-
-HOW TO USE:
-1. Start with an initial problem statement and estimate of needed thoughts
-2. Develop each thought sequentially, building on previous insights
-3. When appropriate, revise previous thoughts or branch into new directions
-4. Continue until you reach a satisfactory conclusion
-5. Provide a final thought that synthesizes your reasoning and solution
-
-PARAMETERS EXPLAINED:
-- thought: Your current thinking step
-- nextThoughtNeeded: True if you need more thinking
-- thoughtNumber: Current number in sequence
-- totalThoughts: Current estimate of thoughts needed
-- isRevision: Indicates if this thought revises previous thinking
-- revisesThought: Which thought number is being reconsidered
-- branchFromThought: Which thought number is the branching point
-- branchId: Identifier for the current branch
-- needsMoreThoughts: If reaching end but realizing more thoughts needed`;
-
-export const BRAINSTORMING_TOOL_DESCRIPTION = `A comprehensive tool for facilitating structured brainstorming sessions.
-
-WHAT IT DOES:
-This tool guides you through a systematic brainstorming process, from preparation to action planning.
-It helps generate, refine, evaluate, and select ideas in a structured way, while leveraging
-appropriate mental models to enhance creativity and effectiveness.
-
-WHEN TO USE:
-- When you need to generate creative solutions to complex problems
-- When you want to explore multiple approaches to a challenge
-- When you need to involve multiple perspectives in idea generation
-- When you want to systematically evaluate and select the best ideas
-- When you need to break out of conventional thinking patterns
-- When planning new features, products, or strategies
-- When trying to overcome obstacles or bottlenecks
-
-KEY FEATURES:
-- Structured six-phase brainstorming process
-- Integration with mental models to enhance creativity
-- Support for collaborative ideation
-- Idea categorization and evaluation
-- Persistent sessions for ongoing brainstorming
-- Guidance tailored to each phase of the process
-
-HOW TO USE:
-1. Start by creating a new session with a clear topic
-2. Follow the guided process through each phase:
-   - Preparation: Define constraints and participants
-   - Ideation: Generate as many ideas as possible
-   - Clarification: Refine and categorize ideas
-   - Evaluation: Assess ideas objectively
-   - Selection: Choose the best ideas to pursue
-   - Action Planning: Define next steps for implementation
-3. Use recommended mental models to enhance your thinking
-4. Add, categorize, and vote on ideas as you progress
-
-PARAMETERS EXPLAINED:
-- topic: The main subject or problem for brainstorming
-- phase: Current phase of the brainstorming process
-- ideas: Collection of generated ideas
-- constraints: Limitations or requirements to consider
-- participants: People involved in the brainstorming
-- timeLimit: Optional time constraint for the session
-- recommendedModels: Mental models that can help with this topic
-- sessionId: Identifier for ongoing sessions`;
-
-export const MODEL_SELECTOR_TOOL_DESCRIPTION = `A specialized tool for selecting the optimal architecture, design pattern, algorithm, or data structure for programming tasks.
-
-WHAT IT DOES:
-This tool analyzes your programming task and requirements to recommend the most appropriate models,
-patterns, algorithms, or architectures based on your specific context, constraints, and preferences.
-It provides tailored recommendations with explanations of why each approach is suitable for your case.
-
-WHEN TO USE:
-- At the beginning of project design, when choosing an application architecture
-- When solving a specific problem that requires an appropriate design pattern
-- When selecting the most efficient algorithm for data processing
-- When choosing the optimal data structure for storing and accessing information
-- For comparing different approaches to solving the same task
-- When refactoring existing code and need guidance on better structures
-
-CATEGORIES OF MODELS:
-This tool can recommend models from different categories:
-- **Architecture Models**: Microservices, Monolithic, Serverless, MVC, MVVM, Clean Architecture
-- **Design Patterns**: Factory, Singleton, Observer, Strategy, Decorator, etc.
-- **Algorithms**: Sorting (QuickSort, MergeSort), Searching (Binary Search, DFS/BFS), Graph algorithms
-- **Data Structures**: Arrays, LinkedLists, Trees, Graphs, HashMaps, Queues, Stacks
-- **Programming Paradigms**: OOP, Functional, Reactive, Event-driven
-- **Concurrency Models**: Threads, Actors, CSP, STM
-
-EXAMPLE SCENARIOS:
-- Developing a scalable web application with high traffic
-- Implementing dynamic object creation based on configuration
-- Efficient sorting and searching in large datasets
-- Designing a cache with fast lookups and automatic expiration
-- Creating a system that needs to handle multiple types of notifications
-- Implementing a plugin architecture for extensibility
-
-PARAMETERS EXPLAINED:
-- task: The specific programming task or problem requiring a recommendation
-- context: Additional context about the project, environment, or requirements
-- constraints: Any limitations that might affect the choice of approach
-- preferences: Desired qualities or characteristics for the solution
-- language: Programming language being used (for language-specific recommendations)
-- projectScale: Size of the project to influence architectural recommendations
-
-HOW TO USE:
-1. Clearly define your programming task or problem
-2. Provide relevant context about your project or environment
-3. Specify any constraints that might limit your options
-4. Indicate your preferences for the solution (e.g., performance, simplicity)
-5. The tool will analyze your inputs and recommend appropriate models
-6. Review the recommendations and their rationales to make an informed decision`;
-
-export const FIRST_THOUGHT_ADVISOR_TOOL_DESCRIPTION = `A sophisticated decision-making tool that analyzes problem characteristics and intelligently recommends the optimal mental model, algorithm, or thinking approach best suited to tackle your specific challenge. This tool leverages pattern recognition across domains to identify the most effective cognitive frameworks for your unique situation.
-
-WHAT IT DOES:
-This tool analyzes your problem statement, goals, domain context, complexity level, constraints, 
-and previous approaches to recommend the most effective thinking framework or approach for 
-your specific situation. It helps you select the right mental model before diving into 
-detailed problem-solving.
-
-WHEN TO USE:
-- At the beginning of approaching a new problem
-- When you're unsure which mental model or algorithm would be most appropriate
-- When facing an unfamiliar type of problem
-- When you have multiple possible approaches and need guidance on where to start
-- When you want to ensure you're using the most efficient approach for your problem type
-
-KEY FEATURES:
-- Intelligent matching of problem characteristics to appropriate mental models
-- Consideration of domain-specific approaches based on problem context
-- Analysis of problem complexity to recommend proportionate solutions
-- Adaptation to constraints that might limit certain approaches
-- Learning from previously attempted approaches to avoid repeating ineffective strategies
-
-PARAMETERS EXPLAINED:
-- problem: The specific problem or challenge that requires analysis. Be detailed and precise to receive the most relevant mental model recommendation.
-- goal: The specific outcome or objective you're trying to achieve. A clear goal statement helps focus recommendations on solutions that directly address your desired end result.
-- domain: The field or context in which the problem exists (e.g., 'software engineering', 'machine learning', 'business strategy'). This helps tailor recommendations to domain-specific approaches.
-- complexity: Assessment of problem difficulty on a scale from 'low' to 'high'. This helps calibrate the sophistication level of the recommended mental models.
-- constraints: Any limitations, boundaries, or requirements that affect potential solutions. Each constraint should be expressed as a separate array element.
-- previousApproaches: Methods or strategies already attempted, allowing the advisor to suggest novel alternatives. Each approach should be listed as a separate array element.
-
-EXAMPLE USAGE:
-```json
-{
-   "problem": "Design a scalable notification system for a social media platform",
-      "domain": "software architecture",
-         "complexity": "high",
-            "goal": "Handle 10M+ daily notifications with < 100ms latency",
-               "constraints": ["Cloud-based solution", "Limited budget", "Must integrate with legacy systems"],
-                  "previousApproaches": ["Monolithic event processor", "Simple queue system"]
-}
-```
-
-INTERPRETING RESULTS:
-The response includes recommended mental models or approaches, confidence levels, rationales
-for each recommendation, and potential next steps. Use these insights to guide your approach
-to the original problem and apply the most suitable thinking framework.`;
-
-export const FEATURE_DISCUSSION_TOOL_DESCRIPTION = `A structured tool for facilitating feature discussions and gathering requirements.
-
-WHAT IT DOES:
-This tool provides a systematic framework for discussing new features, capturing requirements,
-and ensuring all stakeholders have input into the feature development process.
-
-WHEN TO USE:
-- When planning new product features
-- When gathering requirements from stakeholders
-- When evaluating feature proposals
-- When iterating on feature designs based on feedback
-- When documenting feature specifications
-
-KEY FEATURES:
-- Structured prompts to guide feature discussions
-- Collaborative input capturing from multiple stakeholders
-- Organized documentation of feature requirements
-- Progressive refinement of feature specifications
-- Integration with existing feature tracking
-
-PARAMETERS EXPLAINED:
-- featureId: Identifier for the feature being discussed
-- response: Your response to the current prompt in the discussion flow
-
-HOW TO USE:
-1. Begin a feature discussion with a clear title
-2. Follow the prompted discussion flow, providing detailed responses
-3. The tool will maintain context throughout the discussion
-4. Add implementation details and requirements as they emerge
-5. Use the final output as specification for development`;
-
-export const FEATURE_ANALYZER_TOOL_DESCRIPTION = `A analytical tool for evaluating feature complexity, dependencies, and implementation challenges.
-
-WHAT IT DOES:
-This tool analyzes proposed features to estimate complexity, identify dependencies,
-flag potential implementation challenges, and provide insights for planning and prioritization.
-
-WHEN TO USE:
-- When estimating effort for feature implementation
-- When prioritizing features for a roadmap
-- When identifying potential risks in feature development
-- When planning resource allocation for features
-- When breaking down features into implementable components
-
-KEY FEATURES:
-- Complexity analysis based on feature description
-- Identification of system dependencies
-- Risk assessment for implementation challenges
-- Component breakdown suggestions
-- Integration complexity evaluation
-
-PARAMETERS EXPLAINED:
-- featureName: Name of the feature to analyze
-- featureDescription: Detailed description of the feature functionality
-
-HOW TO USE:
-1. Provide a clear name for the feature
-2. Include a detailed description of the feature's functionality
-3. The tool will analyze the feature and provide insights
-4. Use the analysis for planning, estimation, and risk assessment
-5. Consider the identified dependencies when scheduling implementation`;
-
-export const STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION = `A specialized tool for applying stochastic algorithms to optimization and decision-making problems.
-
-WHAT IT DOES:
-This tool implements various stochastic algorithms to solve problems involving uncertainty,
-optimization under constraints, sequential decision-making, or probabilistic inference.
-
-WHEN TO USE:
-- When dealing with problems that have uncertainty or randomness
-- When traditional deterministic approaches are inefficient or infeasible
-- When optimizing complex systems with many variables
-- When modeling sequential decision processes
-- When performing probabilistic inference
-
-AVAILABLE ALGORITHMS:
-1. Markov Decision Processes (MDP):
-   For sequential decision-making problems with fully observable states.
-   Best for: Resource allocation, scheduling, and control problems.
-
-2. Monte Carlo Tree Search (MCTS):
-   For planning in large decision spaces by random sampling.
-   Best for: Games, planning with incomplete information, complex optimization.
-
-3. Multi-armed Bandit Algorithms:
-   For balancing exploration vs. exploitation in decision-making.
-   Best for: A/B testing, online advertising, recommendation systems.
-
-4. Bayesian Optimization:
-   For efficient optimization of expensive-to-evaluate objective functions.
-   Best for: Hyperparameter tuning, experimental design, model calibration.
-
-5. Hidden Markov Models (HMM):
-   For inferring hidden states from observable outputs in sequential data.
-   Best for: Speech recognition, time series analysis, biological sequence analysis.
-
-PARAMETERS EXPLAINED:
-- algorithm: The specific stochastic algorithm to apply
-- problem: Description of the problem to solve
-- parameters: Algorithm-specific parameters (varies by algorithm)
-- result: Optional field for providing expected or desired results
-
-HOW TO USE:
-1. Select the appropriate algorithm for your problem type
-2. Clearly define your problem statement
-3. Provide algorithm-specific parameters as needed
-4. The tool will apply the algorithm and return results
-5. Interpret the results in the context of your original problem`; 
+/**
+ * Улучшенные описания для инструментов MCP
+ * Эти описания используются для отображения в IDE и для авто-документации
+ */
+
+import { ToolDescription } from '../interfaces/tool-description.js';
+import { createToolDescription } from '../utils/tool-description-utils.js';
+
+/**
+ * Описание инструмента Mental Model
+ */
+export const MENTAL_MODEL_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Mental Model",
+   purpose: "A tool for applying structured mental models to problem-solving.",
+   whenToUse: [
+      "When facing complex problems requiring different thinking approaches",
+      "When you want to analyze a problem from a specific perspective",
+      "When traditional approaches have failed to yield satisfactory solutions",
+      "When you need to teach or explain a specific mental model to a user"
+   ],
+   capabilities: [
+      {
+         name: "apply_mental_model",
+         description: "Applies a specific mental model to analyze a problem",
+         keyParameters: ["modelName", "problem"]
+      }
+   ],
+   exampleScenarios: [
+      "Using first principles to break down a complex software architecture",
+      "Applying systems thinking to understand interdependencies in a codebase",
+      "Using the scientific method to debug an inconsistent issue",
+      "Analyzing time and space complexity for algorithm optimization"
+   ],
+   bestPractices: [
+      "Be explicit about which mental model you're using",
+      "Explain why you chose that particular model for the problem",
+      "Document insights gained from applying the model",
+      "Consider using multiple models for complex problems"
+   ],
+   integration: {
+      withAI: "This tool helps AI assistants structure their thinking process and communicate it to users",
+      examples: [
+         "When analyzing a complex system: 'I'll use the systems thinking model to understand the interdependencies in your architecture.'",
+         "When debugging: 'Let me apply the scientific method to systematically identify the root cause of this issue.'"
+      ]
+   },
+   parameterDescriptions: {
+      "modelName": "The mental model to apply. For programming problems, consider using the specialized programming models: composition_vs_inheritance, single_responsibility, interface_segregation, actor_model, or time_space_complexity.",
+      "problem": "The problem to analyze using the selected mental model. For programming models, provide specific code design or architectural challenges."
+   },
+   exampleUsage: {
+      "modelName": "first_principles",
+      "problem": "How should we architect our data pipeline to handle 10x the current load?"
+   }
+});
+
+/**
+ * Описание инструмента Sequential Thinking
+ */
+export const SEQUENTIAL_THINKING_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Sequential Thinking",
+   purpose: "A tool for dynamic and reflective problem-solving through sequential thoughts.",
+   whenToUse: [
+      "When solving complex, multi-step problems",
+      "When you need to break down reasoning into discrete steps",
+      "When you want to show your thinking process transparently",
+      "When exploring multiple solution branches is helpful"
+   ],
+   capabilities: [
+      {
+         name: "think_sequentially",
+         description: "Produces a series of connected thoughts to solve a problem",
+         keyParameters: ["thought", "thoughtNumber", "totalThoughts", "nextThoughtNeeded"]
+      },
+      {
+         name: "branch_thinking",
+         description: "Creates alternative thinking paths from a specific thought",
+         keyParameters: ["branchFromThought", "branchId"]
+      },
+      {
+         name: "revise_thinking",
+         description: "Updates a previous thought with new information",
+         keyParameters: ["revisesThought", "isRevision"]
+      }
+   ],
+   exampleScenarios: [
+      "Debugging a complex issue step by step",
+      "Planning architecture with multiple considerations",
+      "Exploring different approaches to algorithm design",
+      "Decomposing a complex function into manageable pieces"
+   ],
+   bestPractices: [
+      "Keep individual thoughts focused and concise",
+      "Clearly indicate when you're branching to an alternative solution",
+      "Use revision to improve earlier thoughts with new insights",
+      "Summarize key insights at the end of the thinking sequence"
+   ],
+   integration: {
+      withAI: "AIs can use this tool to make their thinking process explicit and revisable",
+      examples: [
+         "When solving a complex problem: 'Let me think through this step by step to find the best approach.'",
+         "When exploring alternatives: 'I'll branch my thinking here to consider a different solution path.'"
+      ]
+   },
+   parameterDescriptions: {
+      "thought": "The current thought or reasoning step",
+      "thoughtNumber": "The sequential number of the current thought (starting from 1)",
+      "totalThoughts": "The estimated total number of thoughts needed",
+      "nextThoughtNeeded": "Whether additional thoughts are needed to complete the reasoning",
+      "branchFromThought": "Number of the thought from which to create an alternative reasoning path",
+      "branchId": "Identifier for the current reasoning branch",
+      "revisesThought": "Number of the thought being revised with new information",
+      "isRevision": "Whether this thought is a revision of a previous thought",
+      "needsMoreThoughts": "Indicates if additional thoughts would be helpful beyond the initial estimate"
+   },
+   exampleUsage: {
+      "thought": "Let's analyze the time complexity of this recursive function",
+      "thoughtNumber": 1,
+      "totalThoughts": 5,
+      "nextThoughtNeeded": true
+   }
+});
+
+/**
+ * Описание инструмента Debugging Approach
+ */
+export const DEBUGGING_APPROACH_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Debugging Approach",
+   purpose: "A tool for applying systematic debugging approaches to technical issues.",
+   whenToUse: [
+      "When facing complex or difficult-to-reproduce bugs",
+      "When standard debugging techniques have failed",
+      "When you need a structured approach to isolate issues",
+      "When documenting debugging processes for future reference"
+   ],
+   capabilities: [
+      {
+         name: "apply_debugging_approach",
+         description: "Applies a specific debugging methodology to troubleshoot an issue",
+         keyParameters: ["approachName", "issue"]
+      },
+      {
+         name: "document_findings",
+         description: "Records observations and patterns discovered during debugging",
+         keyParameters: ["findings"]
+      },
+      {
+         name: "propose_steps",
+         description: "Suggests specific actions to isolate or resolve the issue",
+         keyParameters: ["steps"]
+      },
+      {
+         name: "resolve_issue",
+         description: "Documents the solution that fixed the problem",
+         keyParameters: ["resolution"]
+      }
+   ],
+   exampleScenarios: [
+      "Using binary search to locate a performance regression",
+      "Applying divide and conquer to isolate a race condition",
+      "Using backtracking to understand a complex state management bug",
+      "Applying program slicing to identify relevant code for a memory leak"
+   ],
+   bestPractices: [
+      "Document each step of the debugging process",
+      "Test hypotheses systematically before moving on",
+      "Create minimal reproducible examples when possible",
+      "Consider environmental factors that might contribute to the issue"
+   ],
+   integration: {
+      withAI: "AI assistants can use this tool to structure and document their debugging processes",
+      examples: [
+         "When facing a complex bug: 'I'll use binary search debugging to narrow down where the issue occurs.'",
+         "When analyzing a performance problem: 'Let me apply divide and conquer to isolate which component is causing the slowdown.'"
+      ]
+   },
+   parameterDescriptions: {
+      "approachName": "The debugging methodology to apply (binary_search, reverse_engineering, divide_conquer, backtracking, cause_elimination, program_slicing)",
+      "issue": "Description of the problem to be debugged",
+      "findings": "Observations and patterns discovered during the debugging process",
+      "steps": "Specific actions taken or recommended to isolate and resolve the issue",
+      "resolution": "The solution that fixed the problem, including explanation of root cause"
+   },
+   exampleUsage: {
+      "approachName": "binary_search",
+      "issue": "Performance degradation occurred between version 2.1 and 2.8"
+   }
+});
+
+/**
+ * Описание инструмента Brainstorming
+ */
+export const BRAINSTORMING_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Brainstorming",
+   purpose: "A tool for facilitating structured brainstorming sessions.",
+   whenToUse: [
+      "When generating ideas for a new feature or project",
+      "When exploring multiple solutions to a problem",
+      "When creativity and divergent thinking are needed",
+      "When organizing collaborative ideation"
+   ],
+   capabilities: [
+      {
+         name: "create_session",
+         description: "Starts a new brainstorming session on a specific topic",
+         keyParameters: ["topic", "participants"]
+      },
+      {
+         name: "generate_ideas",
+         description: "Adds new ideas during the ideation phase",
+         keyParameters: ["newIdea", "sessionId", "phase"]
+      },
+      {
+         name: "categorize_ideas",
+         description: "Groups related ideas during the clarification phase",
+         keyParameters: ["ideaId", "category", "phase"]
+      },
+      {
+         name: "evaluate_ideas",
+         description: "Votes on ideas during the evaluation phase",
+         keyParameters: ["voteForIdea", "phase"]
+      },
+      {
+         name: "select_ideas",
+         description: "Chooses top ideas to implement during the selection phase",
+         keyParameters: ["selectIdea", "phase"]
+      },
+      {
+         name: "plan_actions",
+         description: "Creates action plans for selected ideas",
+         keyParameters: ["ideaId", "action", "phase"]
+      }
+   ],
+   exampleScenarios: [
+      "Generating feature ideas for a new product release",
+      "Exploring architectural approaches for a system redesign",
+      "Brainstorming solutions to performance bottlenecks",
+      "Planning refactoring strategies for legacy code"
+   ],
+   bestPractices: [
+      "Follow the structured phases: preparation → ideation → clarification → evaluation → selection → action planning",
+      "Encourage quantity of ideas during ideation before evaluating",
+      "Group similar ideas to identify patterns and themes",
+      "Create specific, actionable plans for implementation"
+   ],
+   integration: {
+      withAI: "AI assistants can use this tool to facilitate creative problem-solving sessions",
+      examples: [
+         "When designing a new feature: 'Let's start a brainstorming session to explore different approaches to this problem.'",
+         "When refactoring: 'We can use brainstorming to identify the best strategies for improving this code.'"
+      ]
+   },
+   parameterDescriptions: {
+      "topic": "The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session.",
+      "sessionId": "Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions.",
+      "phase": "Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning.",
+      "participants": "People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities.",
+      "newIdea": "A new idea to add to the session during the ideation phase. Should be clear, concise, and relevant to the brainstorming topic.",
+      "category": "Category name for grouping related ideas during the clarification phase. Helps organize ideas by theme or type.",
+      "ideaId": "Identifier for a specific idea, used when categorizing, voting for, selecting, or adding actions to an idea.",
+      "voteForIdea": "ID of an idea to vote for during the evaluation phase. More votes indicate higher group preference.",
+      "selectIdea": "ID of an idea to mark as selected during the selection phase. Selected ideas move forward to action planning.",
+      "action": "Action step to add to a selected idea during the action planning phase. Should be specific and actionable.",
+      "ideas": "Collection of generated ideas for the brainstorming session. Grows during the ideation phase and gets refined in later phases.",
+      "constraints": "Limitations or requirements to consider during brainstorming. Helps focus ideation on practical solutions that meet specific criteria.",
+      "currentStep": "Current step in the brainstorming process. Helps track progress within each phase of the session.",
+      "totalSteps": "Total number of steps in the brainstorming process. Provides context for how far along the session has progressed."
+   },
+   exampleUsage: {
+      "topic": "How can we improve the performance of our database queries?",
+      "phase": "ideation",
+      "sessionId": "perf-improvement-2023-12"
+   }
+});
+
+/**
+ * Описание инструмента Stochastic Algorithm
+ */
+export const STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Stochastic Algorithm",
+   purpose: "A tool for applying stochastic algorithms to decision-making problems.",
+   whenToUse: [
+      "When decisions must be made under uncertainty",
+      "When probabilistic modeling would improve outcomes",
+      "When dealing with sequential decision processes",
+      "When optimization requires exploring large solution spaces"
+   ],
+   capabilities: [
+      {
+         name: "apply_stochastic_algorithm",
+         description: "Applies a specific stochastic algorithm to a decision problem",
+         keyParameters: ["algorithm", "problem", "parameters"]
+      },
+      {
+         name: "analyze_results",
+         description: "Interprets and explains the output of the algorithm",
+         keyParameters: ["result"]
+      }
+   ],
+   exampleScenarios: [
+      "Using Markov Decision Processes (MDP) for resource allocation",
+      "Applying Monte Carlo Tree Search for planning complex workflows",
+      "Using Multi-Armed Bandit algorithms for A/B testing",
+      "Applying Bayesian optimization for hyperparameter tuning"
+   ],
+   bestPractices: [
+      "Clearly define the state space and actions for MDPs",
+      "Allow sufficient simulation time for MCTS to converge",
+      "Balance exploration vs. exploitation in Bandit algorithms",
+      "Update Bayesian priors with new evidence systematically"
+   ],
+   integration: {
+      withAI: "AI assistants can use this tool to make robust decisions under uncertainty",
+      examples: [
+         "When optimizing resource allocation: 'I'll apply MDP to find the optimal policy for distributing resources.'",
+         "When planning a complex workflow: 'Let me use MCTS to explore the possible execution paths and find the most promising one.'"
+      ]
+   },
+   parameterDescriptions: {
+      "algorithm": "The stochastic algorithm to apply. Each algorithm is suited to different types of decision problems.",
+      "problem": "The decision problem to solve. Describe the uncertainty, options, and desired outcome.",
+      "parameters": "Algorithm-specific parameters for customization. Each algorithm has its own parameter set.",
+      "result": "Optional result from algorithm application, typically filled in response."
+   },
+   exampleUsage: {
+      "algorithm": "mcts",
+      "problem": "We need to schedule tasks with uncertain durations to minimize overall completion time",
+      "parameters": {
+         "simulationDepth": 10,
+         "explorationConstant": 1.41
+      }
+   }
+});
+
+/**
+ * Описание инструмента Feature Discussion
+ */
+export const FEATURE_DISCUSSION_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Feature Discussion",
+   purpose: "A tool for collaborative feature discussion and planning.",
+   whenToUse: [
+      "When discussing a new feature in a structured way",
+      "When gathering requirements for feature development",
+      "When evaluating feature proposals with stakeholders",
+      "When planning feature implementation details"
+   ],
+   capabilities: [
+      {
+         name: "start_discussion",
+         description: "Initiates a new feature discussion with a title",
+         keyParameters: ["featureId", "response"]
+      },
+      {
+         name: "contribute_to_discussion",
+         description: "Adds input to an ongoing feature discussion",
+         keyParameters: ["featureId", "response"]
+      }
+   ],
+   exampleScenarios: [
+      "Planning a new authentication system feature",
+      "Discussing implementation approaches for a critical algorithm",
+      "Evaluating user interface improvements for accessibility",
+      "Planning performance optimizations for key functionality"
+   ],
+   bestPractices: [
+      "Clearly define the feature scope at the beginning",
+      "Consider both technical implementation and user experience",
+      "Document assumptions and constraints explicitly",
+      "Identify potential risks and mitigation strategies"
+   ],
+   integration: {
+      withAI: "AI assistants can use this tool to facilitate structured discussions about features",
+      examples: [
+         "When planning a new feature: 'Let's start a feature discussion to clarify the requirements and implementation approach.'",
+         "When evaluating options: 'We can use feature discussion to compare different implementation strategies.'"
+      ]
+   },
+   parameterDescriptions: {
+      "featureId": "Identifier for the feature being discussed",
+      "response": "Your response to the current prompt about the feature"
+   },
+   exampleUsage: {
+      "featureId": "auth-system-redesign",
+      "response": "The new authentication system should support both OAuth and traditional logins"
+   }
+});
+
+/**
+ * Описание инструмента Feature Analyzer
+ */
+export const FEATURE_ANALYZER_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Feature Analyzer",
+   purpose: "A tool for analyzing feature requirements and implementation approaches.",
+   whenToUse: [
+      "When evaluating the feasibility of a proposed feature",
+      "When identifying dependencies and requirements for implementation",
+      "When breaking down a complex feature into manageable components",
+      "When assessing potential impacts on existing systems"
+   ],
+   capabilities: [
+      {
+         name: "analyze_feature",
+         description: "Provides structured analysis of a feature concept",
+         keyParameters: ["featureName", "featureDescription"]
+      }
+   ],
+   exampleScenarios: [
+      "Analyzing requirements for a real-time notification system",
+      "Breaking down implementation steps for data migration feature",
+      "Evaluating security implications of a new API endpoint",
+      "Analyzing performance requirements for video processing feature"
+   ],
+   bestPractices: [
+      "Consider technical, UX, security, and performance aspects",
+      "Identify dependencies on other systems or components",
+      "Assess potential scalability challenges",
+      "Outline a phased implementation approach if appropriate"
+   ],
+   integration: {
+      withAI: "AI assistants can use this tool to provide comprehensive feature analysis to development teams",
+      examples: [
+         "When evaluating a feature request: 'Let me analyze this feature to understand its requirements and implementation complexity.'",
+         "When planning development: 'I'll break down this feature into its component parts for easier implementation.'"
+      ]
+   },
+   parameterDescriptions: {
+      "featureName": "The name of the feature to analyze",
+      "featureDescription": "Detailed description of the feature's purpose, functionality, and requirements"
+   },
+   exampleUsage: {
+      "featureName": "Real-time Collaboration Editor",
+      "featureDescription": "A document editing feature that allows multiple users to edit the same document simultaneously with real-time updates"
+   }
+});
+
+/**
+ * Описание инструмента Model Selector
+ */
+export const MODEL_SELECTOR_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "Model Selector",
+   purpose: "A tool for recommending optimal programming patterns, architectures, and algorithms for specific development tasks.",
+   whenToUse: [
+      "When selecting architectural patterns for a new project or component",
+      "When choosing data structures or algorithms for specific operations",
+      "When refactoring code and considering design patterns",
+      "When facing performance or scalability challenges requiring structural solutions"
+   ],
+   capabilities: [
+      {
+         name: "select_model",
+         description: "Recommends the most appropriate design pattern, architecture, or algorithm for a specific task",
+         keyParameters: ["task", "language", "projectScale"]
+      },
+      {
+         name: "list_models",
+         description: "Provides a list of relevant models that could apply to a specific development context",
+         keyParameters: ["context", "constraints", "preferences"]
+      }
+   ],
+   exampleScenarios: [
+      "Selecting between microservices vs. monolith for a new web application",
+      "Choosing between inheritance and composition for a class hierarchy",
+      "Determining the optimal data structure for high-frequency lookups with occasional inserts",
+      "Selecting an architectural pattern for a real-time data processing system"
+   ],
+   bestPractices: [
+      "Consider trade-offs between complexity, performance, and maintainability",
+      "Align recommendations with project scale and team expertise",
+      "Account for language-specific idioms and best practices",
+      "Explain rationale behind recommendations to aid understanding"
+   ],
+   integration: {
+      withAI: "AI assistants can use this tool to guide software design decisions with principled recommendations",
+      examples: [
+         "When starting a new project: 'Let me recommend an architectural pattern that would best suit your requirements.'",
+         "When facing a design challenge: 'I'll help you select the most appropriate data structure for this use case.'"
+      ]
+   },
+   parameterDescriptions: {
+      "task": "The specific programming task or problem that requires a model/approach recommendation",
+      "language": "Programming language being used (to provide language-specific recommendations)",
+      "projectScale": "Size of the project (Small, Medium, Large, Enterprise) to influence architectural recommendations",
+      "context": "Additional context about the project, environment, or requirements",
+      "constraints": "Any limitations or requirements that might affect the choice of model/approach",
+      "preferences": "Desired qualities or characteristics that the selected model/approach should have"
+   },
+   exampleUsage: {
+      "task": "We need to implement a cache for database query results",
+      "language": "TypeScript",
+      "projectScale": "Medium"
+   }
+});
+
+/**
+ * Описание инструмента First Thought Advisor
+ */
+export const FIRST_THOUGHT_ADVISOR_TOOL_DESCRIPTION: ToolDescription = createToolDescription({
+   name: "First Thought Advisor",
+   purpose: "A tool that intelligently recommends the optimal mental model or algorithm for any problem.",
+   whenToUse: [
+      "When beginning to approach a complex problem",
+      "When unsure which mental model or algorithm would be most effective",
+      "When wanting to explore different problem-solving perspectives",
+      "When teaching problem-solving approaches to others"
+   ],
+   capabilities: [
+      {
+         name: "get_thinking_approach",
+         description: "Recommends a thinking approach, algorithm, or mental model suited for a specific problem",
+         keyParameters: ["problem", "goal", "domain", "complexity", "constraints", "previousApproaches"]
+      }
+   ],
+   exampleScenarios: [
+      "Finding the right approach to optimize a slow-performing algorithm",
+      "Determining how to break down a complex system architecture problem",
+      "Selecting an appropriate mental model for a decision under uncertainty",
+      "Recommending a search strategy for an NP-hard computational problem"
+   ],
+   bestPractices: [
+      "Consider the problem's domain when recommending approaches",
+      "Account for complexity and constraints in recommendations",
+      "Suggest multiple approaches when appropriate, with reasoning",
+      "Build upon previous approaches that partially worked"
+   ],
+   integration: {
+      withAI: "AI assistants can use this tool as a meta-level advisor for their own reasoning process",
+      examples: [
+         "When approaching a complex problem: 'Let me first determine the best thinking approach for this type of challenge.'",
+         "When teaching problem-solving: 'I'll show you how to select the right mental model for different types of problems.'"
+      ]
+   },
+   parameterDescriptions: {
+      "problem": "The problem to analyze. Provide a clear, concise description of the challenge or task that needs a solution.",
+      "goal": "The desired outcome or objective. What would a successful solution achieve?",
+      "domain": "The field or context of the problem (e.g., software development, data analysis, etc.)",
+      "complexity": "The estimated complexity level of the problem (e.g., simple, moderate, complex, very complex)",
+      "constraints": "Any limitations or requirements that restrict possible solutions",
+      "previousApproaches": "Methods that have already been tried, whether successful or not"
+   },
+   exampleUsage: {
+      "problem": "Need to find the shortest path between nodes in a sparse graph with millions of nodes",
+      "domain": "Algorithm design",
+      "complexity": "High",
+      "constraints": ["Memory limitations", "Must complete in near real-time"]
+   }
+});
+
+export const toolDescriptions = {
+   firstThoughtAdvisor: FIRST_THOUGHT_ADVISOR_TOOL_DESCRIPTION,
+   mentalModel: MENTAL_MODEL_TOOL_DESCRIPTION,
+   sequentialThinking: SEQUENTIAL_THINKING_TOOL_DESCRIPTION,
+   debuggingApproach: DEBUGGING_APPROACH_TOOL_DESCRIPTION,
+   brainstorming: BRAINSTORMING_TOOL_DESCRIPTION,
+   stochasticAlgorithm: STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION,
+   featureDiscussion: FEATURE_DISCUSSION_TOOL_DESCRIPTION,
+   featureAnalyzer: FEATURE_ANALYZER_TOOL_DESCRIPTION,
+   modelSelector: MODEL_SELECTOR_TOOL_DESCRIPTION
+}; 
