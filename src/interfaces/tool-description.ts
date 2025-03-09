@@ -40,4 +40,27 @@ export interface ToolDescription {
  */
 export function createToolDescription(description: ToolDescription): ToolDescription {
     return description;
+}
+
+/**
+ * Проверяет наличие описаний для всех параметров инструмента
+ * @param toolParameters Параметры инструмента
+ * @returns Объект с результатами проверки
+ */
+export function validateParameterDescriptions(toolParameters: Record<string, any>): {
+    valid: boolean;
+    missingDescriptions: string[]
+} {
+    const missingDescriptions: string[] = [];
+
+    for (const [paramName, paramDef] of Object.entries(toolParameters)) {
+        if (!paramDef.description || paramDef.description.trim() === '') {
+            missingDescriptions.push(paramName);
+        }
+    }
+
+    return {
+        valid: missingDescriptions.length === 0,
+        missingDescriptions
+    };
 } 

@@ -292,198 +292,223 @@ export class FirstThoughtAdvisorServer extends BaseServer {
                 name: 'get_thinking_approach',
                 description: 'Gets recommended thinking approach for a problem',
                 parameters: {
-                    problem: { type: 'string', required: true, description: 'The specific problem or challenge that requires analysis' },
+                    problem: {
+                        type: 'string',
+                        required: true,
+                        description: 'The specific problem or challenge that requires analysis. Be detailed and precise to receive the most relevant mental model recommendation.'
+                    },
                     goal: {
-                        type: 'string', required: false, description: 'The specific outcome or objective you're trying to achieve' },
-                    domain: { type: 'string', required: false, description: 'The field or context in which the problem exists' },
-            complexity: { type: 'string', required: false, description: 'Assessment of problem difficulty (low, moderate, high)' },
-            constraints: { type: 'array', items: { type: 'string' }, required: false, description: 'Limitations that affect potential solutions' },
-            previousApproaches: { type: 'array', items: { type: 'string' }, required: false, description: 'Methods or strategies already attempted' }
+                        type: 'string',
+                        required: false,
+                        description: 'The specific outcome or objective you're trying to achieve.A clear goal statement helps focus recommendations on solutions that directly address your desired end result.'
+                    },
+                    domain: {
+                        type: 'string',
+                        required: false,
+                        description: 'The field or context in which the problem exists (e.g., software engineering, machine learning, business strategy). This helps tailor recommendations to domain-specific approaches.'
+                    },
+                    complexity: {
+                        type: 'string',
+                        required: false,
+                        description: 'Assessment of problem difficulty on a scale from low to high. This helps calibrate the sophistication level of the recommended mental models.'
+                    },
+                    constraints: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        required: false,
+                        description: 'Any limitations, boundaries, or requirements that affect potential solutions. Each constraint should be expressed as a separate array element.'
+                    },
+                    previousApproaches: {
+                        type: 'array',
+                        items: { type: 'string' },
+                        required: false,
+                        description: 'Methods or strategies already attempted, allowing the advisor to suggest novel alternatives. Each approach should be listed as a separate array element.'
+                    }
                 }
-}
+            }
         ]);
     }
 
     // Переопределение метода обработки запросов для советника по первым мыслям
-    async handleRequest(request: ServerRequest): Promise < ServerResponse > {
-    if(request.capability === 'get_thinking_approach') {
-    const { problem, goal, domain, complexity, constraints, previousApproaches } = request.parameters;
+    async handleRequest(request: ServerRequest): Promise<ServerResponse> {
+        if (request.capability === 'get_thinking_approach') {
+            const { problem, goal, domain, complexity, constraints, previousApproaches } = request.parameters;
 
-    // Анализ уровня сложности проблемы
-    let complexityLevel = complexity || this.assessComplexity(problem);
+            // Анализ уровня сложности проблемы
+            let complexityLevel = complexity || this.assessComplexity(problem);
 
-    // Определяем подходящие подходы на основе параметров
-    const recommendedApproaches = this.recommendApproaches(
-        problem,
-        goal,
-        domain,
-        complexityLevel,
-        constraints,
-        previousApproaches
-    );
+            // Определяем подходящие подходы на основе параметров
+            const recommendedApproaches = this.recommendApproaches(
+                problem,
+                goal,
+                domain,
+                complexityLevel,
+                constraints,
+                previousApproaches
+            );
 
-    return {
-        success: true,
-        data: {
-            problem,
-            goal,
-            domain,
-            complexity: complexityLevel,
-            constraints,
-            previousApproaches,
-            recommendedApproaches,
-            timestamp: new Date().toISOString()
+            return {
+                success: true,
+                data: {
+                    problem,
+                    goal,
+                    domain,
+                    complexity: complexityLevel,
+                    constraints,
+                    previousApproaches,
+                    recommendedApproaches,
+                    timestamp: new Date().toISOString()
+                }
+            };
         }
-    };
-}
 
-return {
-    success: false,
-    error: `Unknown capability: ${request.capability}`
-};
+        return {
+            success: false,
+            error: `Unknown capability: ${request.capability}`
+        };
     }
 
     // Оценка сложности проблемы на основе текста
     private assessComplexity(problem: string): string {
-    // Простой алгоритм оценки сложности на основе длины и ключевых слов
-    const complexityIndicators = [
-        'complex', 'difficult', 'challenging', 'sophisticated', 'intricate',
-        'multiple', 'interdependent', 'unclear', 'ambiguous', 'uncertain'
-    ];
+        // Простой алгоритм оценки сложности на основе длины и ключевых слов
+        const complexityIndicators = [
+            'complex', 'difficult', 'challenging', 'sophisticated', 'intricate',
+            'multiple', 'interdependent', 'unclear', 'ambiguous', 'uncertain'
+        ];
 
-    const wordCount = problem.split(' ').length;
-    let indicatorCount = 0;
+        const wordCount = problem.split(' ').length;
+        let indicatorCount = 0;
 
-    for (const indicator of complexityIndicators) {
-        if (problem.toLowerCase().includes(indicator)) {
-            indicatorCount++;
+        for (const indicator of complexityIndicators) {
+            if (problem.toLowerCase().includes(indicator)) {
+                indicatorCount++;
+            }
+        }
+
+        if (wordCount > 100 || indicatorCount > 3) {
+            return 'high';
+        } else if (wordCount > 50 || indicatorCount > 1) {
+            return 'moderate';
+        } else {
+            return 'low';
         }
     }
-
-    if (wordCount > 100 || indicatorCount > 3) {
-        return 'high';
-    } else if (wordCount > 50 || indicatorCount > 1) {
-        return 'moderate';
-    } else {
-        return 'low';
-    }
-}
 
     // Рекомендация подходов на основе всех параметров
     private recommendApproaches(
-    problem: string,
-    goal ?: string,
-    domain ?: string,
-    complexity ?: string,
-    constraints ?: string[],
-    previousApproaches ?: string[]
-) {
-    // Здесь будет логика рекомендаций на основе всех параметров
-    // Это заглушка с некоторыми примерами подходов
+        problem: string,
+        goal?: string,
+        domain?: string,
+        complexity?: string,
+        constraints?: string[],
+        previousApproaches?: string[]
+    ) {
+        // Здесь будет логика рекомендаций на основе всех параметров
+        // Это заглушка с некоторыми примерами подходов
 
-    const approaches = [
-        { name: 'systems_thinking', confidence: 0, reason: 'Best for understanding complex interconnected systems' },
-        { name: 'first_principles', confidence: 0, reason: 'Good for breaking down complex problems to fundamentals' },
-        { name: 'mental_model', confidence: 0, reason: 'Provides structured framework for analysis' },
-        { name: 'design_thinking', confidence: 0, reason: 'Human-centered approach to innovation and problem solving' },
-        { name: 'critical_path', confidence: 0, reason: 'Identifies essential sequence of steps with dependencies' },
-        { name: 'decision_tree', confidence: 0, reason: 'Maps decisions and their possible consequences' },
-        { name: 'cost_benefit', confidence: 0, reason: 'Evaluates actions by comparing costs to benefits' },
-        { name: 'scenario_planning', confidence: 0, reason: 'Prepares for different possible future states' },
-        { name: 'root_cause', confidence: 0, reason: 'Focuses on identifying the fundamental source of problems' }
-    ];
+        const approaches = [
+            { name: 'systems_thinking', confidence: 0, reason: 'Best for understanding complex interconnected systems' },
+            { name: 'first_principles', confidence: 0, reason: 'Good for breaking down complex problems to fundamentals' },
+            { name: 'mental_model', confidence: 0, reason: 'Provides structured framework for analysis' },
+            { name: 'design_thinking', confidence: 0, reason: 'Human-centered approach to innovation and problem solving' },
+            { name: 'critical_path', confidence: 0, reason: 'Identifies essential sequence of steps with dependencies' },
+            { name: 'decision_tree', confidence: 0, reason: 'Maps decisions and their possible consequences' },
+            { name: 'cost_benefit', confidence: 0, reason: 'Evaluates actions by comparing costs to benefits' },
+            { name: 'scenario_planning', confidence: 0, reason: 'Prepares for different possible future states' },
+            { name: 'root_cause', confidence: 0, reason: 'Focuses on identifying the fundamental source of problems' }
+        ];
 
-    // Повышаем уверенность в соответствующих подходах на основе входных данных
-    // В реальном приложении здесь будет более сложная логика
+        // Повышаем уверенность в соответствующих подходах на основе входных данных
+        // В реальном приложении здесь будет более сложная логика
 
-    // На основе предметной области
-    if (domain) {
-        const domainLower = domain.toLowerCase();
-        if (domainLower.includes('software') || domainLower.includes('engineering')) {
-            this.adjustConfidence(approaches, 'first_principles', 0.2);
-            this.adjustConfidence(approaches, 'systems_thinking', 0.3);
-        } else if (domainLower.includes('business') || domainLower.includes('strategy')) {
-            this.adjustConfidence(approaches, 'scenario_planning', 0.3);
-            this.adjustConfidence(approaches, 'cost_benefit', 0.3);
-        } else if (domainLower.includes('design') || domainLower.includes('user')) {
-            this.adjustConfidence(approaches, 'design_thinking', 0.4);
-        }
-    }
-
-    // На основе сложности
-    if (complexity === 'high') {
-        this.adjustConfidence(approaches, 'systems_thinking', 0.3);
-        this.adjustConfidence(approaches, 'scenario_planning', 0.2);
-    } else if (complexity === 'moderate') {
-        this.adjustConfidence(approaches, 'mental_model', 0.2);
-        this.adjustConfidence(approaches, 'decision_tree', 0.2);
-    } else {
-        this.adjustConfidence(approaches, 'root_cause', 0.2);
-        this.adjustConfidence(approaches, 'cost_benefit', 0.2);
-    }
-
-    // На основе цели
-    if (goal) {
-        const goalLower = goal.toLowerCase();
-        if (goalLower.includes('optimize') || goalLower.includes('improve')) {
-            this.adjustConfidence(approaches, 'root_cause', 0.2);
-        } else if (goalLower.includes('design') || goalLower.includes('create')) {
-            this.adjustConfidence(approaches, 'design_thinking', 0.3);
-            this.adjustConfidence(approaches, 'first_principles', 0.2);
-        } else if (goalLower.includes('decide') || goalLower.includes('choose')) {
-            this.adjustConfidence(approaches, 'decision_tree', 0.3);
-            this.adjustConfidence(approaches, 'cost_benefit', 0.3);
-        }
-    }
-
-    // Исключаем предыдущие подходы
-    if (previousApproaches && previousApproaches.length > 0) {
-        for (const approach of approaches) {
-            if (previousApproaches.some(prev =>
-                prev.toLowerCase().includes(approach.name.toLowerCase())
-            )) {
-                approach.confidence = 0;
+        // На основе предметной области
+        if (domain) {
+            const domainLower = domain.toLowerCase();
+            if (domainLower.includes('software') || domainLower.includes('engineering')) {
+                this.adjustConfidence(approaches, 'first_principles', 0.2);
+                this.adjustConfidence(approaches, 'systems_thinking', 0.3);
+            } else if (domainLower.includes('business') || domainLower.includes('strategy')) {
+                this.adjustConfidence(approaches, 'scenario_planning', 0.3);
+                this.adjustConfidence(approaches, 'cost_benefit', 0.3);
+            } else if (domainLower.includes('design') || domainLower.includes('user')) {
+                this.adjustConfidence(approaches, 'design_thinking', 0.4);
             }
         }
+
+        // На основе сложности
+        if (complexity === 'high') {
+            this.adjustConfidence(approaches, 'systems_thinking', 0.3);
+            this.adjustConfidence(approaches, 'scenario_planning', 0.2);
+        } else if (complexity === 'moderate') {
+            this.adjustConfidence(approaches, 'mental_model', 0.2);
+            this.adjustConfidence(approaches, 'decision_tree', 0.2);
+        } else {
+            this.adjustConfidence(approaches, 'root_cause', 0.2);
+            this.adjustConfidence(approaches, 'cost_benefit', 0.2);
+        }
+
+        // На основе цели
+        if (goal) {
+            const goalLower = goal.toLowerCase();
+            if (goalLower.includes('optimize') || goalLower.includes('improve')) {
+                this.adjustConfidence(approaches, 'root_cause', 0.2);
+            } else if (goalLower.includes('design') || goalLower.includes('create')) {
+                this.adjustConfidence(approaches, 'design_thinking', 0.3);
+                this.adjustConfidence(approaches, 'first_principles', 0.2);
+            } else if (goalLower.includes('decide') || goalLower.includes('choose')) {
+                this.adjustConfidence(approaches, 'decision_tree', 0.3);
+                this.adjustConfidence(approaches, 'cost_benefit', 0.3);
+            }
+        }
+
+        // Исключаем предыдущие подходы
+        if (previousApproaches && previousApproaches.length > 0) {
+            for (const approach of approaches) {
+                if (previousApproaches.some(prev =>
+                    prev.toLowerCase().includes(approach.name.toLowerCase())
+                )) {
+                    approach.confidence = 0;
+                }
+            }
+        }
+
+        // Исключаем подходы, которые не соответствуют ограничениям
+        if (constraints && constraints.length > 0) {
+            const constraintsLower = constraints.map(c => c.toLowerCase());
+
+            if (constraintsLower.some(c => c.includes('time') && c.includes('limit'))) {
+                this.adjustConfidence(approaches, 'systems_thinking', -0.1);
+                this.adjustConfidence(approaches, 'critical_path', 0.2);
+            }
+
+            if (constraintsLower.some(c => c.includes('budget') || c.includes('cost'))) {
+                this.adjustConfidence(approaches, 'cost_benefit', 0.3);
+            }
+
+            if (constraintsLower.some(c => c.includes('uncertain') || c.includes('unpredictable'))) {
+                this.adjustConfidence(approaches, 'scenario_planning', 0.3);
+            }
+        }
+
+        // Сортируем по уверенности и возвращаем топ-3
+        return approaches
+            .filter(a => a.confidence > 0)
+            .sort((a, b) => b.confidence - a.confidence)
+            .slice(0, 3)
+            .map(a => ({
+                ...a,
+                confidence: parseFloat(a.confidence.toFixed(2))
+            }));
     }
-
-    // Исключаем подходы, которые не соответствуют ограничениям
-    if (constraints && constraints.length > 0) {
-        const constraintsLower = constraints.map(c => c.toLowerCase());
-
-        if (constraintsLower.some(c => c.includes('time') && c.includes('limit'))) {
-            this.adjustConfidence(approaches, 'systems_thinking', -0.1);
-            this.adjustConfidence(approaches, 'critical_path', 0.2);
-        }
-
-        if (constraintsLower.some(c => c.includes('budget') || c.includes('cost'))) {
-            this.adjustConfidence(approaches, 'cost_benefit', 0.3);
-        }
-
-        if (constraintsLower.some(c => c.includes('uncertain') || c.includes('unpredictable'))) {
-            this.adjustConfidence(approaches, 'scenario_planning', 0.3);
-        }
-    }
-
-    // Сортируем по уверенности и возвращаем топ-3
-    return approaches
-        .filter(a => a.confidence > 0)
-        .sort((a, b) => b.confidence - a.confidence)
-        .slice(0, 3)
-        .map(a => ({
-            ...a,
-            confidence: parseFloat(a.confidence.toFixed(2))
-        }));
-}
 
     // Вспомогательный метод для корректировки уверенности в подходе
     private adjustConfidence(approaches: any[], name: string, amount: number) {
-    const approach = approaches.find(a => a.name === name);
-    if (approach) {
-        approach.confidence += amount;
-        approach.confidence = Math.max(0, Math.min(1, approach.confidence));
+        const approach = approaches.find(a => a.name === name);
+        if (approach) {
+            approach.confidence += amount;
+            approach.confidence = Math.max(0, Math.min(1, approach.confidence));
+        }
     }
-}
 }
 
 // Экспорт всех серверов

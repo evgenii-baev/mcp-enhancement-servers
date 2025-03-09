@@ -13,7 +13,9 @@
     "dev": "tsc-watch --onSuccess \"node dist/index.js\"",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "start:ai-integration": "node dist/ai-integration/start-server.js"
+    "start:ai-integration": "node dist/ai-integration/start-server.js",
+    "validate:params": "node dist/tools/parameter-validator.js",
+    "fix:params": "node dist/tools/fix-parameter-descriptions.js"
   },
   "keywords": [
     "mcp",
