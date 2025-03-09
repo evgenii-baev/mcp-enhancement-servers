@@ -218,25 +218,86 @@ The Brainstorming tool facilitates structured brainstorming sessions. It guides 
 | Argument | Type | Required | Description |
 |----------|------|----------|-------------|
 | phase | string | No | The current phase of brainstorming |
-| topic | string | No | The topic for brainstorming |
+| topic | string | Yes (for new sessions) | The topic for brainstorming |
 | sessionId | string | No | Identifier for the brainstorming session |
+| newIdea | string | No | New idea to add during ideation phase |
+| ideas | array of objects | No | Collection of generated ideas |
+| ideaId | string | No | Identifier for a specific idea for operations |
+| category | string | No | Category name for grouping related ideas |
+| voteForIdea | string | No | ID of an idea to vote for |
+| selectIdea | string | No | ID of an idea to mark as selected |
+| action | string | No | Action step to add to a selected idea |
+| constraints | array of strings | No | Limitations or requirements to consider |
+| participants | array of strings | No | People involved in the session |
 
 #### Available Phases
 
-- preparation
-- ideation
-- clarification
-- evaluation
-- selection
-- action_planning
+- **preparation**: Define the problem, establish constraints, identify participants
+- **ideation**: Generate as many ideas as possible without judgment
+- **clarification**: Group similar ideas, clarify ambiguities, combine concepts
+- **evaluation**: Rate ideas against criteria, consider feasibility, vote on options
+- **selection**: Select top ideas to pursue, verify alignment with goals
+- **action_planning**: Define next steps, assign responsibilities, set timelines
+
+#### Session Persistence
+
+The Brainstorming tool supports persistent sessions, allowing you to continue the same brainstorming process across multiple interactions. To continue a previous session, provide the same `sessionId`.
+
+#### Idea Management
+
+Ideas evolve through the different phases:
+- During **ideation**, ideas are simple text entries
+- In **clarification**, ideas can be categorized
+- During **evaluation**, ideas receive votes
+- In **selection**, ideas are marked as selected
+- During **action_planning**, actions are added to selected ideas
 
 #### Example
 
+Creating a new session:
 ```json
 {
-  "phase": "ideation",
+  "phase": "preparation",
   "topic": "Improving application performance during peak hours",
-  "sessionId": "perf-improvement-2023-03-15"
+  "constraints": ["Must be implementable within 2 weeks", "Cannot affect API contracts"]
+}
+```
+
+Adding ideas during ideation:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "ideation",
+  "newIdea": "Implement Redis cache for frequently accessed data"
+}
+```
+
+Categorizing ideas during clarification:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "clarification",
+  "ideaId": "idea123",
+  "category": "Caching Solutions"
+}
+```
+
+Voting during evaluation:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "evaluation",
+  "voteForIdea": "idea123"
+}
+```
+
+Adding actions during action planning:
+```json
+{
+  "sessionId": "perf-improvement-2023-03-15",
+  "phase": "action_planning",
+  "ideaId": "idea123",
+  "action": "Research Redis client libraries and benchmark performance"
 }
 ```
 

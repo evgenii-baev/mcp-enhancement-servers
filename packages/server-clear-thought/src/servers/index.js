@@ -1,11 +1,7 @@
 // Export server classes
-export class BrainstormingServer {
-    processBrainstorming(input) {
-        return {
-            content: [{ type: "text", text: `Processed brainstorming: ${JSON.stringify(input)}` }]
-        };
-    }
-}
+import { BrainstormingServer } from './brainstorming-server.js';
+
+export { BrainstormingServer };
 
 export class FirstThoughtAdvisorServer {
     processAdvice(input) {

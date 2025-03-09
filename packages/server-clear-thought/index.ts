@@ -177,24 +177,96 @@ const SEQUENTIAL_THINKING_TOOL: Tool = {
 const BRAINSTORMING_TOOL: Tool = {
     name: "brainstorming",
     description: "A tool for facilitating structured brainstorming sessions.",
+    details: `
+    This tool guides you through a systematic brainstorming process, from preparation to action planning,
+    helping generate, refine, evaluate, and implement ideas effectively. 
+    
+    Features:
+    - Structured phase-based approach to brainstorming
+    - Persistent sessions for ongoing brainstorming
+    - Idea management with categories, voting, and action planning
+    - Guidance specific to each phase of the process
+    
+    Use for: Brainstorming, exploring possibilities, creative problem-solving.
+    `,
     inputSchema: {
         type: "object",
         properties: {
+            sessionId: {
+                type: "string",
+                description: "Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions."
+            },
+            topic: {
+                type: "string",
+                description: "The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session."
+            },
             phase: {
                 type: "string",
-                enum: [
-                    "preparation",
-                    "ideation",
-                    "clarification",
-                    "evaluation",
-                    "selection",
-                    "action_planning"
-                ]
+                enum: ["preparation", "ideation", "clarification", "evaluation", "selection", "action_planning"],
+                description: "Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning."
             },
-            topic: { type: "string" },
-            sessionId: { type: "string" }
-        },
-        required: []
+            newIdea: {
+                type: "string",
+                description: "A new idea to add to the session during the ideation phase. Should be clear, concise, and relevant to the brainstorming topic."
+            },
+            ideas: {
+                type: "array",
+                items: {
+                    type: "object",
+                    properties: {
+                        id: { type: "string" },
+                        text: { type: "string" },
+                        category: { type: "string" },
+                        votes: { type: "number" },
+                        selected: { type: "boolean" },
+                        actions: {
+                            type: "array",
+                            items: { type: "string" }
+                        }
+                    },
+                    required: ["text"]
+                },
+                description: "Collection of generated ideas for the brainstorming session. Grows during the ideation phase and gets refined in later phases."
+            },
+            ideaId: {
+                type: "string",
+                description: "Identifier for a specific idea, used when categorizing, voting for, selecting, or adding actions to an idea."
+            },
+            category: {
+                type: "string",
+                description: "Category name for grouping related ideas during the clarification phase. Helps organize ideas by theme or type."
+            },
+            voteForIdea: {
+                type: "string",
+                description: "ID of an idea to vote for during the evaluation phase. More votes indicate higher group preference."
+            },
+            selectIdea: {
+                type: "string",
+                description: "ID of an idea to mark as selected during the selection phase. Selected ideas move forward to action planning."
+            },
+            action: {
+                type: "string",
+                description: "Action step to add to a selected idea during the action planning phase. Should be specific and actionable."
+            },
+            constraints: {
+                type: "array",
+                items: { type: "string" },
+                description: "Limitations or requirements to consider during brainstorming. Helps focus ideation on practical solutions that meet specific criteria."
+            },
+            participants: {
+                type: "array",
+                items: { type: "string" },
+                description: "People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities."
+            },
+            currentStep: {
+                type: "number",
+                description: "Current step in the brainstorming process. Helps track progress within each phase of the session."
+            },
+            totalSteps: {
+                type: "number",
+                description: "Total number of steps in the brainstorming process. Provides context for how far along the session has progressed."
+            }
+        }
     }
 };
 
