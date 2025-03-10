@@ -182,11 +182,12 @@ export class BrainstormingServer {
      * @returns Formatted string output
      */
     private formatBrainstormingOutput(data: BrainstormingData): string {
-        const border = "─".repeat(Math.max(data.topic.length + 20, 60));
-        const phaseDisplay =
-            data.phase.charAt(0).toUpperCase() + data.phase.slice(1).replace("_", " ");
+        try {
+            const border = "─".repeat(Math.max(data.topic.length + 20, 60));
+            const phaseDisplay =
+                data.phase.charAt(0).toUpperCase() + data.phase.slice(1).replace("_", " ");
 
-        let output = `
+            let output = `
 ┌${border}┐
 │ 🧠 Brainstorming Session: ${data.topic.padEnd(border.length - 26)} │
 ├${border}┤
@@ -194,112 +195,82 @@ export class BrainstormingServer {
 ├${border}┤
 `;
 
-        if (data.constraints && data.constraints.length > 0) {
-            output += `│ Constraints:${" ".repeat(border.length - 13)} │\n`;
-            data.constraints.forEach((constraint) => {
-                output += `│ • ${constraint.padEnd(border.length - 4)} │\n`;
-            });
-            output += `├${border}┤\n`;
-        }
-
-        if (data.participants && data.participants.length > 0) {
-            output += `│ Participants:${" ".repeat(border.length - 14)} │\n`;
-            data.participants.forEach((participant) => {
-                output += `│ • ${participant.padEnd(border.length - 4)} │\n`;
-            });
-            output += `├${border}┤\n`;
-        }
-
-        if (data.recommendedModels && data.recommendedModels.length > 0) {
-            output += `│ Recommended Models:${" ".repeat(border.length - 20)} │\n`;
-            data.recommendedModels.forEach((model) => {
-                const modelObj = getMentalModelById(model);
-                if (modelObj) {
-                    output += `│ • ${modelObj.name}: ${modelObj.definition
-                        .substring(0, border.length - modelObj.name.length - 6)
-                        .padEnd(border.length - modelObj.name.length - 6)} │\n`;
-                } else {
-                    output += `│ • ${model.padEnd(border.length - 4)} │\n`;
-                }
-            });
-            output += `├${border}┤\n`;
-        }
-
-        if (data.ideas && data.ideas.length > 0) {
-            output += `│ Ideas (${data.ideas.length}):${" ".repeat(
-                border.length - 11 - String(data.ideas.length).length
-            )} │\n`;
-
-            // Group ideas by category if available
-            const categorizedIdeas: Record<string, BrainstormingIdea[]> = {};
-            data.ideas.forEach((idea) => {
-                const category = idea.category || "Uncategorized";
-                if (!categorizedIdeas[category]) {
-                    categorizedIdeas[category] = [];
-                }
-                categorizedIdeas[category].push(idea);
-            });
-
-            // Display ideas by category
-            Object.entries(categorizedIdeas).forEach(([category, ideas]) => {
-                output += `│ ${category}:${" ".repeat(border.length - category.length - 3)} │\n`;
-                ideas.forEach((idea) => {
-                    const voteDisplay = idea.votes !== undefined ? ` [${idea.votes} votes]` : "";
-                    output += `│   - ${idea.content}${voteDisplay}${" ".repeat(
-                        Math.max(0, border.length - idea.content.length - voteDisplay.length - 5)
-                    )} │\n`;
+            if (data.constraints && data.constraints.length > 0) {
+                output += `│ Constraints:${" ".repeat(border.length - 13)} │\n`;
+                data.constraints.forEach((constraint) => {
+                    output += `│ • ${constraint.padEnd(border.length - 4)} │\n`;
                 });
-            });
+                output += `├${border}┤\n`;
+            }
 
-            output += `├${border}┤\n`;
+            if (data.participants && data.participants.length > 0) {
+                output += `│ Participants:${" ".repeat(border.length - 14)} │\n`;
+                data.participants.forEach((participant) => {
+                    output += `│ • ${participant.padEnd(border.length - 4)} │\n`;
+                });
+                output += `├${border}┤\n`;
+            }
+
+            if (data.recommendedModels && data.recommendedModels.length > 0) {
+                output += `│ Recommended Models:${" ".repeat(border.length - 20)} │\n`;
+                data.recommendedModels.forEach((model) => {
+                    try {
+                        const modelObj = getMentalModelById(model);
+                        if (modelObj) {
+                            output += `│ • ${modelObj.name}: ${modelObj.definition
+                                .substring(0, border.length - modelObj.name.length - 6)
+                                .padEnd(border.length - modelObj.name.length - 6)} │\n`;
+                        } else {
+                            output += `│ • ${model.padEnd(border.length - 4)} │\n`;
+                        }
+                    } catch (modelError) {
+                        console.error(`Error getting mental model ${model}:`, modelError);
+                        output += `│ • ${model.padEnd(border.length - 4)} │\n`;
+                    }
+                });
+                output += `├${border}┤\n`;
+            }
+
+            if (data.ideas && data.ideas.length > 0) {
+                output += `│ Ideas (${data.ideas.length}):${" ".repeat(
+                    border.length - 11 - String(data.ideas.length).length
+                )} │\n`;
+
+                // Group ideas by category if available
+                const categorizedIdeas: Record<string, BrainstormingIdea[]> = {};
+                data.ideas.forEach((idea) => {
+                    const category = idea.category || "Uncategorized";
+                    if (!categorizedIdeas[category]) {
+                        categorizedIdeas[category] = [];
+                    }
+                    categorizedIdeas[category].push(idea);
+                });
+
+                // Display ideas by category
+                Object.entries(categorizedIdeas).forEach(([category, ideas]) => {
+                    output += `│ ${category}:${" ".repeat(border.length - category.length - 3)} │\n`;
+                    ideas.forEach((idea) => {
+                        try {
+                            const voteDisplay = idea.votes !== undefined ? ` [${idea.votes} votes]` : "";
+                            const contentLength = Math.min(idea.content.length, border.length - voteDisplay.length - 5);
+                            output += `│   - ${idea.content.substring(0, contentLength)}${voteDisplay}${" ".repeat(
+                                Math.max(0, border.length - contentLength - voteDisplay.length - 5)
+                            )} │\n`;
+                        } catch (ideaError) {
+                            console.error(`Error formatting idea:`, ideaError);
+                            output += `│   - [Error formatting idea] │\n`;
+                        }
+                    });
+                });
+            }
+
+            output += `└${border}┘`;
+
+            return output;
+        } catch (error) {
+            console.error("Error formatting brainstorming output:", error);
+            return `[Error formatting brainstorming session]`;
         }
-
-        // Add hints based on current phase
-        output += `│ Next Steps:${" ".repeat(border.length - 12)} │\n`;
-        switch (data.phase) {
-            case BrainstormingPhase.PREPARATION:
-                output += `│ • Define constraints and participants${" ".repeat(
-                    border.length - 36
-                )} │\n`;
-                output += `│ • Move to ideation phase when ready${" ".repeat(
-                    border.length - 35
-                )} │\n`;
-                break;
-            case BrainstormingPhase.IDEATION:
-                output += `│ • Generate as many ideas as possible${" ".repeat(
-                    border.length - 37
-                )} │\n`;
-                output += `│ • Don't evaluate ideas yet${" ".repeat(border.length - 27)} │\n`;
-                output += `│ • Build upon others' ideas${" ".repeat(border.length - 28)} │\n`;
-                break;
-            case BrainstormingPhase.CLARIFICATION:
-                output += `│ • Clarify and refine ideas${" ".repeat(border.length - 29)} │\n`;
-                output += `│ • Combine similar ideas${" ".repeat(border.length - 25)} │\n`;
-                output += `│ • Categorize ideas${" ".repeat(border.length - 21)} │\n`;
-                break;
-            case BrainstormingPhase.EVALUATION:
-                output += `│ • Evaluate each idea objectively${" ".repeat(border.length - 34)} │\n`;
-                output += `│ • Consider feasibility and impact${" ".repeat(border.length - 34)} │\n`;
-                output += `│ • Vote on promising ideas${" ".repeat(border.length - 28)} │\n`;
-                break;
-            case BrainstormingPhase.SELECTION:
-                output += `│ • Select the best ideas to pursue${" ".repeat(border.length - 35)} │\n`;
-                output += `│ • Consider combining complementary ideas${" ".repeat(
-                    border.length - 40
-                )} │\n`;
-                break;
-            case BrainstormingPhase.ACTION_PLANNING:
-                output += `│ • Define next steps for selected ideas${" ".repeat(
-                    border.length - 39
-                )} │\n`;
-                output += `│ • Assign responsibilities${" ".repeat(border.length - 27)} │\n`;
-                output += `│ • Set timelines${" ".repeat(border.length - 17)} │\n`;
-                break;
-        }
-
-        output += `└${border}┘`;
-
-        return output;
     }
 
     /**
@@ -312,6 +283,7 @@ export class BrainstormingServer {
         isError?: boolean;
     } {
         try {
+            console.error(`Processing brainstorming request:`, JSON.stringify(input, null, 2));
             const data = this.validateBrainstormingData(input);
 
             // Get or create session
@@ -321,19 +293,25 @@ export class BrainstormingServer {
             if (sessionId && this.sessions.has(sessionId)) {
                 // Update existing session
                 session = this.sessions.get(sessionId)!;
+                console.error(`Found existing session: ${sessionId}`);
 
                 // Update fields if provided
                 if (data.phase !== undefined) {
+                    console.error(`Updating phase to: ${data.phase}`);
                     session.phase = data.phase as BrainstormingPhase;
                 }
 
                 if (data.ideas !== undefined) {
+                    console.error(`Updating ideas: ${data.ideas.length} ideas provided`);
                     session.ideas = data.ideas as BrainstormingIdea[];
                 } else if ((data as any).newIdea) {
                     // Add new idea if provided, regardless of phase
+                    const ideaContent = (data as any).newIdea;
+                    console.error(`Adding new idea: ${ideaContent}`);
+
                     const newIdea: BrainstormingIdea = {
                         id: Math.random().toString(36).substring(2, 15),
-                        content: (data as any).newIdea,
+                        content: ideaContent,
                         createdAt: Date.now(),
                     };
 
@@ -346,50 +324,65 @@ export class BrainstormingServer {
                     }
 
                     session.ideas.push(newIdea);
+                    console.error(`Added idea with ID: ${newIdea.id}`);
                 }
 
                 if (data.constraints !== undefined) {
+                    console.error(`Updating constraints: ${data.constraints.length} constraints`);
                     session.constraints = data.constraints as string[];
                 }
 
                 if (data.participants !== undefined) {
+                    console.error(`Updating participants: ${data.participants.length} participants`);
                     session.participants = data.participants as string[];
                 }
 
                 if (data.timeLimit !== undefined) {
+                    console.error(`Updating time limit to: ${data.timeLimit} minutes`);
                     session.timeLimit = data.timeLimit as number;
                 }
 
                 if (data.recommendedModels !== undefined) {
+                    console.error(`Updating recommended models: ${data.recommendedModels.length} models`);
                     session.recommendedModels = data.recommendedModels as string[];
                 }
 
                 if (data.currentStep !== undefined) {
+                    console.error(`Updating current step to: ${data.currentStep}`);
                     session.currentStep = data.currentStep as number;
                 }
 
                 if (data.totalSteps !== undefined) {
+                    console.error(`Updating total steps to: ${data.totalSteps}`);
                     session.totalSteps = data.totalSteps as number;
                 }
 
                 // Handle voting in evaluation phase
-                if (data.phase === BrainstormingPhase.EVALUATION && (data as any).voteForIdea) {
+                if (session.phase === BrainstormingPhase.EVALUATION && (data as any).voteForIdea) {
                     const ideaId = (data as any).voteForIdea;
+                    console.error(`Voting for idea: ${ideaId}`);
                     const idea = session.ideas.find((i) => i.id === ideaId);
                     if (idea) {
                         idea.votes = (idea.votes || 0) + 1;
+                        console.error(`Updated votes for idea ${ideaId} to ${idea.votes}`);
+                    } else {
+                        console.error(`Idea ${ideaId} not found for voting`);
                     }
                 }
 
                 // Handle idea categorization
                 if (
-                    data.phase === BrainstormingPhase.CLARIFICATION &&
+                    session.phase === BrainstormingPhase.CLARIFICATION &&
                     (data as any).categorizeIdea
                 ) {
                     const { ideaId, category } = (data as any).categorizeIdea;
+                    console.error(`Categorizing idea ${ideaId} as ${category}`);
                     const idea = session.ideas.find((i) => i.id === ideaId);
                     if (idea) {
                         idea.category = category;
+                        console.error(`Updated category for idea ${ideaId} to ${category}`);
+                    } else {
+                        console.error(`Idea ${ideaId} not found for categorization`);
                     }
                 }
             } else {
@@ -399,6 +392,8 @@ export class BrainstormingServer {
                 }
 
                 sessionId = this.generateSessionId();
+                console.error(`Creating new session with ID: ${sessionId}`);
+
                 session = {
                     topic: data.topic as string,
                     phase: (data.phase as BrainstormingPhase) || BrainstormingPhase.PREPARATION,
@@ -413,37 +408,82 @@ export class BrainstormingServer {
                 };
 
                 this.sessions.set(sessionId, session);
+                console.error(`New session created with topic: ${session.topic}`);
             }
 
-            const formattedOutput = this.formatBrainstormingOutput(session);
-            console.error(formattedOutput);
+            try {
+                const formattedOutput = this.formatBrainstormingOutput(session);
+                console.error(formattedOutput);
+            } catch (formatError) {
+                console.error("Failed to format brainstorming output:", formatError);
+            }
+
+            // Создаем структурированный и упрощенный ответ
+            const responseObj = {
+                sessionId,
+                topic: session.topic,
+                phase: session.phase,
+                ideasCount: session.ideas.length,
+                currentStep: session.currentStep,
+                totalSteps: session.totalSteps,
+                status: "success"
+            };
+
+            // Добавляем информацию о последней добавленной идее, если она есть
+            if ((data as any).newIdea && session.ideas.length > 0) {
+                const lastIdea = session.ideas[session.ideas.length - 1];
+                responseObj['lastIdeaId'] = lastIdea.id;
+            }
+
+            // Преобразуем в JSON с обработкой ошибок
+            let responseText = "";
+            try {
+                responseText = JSON.stringify(responseObj, null, 2);
+            } catch (jsonError) {
+                console.error("Error stringifying response:", jsonError);
+                // Запасной вариант, если произошла ошибка при JSON.stringify
+                responseText = JSON.stringify({
+                    sessionId,
+                    topic: session.topic,
+                    phase: session.phase,
+                    status: "success",
+                    note: "Response simplified due to JSON serialization error"
+                }, null, 2);
+            }
 
             return {
                 content: [
                     {
                         type: "text",
-                        text: JSON.stringify(
-                            {
-                                sessionId,
-                                topic: session.topic,
-                                phase: session.phase,
-                                ideasCount: session.ideas.length,
-                                status: "success",
-                            },
-                            null,
-                            2
-                        ),
+                        text: responseText
                     },
                 ],
             };
         } catch (error) {
+            console.error("Brainstorming server error:", error);
+
+            // Обработка ошибок с надежным созданием JSON
+            let errorMessage = "Unknown error";
+
+            try {
+                if (error instanceof Error) {
+                    errorMessage = error.message;
+                } else if (typeof error === 'string') {
+                    errorMessage = error;
+                } else {
+                    errorMessage = JSON.stringify(error);
+                }
+            } catch (jsonError) {
+                errorMessage = "Error cannot be converted to string";
+            }
+
             return {
                 content: [
                     {
                         type: "text",
                         text: JSON.stringify(
                             {
-                                error: error instanceof Error ? error.message : String(error),
+                                error: errorMessage,
                                 status: "failed",
                             },
                             null,
