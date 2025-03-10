@@ -156,6 +156,104 @@ We've implemented the following improvements:
    - Standardized response format
    - Improved consistency with other tools
 
+## Enhancing the First Thought Advisor Tool
+
+### Problem
+
+The `first_thought_advisor` tool had several issues that needed to be addressed:
+
+1. Insufficient validation of input parameters (goal, domain, complexity)
+2. No handling for long strings or special characters
+3. Lack of error handling when generating recommendations
+4. No fallback for error conditions
+5. Minimal logging for debugging purposes
+6. No type safety for approach objects
+
+### Solution
+
+We've implemented the following improvements:
+
+1. **Enhanced Validation**:
+   - Added validation for goal, domain, and complexity against lists of valid values
+   - Implemented type checking for all parameters including array elements
+   - Added specific error messages for each validation failure
+
+2. **Robust Formatting**:
+   - Added try/catch blocks around all operations
+   - Implemented truncation for long strings in problem descriptions and constraints
+   - Added error handling for recommendation generation
+   - Created fallback recommendations for error conditions
+
+3. **Improved Error Handling**:
+   - Added comprehensive error handling throughout the server
+   - Created fallback responses for error conditions
+   - Improved error message clarity
+   - Added safeguards against invalid data
+
+4. **Better Response Structure**:
+   - Limited the number of recommendations to prevent overly large responses
+   - Added proper type definitions for approach objects
+   - Standardized response format
+   - Improved consistency with other tools
+
+5. **Enhanced Recommendations**:
+   - Added more specific recommendations for different goals
+   - Improved domain detection for technical problems
+   - Added fallback recommendations for error conditions
+
+## Enhancing the Stochastic Algorithm Tool
+
+### Problem
+
+The `stochastic_algorithm` tool had several issues that needed to be addressed:
+
+1. Insufficient validation of algorithm names and parameters
+2. No type checking for algorithm-specific parameters
+3. No handling for long strings or special characters
+4. Lack of error handling during algorithm simulation
+5. No fallback for error conditions
+6. Minimal logging for debugging purposes
+7. No type safety for parameters and results
+8. Generic recommendations not tailored to specific algorithms
+
+### Solution
+
+We've implemented the following improvements:
+
+1. **Enhanced Validation**:
+   - Added validation for algorithm names against a list of valid algorithms
+   - Implemented type checking for all algorithm parameters
+   - Added specific error messages for each validation failure
+   - Added algorithm-specific parameter validation
+
+2. **Robust Formatting**:
+   - Added try/catch blocks around all operations
+   - Implemented truncation for long strings in problem descriptions
+   - Added error handling for algorithm simulation
+   - Created fallback results for error conditions
+
+3. **Improved Error Handling**:
+   - Added comprehensive error handling throughout the server
+   - Created fallback responses for error conditions
+   - Improved error message clarity
+   - Added safeguards against invalid data
+
+4. **Better Response Structure**:
+   - Added proper type definitions for parameters and results
+   - Standardized response format
+   - Improved consistency with other tools
+   - Added more detailed simulation results
+
+5. **Enhanced Recommendations**:
+   - Added algorithm-specific recommendations
+   - Improved recommendation relevance based on algorithm type
+   - Added fallback recommendations for error conditions
+
+6. **Dynamic Result Generation**:
+   - Implemented dynamic generation of results based on input parameters
+   - Added randomization for more realistic simulations
+   - Ensured results are consistent with input parameters
+
 ## Testing
 
 Test scripts have been added to verify the functionality of these tools:
@@ -172,6 +270,12 @@ npm run test:brainstorming
 
 # Test the debugging approach tool
 npm run test:debugging-approach
+
+# Test the first thought advisor tool
+npm run test:first-thought-advisor
+
+# Test the stochastic algorithm tool
+npm run test:stochastic-algorithm
 ```
 
 These scripts test various scenarios including:
@@ -198,6 +302,27 @@ Available models include:
 - rubber_duck
 - pareto_principle
 - and many more...
+
+To use the stochastic algorithm tool:
+
+```javascript
+{
+  "algorithm": "mdp",
+  "problem": "Find optimal route through city",
+  "parameters": {
+    "states": 10,
+    "actions": 4,
+    "gamma": 0.95
+  }
+}
+```
+
+Available algorithms include:
+- mdp (Markov Decision Process)
+- mcts (Monte Carlo Tree Search)
+- bandit (Multi-Armed Bandit)
+- bayesian (Bayesian Optimization)
+- hmm (Hidden Markov Model)
 
 ## Development
 
