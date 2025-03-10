@@ -77,6 +77,46 @@ We've made the following improvements:
    - Ensured formatting errors don't crash the application
    - Improved debug information
 
+## Enhancing the Brainstorming Tool
+
+### Problem
+
+The `brainstorming` tool had several issues that needed to be addressed:
+
+1. Lack of error handling when formatting complex output
+2. No handling for long strings or special characters
+3. Insufficient logging for debugging session state
+4. Inconsistent phase checking (using input phase instead of session phase)
+5. No fallback for JSON serialization errors
+
+### Solution
+
+We've implemented the following improvements:
+
+1. **Robust Formatting**:
+   - Added try/catch blocks around all formatting operations
+   - Implemented truncation for long strings
+   - Added error handling for each idea and model formatting
+   - Created fallback display for formatting errors
+
+2. **Enhanced Logging**:
+   - Added detailed logs for session creation and updates
+   - Included logging for idea additions and modifications
+   - Added error reporting for failed operations
+   - Improved traceability of session state changes
+
+3. **Improved Error Handling**:
+   - Added comprehensive error handling for JSON serialization
+   - Created fallback responses for error conditions
+   - Improved error message clarity
+   - Added safeguards against invalid data
+
+4. **Better Response Structure**:
+   - Added more useful fields in the response
+   - Included lastIdeaId when adding new ideas
+   - Standardized response format
+   - Improved consistency with other tools
+
 ## Testing
 
 Test scripts have been added to verify the functionality of both tools:
@@ -87,6 +127,9 @@ npm run test:mental-model
 
 # Test the sequential thinking tool
 npm run test:sequential-thinking
+
+# Test the brainstorming tool
+npm run test:brainstorming
 ```
 
 These scripts test various scenarios including:
