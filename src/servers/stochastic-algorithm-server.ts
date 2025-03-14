@@ -3,7 +3,7 @@
  */
 
 import { ServerRequest, ServerResponse } from '../interfaces/server-interfaces.js';
-import { BaseServer } from './index.js';
+import { BaseServer } from './base/base-server.js';
 import { STOCHASTIC_ALGORITHM_PARAM_DESCRIPTIONS } from '../interfaces/parameter-descriptions.js';
 import { createParameters } from '../utils/parameter-utils.js';
 import { logger } from '../utils/logger.js';

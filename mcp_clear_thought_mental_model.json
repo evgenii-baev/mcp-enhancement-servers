@@ -1,0 +1,50 @@
+{
+    "name": "mental_model",
+    "description": "Apply structured mental models to problem-solving. Select a model and define your problem.",
+    "parameters": {
+        "type": "object",
+        "required": [
+            "modelName",
+            "problem"
+        ],
+        "properties": {
+            "modelName": {
+                "type": "string",
+                "enum": [
+                    "first_principles",
+                    "opportunity_cost",
+                    "error_propagation",
+                    "rubber_duck",
+                    "pareto_principle",
+                    "occams_razor",
+                    "regression_to_mean",
+                    "confirmation_bias",
+                    "normal_distribution",
+                    "sensitivity_analysis",
+                    "bayes_theorem",
+                    "survivorship_bias",
+                    "systems_thinking",
+                    "thought_experiment",
+                    "hanlons_razor",
+                    "proximate_ultimate_causation",
+                    "zero_sum_game",
+                    "loss_aversion",
+                    "sunk_cost",
+                    "lateral_thinking",
+                    "divergent_thinking",
+                    "scientific_method",
+                    "decision_tree",
+                    "scenario_planning",
+                    "simulation",
+                    "catalysis",
+                    "ecosystem"
+                ],
+                "description": "Model to apply: first_principles (break down to basics), opportunity_cost (what you give up), error_propagation (how errors spread), rubber_duck (explain problem aloud), pareto_principle (80/20 rule), occams_razor (simplest explanation), regression_to_mean (extremes normalize), confirmation_bias (seeking confirming evidence), normal_distribution (bell curve), sensitivity_analysis (parameter impact), bayes_theorem (update with new evidence), survivorship_bias (seeing only survivors), systems_thinking (interconnections), thought_experiment (hypothetical scenario), hanlons_razor (not malice but incompetence), proximate_ultimate_causation (immediate vs root causes), zero_sum_game (win/lose tradeoffs), loss_aversion (avoiding losses), sunk_cost (ignoring past investments), lateral_thinking (indirect approach), divergent_thinking (creative options), scientific_method (hypothesis testing), decision_tree (branching choices), scenario_planning (future possibilities), simulation (model outcomes), catalysis (accelerate processes), ecosystem (living systems)"
+            },
+            "problem": {
+                "type": "string",
+                "description": "The problem to analyze using the selected mental model."
+            }
+        }
+    }
+}

@@ -3,7 +3,7 @@
  */
 
 import { ServerRequest, ServerResponse } from '../interfaces/server-interfaces.js';
-import { BaseServer } from './index.js';
+import { BaseServer } from './base/base-server.js';
 import { MENTAL_MODEL_PARAM_DESCRIPTIONS } from '../interfaces/parameter-descriptions.js';
 import { createParameters } from '../utils/parameter-utils.js';
 import { getAllMentalModelNames } from '../models/mental-models.js';

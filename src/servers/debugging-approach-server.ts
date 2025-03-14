@@ -3,7 +3,7 @@
  */
 
 import { ServerRequest, ServerResponse } from '../interfaces/server-interfaces.js';
-import { BaseServer } from './index.js';
+import { BaseServer } from './base/base-server.js';
 import { DEBUGGING_APPROACH_PARAM_DESCRIPTIONS } from '../interfaces/parameter-descriptions.js';
 import { createParameters } from '../utils/parameter-utils.js';
 

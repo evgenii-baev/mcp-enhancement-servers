@@ -4,7 +4,7 @@
  */
 
 import { ServerRequest, ServerResponse } from '../interfaces/server-interfaces.js';
-import { BaseServer } from './index.js';
+import { BaseServer } from './base/base-server.js';
 import { ToolDescription, createToolDescription } from '../interfaces/tool-description.js';
 
 // Экспортируемое описание инструмента для ИИ-ассистента
