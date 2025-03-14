@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:20-slim
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -6,20 +6,11 @@ WORKDIR /usr/src/app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
-
 # Copy source files
 COPY . .
 
-# Build the project
-RUN npm run build
-
-# Remove development dependencies
-RUN npm prune --production
-
-# Set executable permissions
-RUN chmod +x dist/index.js
+# Install dependencies
+RUN npm install && npm run build && npm prune --omit=dev && chmod +x dist/index.js
 
 # Run as non-root user
 USER node
@@ -28,6 +19,6 @@ USER node
 CMD ["node", "dist/index.js"]
 
 # Label the image
-LABEL org.opencontainers.image.source="https://github.com/waldzellai/clear-thought"
-LABEL org.opencontainers.image.description="MCP server for sequential thinking, mental models, and debugging approaches"
-LABEL org.opencontainers.image.licenses="MIT"
+# LABEL org.opencontainers.image.source="https://github.com/waldzellai/clear-thought"
+# LABEL org.opencontainers.image.description="MCP server for sequential thinking, mental models, and debugging approaches"
+# LABEL org.opencontainers.image.licenses="MIT"
