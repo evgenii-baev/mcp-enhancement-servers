@@ -43,11 +43,7 @@ export const MENTAL_MODEL_TOOL_DESCRIPTION: ToolDescription = createToolDescript
          "When analyzing a complex system: 'I'll use the systems thinking model to understand the interdependencies in your architecture.'",
          "When debugging: 'Let me apply the scientific method to systematically identify the root cause of this issue.'"
       ]
-   },
-   parameterDescriptions: {
-      "modelName": "The mental model to apply. For programming problems, consider using the specialized programming models: composition_vs_inheritance, single_responsibility, interface_segregation, actor_model, or time_space_complexity.",
-      "problem": "The problem to analyze using the selected mental model. For programming models, provide specific code design or architectural challenges."
-   },
+   },,
    exampleUsage: {
       "modelName": "first_principles",
       "problem": "How should we architect our data pipeline to handle 10x the current load?"
@@ -101,18 +97,7 @@ export const SEQUENTIAL_THINKING_TOOL_DESCRIPTION: ToolDescription = createToolD
          "When solving a complex problem: 'Let me think through this step by step to find the best approach.'",
          "When exploring alternatives: 'I'll branch my thinking here to consider a different solution path.'"
       ]
-   },
-   parameterDescriptions: {
-      "thought": "The current thought or reasoning step",
-      "thoughtNumber": "The sequential number of the current thought (starting from 1)",
-      "totalThoughts": "The estimated total number of thoughts needed",
-      "nextThoughtNeeded": "Whether additional thoughts are needed to complete the reasoning",
-      "branchFromThought": "Number of the thought from which to create an alternative reasoning path",
-      "branchId": "Identifier for the current reasoning branch",
-      "revisesThought": "Number of the thought being revised with new information",
-      "isRevision": "Whether this thought is a revision of a previous thought",
-      "needsMoreThoughts": "Indicates if additional thoughts would be helpful beyond the initial estimate"
-   },
+   },,
    exampleUsage: {
       "thought": "Let's analyze the time complexity of this recursive function",
       "thoughtNumber": 1,
@@ -173,14 +158,7 @@ export const DEBUGGING_APPROACH_TOOL_DESCRIPTION: ToolDescription = createToolDe
          "When facing a complex bug: 'I'll use binary search debugging to narrow down where the issue occurs.'",
          "When analyzing a performance problem: 'Let me apply divide and conquer to isolate which component is causing the slowdown.'"
       ]
-   },
-   parameterDescriptions: {
-      "approachName": "The debugging methodology to apply (binary_search, reverse_engineering, divide_conquer, backtracking, cause_elimination, program_slicing)",
-      "issue": "Description of the problem to be debugged",
-      "findings": "Observations and patterns discovered during the debugging process",
-      "steps": "Specific actions taken or recommended to isolate and resolve the issue",
-      "resolution": "The solution that fixed the problem, including explanation of root cause"
-   },
+   },,
    exampleUsage: {
       "approachName": "binary_search",
       "issue": "Performance degradation occurred between version 2.1 and 2.8"
@@ -249,23 +227,7 @@ export const BRAINSTORMING_TOOL_DESCRIPTION: ToolDescription = createToolDescrip
          "When designing a new feature: 'Let's start a brainstorming session to explore different approaches to this problem.'",
          "When refactoring: 'We can use brainstorming to identify the best strategies for improving this code.'"
       ]
-   },
-   parameterDescriptions: {
-      "topic": "The main subject or problem for brainstorming. Be specific enough to focus ideation but broad enough to allow creative solutions. Required when creating a new session.",
-      "sessionId": "Identifier for an existing brainstorming session. Use this to continue a previously started session, allowing for persistent brainstorming across multiple interactions.",
-      "phase": "Current phase of the brainstorming process. Progress through phases in sequence: preparation → ideation → clarification → evaluation → selection → action_planning.",
-      "participants": "People involved in the brainstorming session. Tracking participants helps ensure diverse perspectives and assign responsibilities.",
-      "newIdea": "A new idea to add to the session during the ideation phase. Should be clear, concise, and relevant to the brainstorming topic.",
-      "category": "Category name for grouping related ideas during the clarification phase. Helps organize ideas by theme or type.",
-      "ideaId": "Identifier for a specific idea, used when categorizing, voting for, selecting, or adding actions to an idea.",
-      "voteForIdea": "ID of an idea to vote for during the evaluation phase. More votes indicate higher group preference.",
-      "selectIdea": "ID of an idea to mark as selected during the selection phase. Selected ideas move forward to action planning.",
-      "action": "Action step to add to a selected idea during the action planning phase. Should be specific and actionable.",
-      "ideas": "Collection of generated ideas for the brainstorming session. Grows during the ideation phase and gets refined in later phases.",
-      "constraints": "Limitations or requirements to consider during brainstorming. Helps focus ideation on practical solutions that meet specific criteria.",
-      "currentStep": "Current step in the brainstorming process. Helps track progress within each phase of the session.",
-      "totalSteps": "Total number of steps in the brainstorming process. Provides context for how far along the session has progressed."
-   },
+   },,
    exampleUsage: {
       "topic": "How can we improve the performance of our database queries?",
       "phase": "ideation",
@@ -315,13 +277,7 @@ export const STOCHASTIC_ALGORITHM_TOOL_DESCRIPTION: ToolDescription = createTool
          "When optimizing resource allocation: 'I'll apply MDP to find the optimal policy for distributing resources.'",
          "When planning a complex workflow: 'Let me use MCTS to explore the possible execution paths and find the most promising one.'"
       ]
-   },
-   parameterDescriptions: {
-      "algorithm": "The stochastic algorithm to apply. Each algorithm is suited to different types of decision problems.",
-      "problem": "The decision problem to solve. Describe the uncertainty, options, and desired outcome.",
-      "parameters": "Algorithm-specific parameters for customization. Each algorithm has its own parameter set.",
-      "result": "Optional result from algorithm application, typically filled in response."
-   },
+   },,
    exampleUsage: {
       "algorithm": "mcts",
       "problem": "We need to schedule tasks with uncertain durations to minimize overall completion time",
@@ -374,11 +330,7 @@ export const FEATURE_DISCUSSION_TOOL_DESCRIPTION: ToolDescription = createToolDe
          "When planning a new feature: 'Let's start a feature discussion to clarify the requirements and implementation approach.'",
          "When evaluating options: 'We can use feature discussion to compare different implementation strategies.'"
       ]
-   },
-   parameterDescriptions: {
-      "featureId": "Identifier for the feature being discussed",
-      "response": "Your response to the current prompt about the feature"
-   },
+   },,
    exampleUsage: {
       "featureId": "auth-system-redesign",
       "response": "The new authentication system should support both OAuth and traditional logins"
@@ -422,11 +374,7 @@ export const FEATURE_ANALYZER_TOOL_DESCRIPTION: ToolDescription = createToolDesc
          "When evaluating a feature request: 'Let me analyze this feature to understand its requirements and implementation complexity.'",
          "When planning development: 'I'll break down this feature into its component parts for easier implementation.'"
       ]
-   },
-   parameterDescriptions: {
-      "featureName": "The name of the feature to analyze",
-      "featureDescription": "Detailed description of the feature's purpose, functionality, and requirements"
-   },
+   },,
    exampleUsage: {
       "featureName": "Real-time Collaboration Editor",
       "featureDescription": "A document editing feature that allows multiple users to edit the same document simultaneously with real-time updates"
@@ -475,15 +423,7 @@ export const MODEL_SELECTOR_TOOL_DESCRIPTION: ToolDescription = createToolDescri
          "When starting a new project: 'Let me recommend an architectural pattern that would best suit your requirements.'",
          "When facing a design challenge: 'I'll help you select the most appropriate data structure for this use case.'"
       ]
-   },
-   parameterDescriptions: {
-      "task": "The specific programming task or problem that requires a model/approach recommendation",
-      "language": "Programming language being used (to provide language-specific recommendations)",
-      "projectScale": "Size of the project (Small, Medium, Large, Enterprise) to influence architectural recommendations",
-      "context": "Additional context about the project, environment, or requirements",
-      "constraints": "Any limitations or requirements that might affect the choice of model/approach",
-      "preferences": "Desired qualities or characteristics that the selected model/approach should have"
-   },
+   },,
    exampleUsage: {
       "task": "We need to implement a cache for database query results",
       "language": "TypeScript",

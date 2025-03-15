@@ -16,7 +16,8 @@
     "start:ai-integration": "node dist/ai-integration/start-server.js",
     "validate:params": "node dist/tools/parameter-validator.js",
     "fix:params": "node dist/tools/fix-parameter-descriptions.js",
-    "validate:param-descriptions": "node scripts/validate-parameter-descriptions.js"
+    "validate:param-descriptions": "node scripts/validate-parameter-descriptions.js",
+    "remove:hardcoded-descriptions": "node scripts/remove-hardcoded-descriptions.js"
   },
   "keywords": [
     "mcp",
