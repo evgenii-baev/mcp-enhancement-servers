@@ -24,48 +24,40 @@ The tool will analyze your input and recommend the most effective thinking appro
 
 Example: { "problem": "Our codebase has become difficult to maintain", "goal": "optimize" }
 
-🚀 PARAMETERS:
-- problem: A description of the challenge you're facing (required)
-- goal: Your objective (analyze, innovate, optimize, debug, decide, understand, predict)
-- domain: The field of application (tech, business, science, personal, education)
-- complexity: Problem complexity level (low, medium, high)
-- constraints: Any limitations to consider
-- previousApproaches: Approaches already tried
-
 After receiving recommendations, use the specific tool for your chosen approach.`,
     inputSchema: {
         type: "object",
         properties: {
             problem: {
                 type: "string",
-                description: "A clear description of the problem you're trying to solve. Be specific about the challenge and context."
+                description: "ALWAYS provide a clear and concise description of the problem you're trying to solve. Be specific about the challenge and context (required)"
             },
             domain: {
                 type: "string",
                 enum: ["tech", "business", "science", "personal", "education", "other"],
-                description: "The domain or field of your problem. Helps tailor recommendations to your specific context."
+                description: "You MAY provide the domain or field of your problem. Helps tailor recommendations to your specific context (tech, business, science, personal, education, other)."
             },
             goal: {
                 type: "string",
                 enum: ["analyze", "innovate", "optimize", "debug", "decide", "understand", "predict"],
-                description: "What you're trying to achieve. Different goals benefit from different mental models."
+                description: "You MUST provide the goal of what you're trying to achieve. Different goals benefit from different mental models (analyze, innovate, optimize, debug, decide, understand, predict)."
             },
             complexity: {
                 type: "string",
                 enum: ["low", "medium", "high"],
-                description: "The complexity level of your problem. More complex problems may require more sophisticated models."
+                description: "RECOMMENDED to provide the complexity level of your problem. More complex problems may require more sophisticated models (low, medium, high)."
             },
             constraints: {
                 type: "array",
                 items: { type: "string" },
-                description: "Any constraints or limitations you're working with. Helps filter out impractical approaches."
+                description: "RECOMMENDED to provide any constraints or limitations you're working with. Helps filter out impractical approaches."
             },
             previousApproaches: {
                 type: "array",
                 items: { type: "string" },
-                description: "Approaches you've already tried. Ensures fresh recommendations."
+                description: "RECOMMENDED to provide approaches you've already tried. Ensures fresh recommendations."
             }
         },
-        required: ["problem"]
+        required: ["problem", "goal"]
     }
 }; 
