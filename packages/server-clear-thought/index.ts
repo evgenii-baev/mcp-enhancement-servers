@@ -124,9 +124,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
 
         // Проверка ответа на корректность
-        if (!response || !response.content || !Array.isArray(response.content)) {
+        if (!response) {
             console.error(`Invalid response format for tool ${name}: ${JSON.stringify(response)}`)
             throw new Error(`Invalid response format returned from ${name} server`)
+        }
+        
+        // Check if response has content property (for most servers) or recommendations (for first thought advisor)
+        if (!('content' in response) && !('recommendations' in response)) {
+            console.error(`Invalid response format for tool ${name}: ${JSON.stringify(response)}`)
+            throw new Error(`Invalid response format: missing content or recommendations property`)
         }
 
         return response

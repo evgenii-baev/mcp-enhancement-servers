@@ -419,7 +419,16 @@ export class BrainstormingServer {
             }
 
             // Создаем структурированный и упрощенный ответ
-            const responseObj = {
+            const responseObj: {
+                sessionId: string;
+                topic: string;
+                phase: BrainstormingPhase;
+                ideasCount: number;
+                currentStep: number | undefined;
+                totalSteps: number | undefined;
+                status: string;
+                lastIdeaId?: string;
+            } = {
                 sessionId,
                 topic: session.topic,
                 phase: session.phase,
