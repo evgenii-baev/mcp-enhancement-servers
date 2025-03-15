@@ -1,8 +1,342 @@
-# Clear Thought MCP Server
+# MCP Clear Thought Server
 
-[![smithery badge](https://smithery.ai/badge/@waldzellai/clear-thought)](https://smithery.ai/server/@waldzellai/clear-thought)
+This server provides cognitive enhancement tools for AI assistants, including:
 
-A Model Context Protocol (MCP) server that provides systematic thinking, mental models, and debugging approaches for enhanced problem-solving capabilities.
+- Mental Models
+- Sequential Thinking
+- Debugging Approaches
+- Brainstorming
+- First Thought Advisor
+- Stochastic Algorithms
+
+## Debugging the Mental Model Tool
+
+### Problem
+
+The `mental_model` tool was experiencing issues with JSON formatting and error handling, causing failures when:
+
+1. Special characters were present in the model output
+2. Error conditions were not properly handled
+3. JSON parsing failed due to invalid input
+
+### Solution
+
+We've implemented several improvements to make the tool more robust:
+
+1. **Enhanced Error Handling**:
+   - Added try/catch blocks around JSON parsing
+   - Improved error reporting with detailed messages
+   - Added fallback responses when errors occur
+
+2. **Caching for Performance**:
+   - Implemented model caching to avoid repeated file reads
+   - Added validation of loaded models
+
+3. **Robust Response Formatting**:
+   - Simplified response structure
+   - Added additional error checking
+   - Improved JSON serialization with proper error handling
+
+4. **Logging for Debugging**:
+   - Added detailed logs for request parameters
+   - Included stack traces for errors
+   - Added validation checks for response format
+
+## Enhancing the Sequential Thinking Tool
+
+### Problem
+
+The `sequential_thinking` tool had similar issues with error handling and could fail when:
+
+1. Optional parameters had incorrect types
+2. Logical validation was missing for related parameters
+3. Special characters or formatting issues occurred
+4. Error handling was insufficient for complex scenarios
+
+### Solution
+
+We've made the following improvements:
+
+1. **Enhanced Validation**:
+   - Added type checking for all optional parameters
+   - Implemented logical validation between related parameters
+   - Made sure required parameters are present when certain options are used
+
+2. **Improved Error Handling**:
+   - Added try/catch blocks around formatting and JSON serialization
+   - Improved error reporting with specific messages
+   - Implemented fallback responses for error conditions
+
+3. **Better Response Structure**:
+   - Simplified the response format
+   - Added additional useful fields in the response
+   - Ensured all responses follow a consistent pattern
+
+4. **Robust Console Output**:
+   - Added error handling around console formatting
+   - Ensured formatting errors don't crash the application
+   - Improved debug information
+
+## Enhancing the Brainstorming Tool
+
+### Problem
+
+The `brainstorming` tool had several issues that needed to be addressed:
+
+1. Lack of error handling when formatting complex output
+2. No handling for long strings or special characters
+3. Insufficient logging for debugging session state
+4. Inconsistent phase checking (using input phase instead of session phase)
+5. No fallback for JSON serialization errors
+
+### Solution
+
+We've implemented the following improvements:
+
+1. **Robust Formatting**:
+   - Added try/catch blocks around all formatting operations
+   - Implemented truncation for long strings
+   - Added error handling for each idea and model formatting
+   - Created fallback display for formatting errors
+
+2. **Enhanced Logging**:
+   - Added detailed logs for session creation and updates
+   - Included logging for idea additions and modifications
+   - Added error reporting for failed operations
+   - Improved traceability of session state changes
+
+3. **Improved Error Handling**:
+   - Added comprehensive error handling for JSON serialization
+   - Created fallback responses for error conditions
+   - Improved error message clarity
+   - Added safeguards against invalid data
+
+4. **Better Response Structure**:
+   - Added more useful fields in the response
+   - Included lastIdeaId when adding new ideas
+   - Standardized response format
+   - Improved consistency with other tools
+
+## Enhancing the Debugging Approach Tool
+
+### Problem
+
+The `debugging_approach` tool had several issues that needed to be addressed:
+
+1. Insufficient validation of approach names and optional parameters
+2. No handling for long strings or special characters
+3. Lack of error handling when formatting complex output
+4. No fallback for JSON serialization errors
+5. Minimal logging for debugging purposes
+
+### Solution
+
+We've implemented the following improvements:
+
+1. **Enhanced Validation**:
+   - Added validation for approach names against a list of valid approaches
+   - Implemented type checking for all optional parameters
+   - Added specific error messages for each validation failure
+
+2. **Robust Formatting**:
+   - Added try/catch blocks around all formatting operations
+   - Implemented truncation for long strings
+   - Added error handling for each step formatting
+   - Created fallback display for formatting errors
+
+3. **Improved Error Handling**:
+   - Added comprehensive error handling for JSON serialization
+   - Created fallback responses for error conditions
+   - Improved error message clarity
+   - Added safeguards against invalid data
+
+4. **Better Response Structure**:
+   - Added more useful fields in the response
+   - Included step count and findings status
+   - Standardized response format
+   - Improved consistency with other tools
+
+## Enhancing the First Thought Advisor Tool
+
+### Problem
+
+The `first_thought_advisor` tool had several issues that needed to be addressed:
+
+1. Insufficient validation of input parameters (goal, domain, complexity)
+2. No handling for long strings or special characters
+3. Lack of error handling when generating recommendations
+4. No fallback for error conditions
+5. Minimal logging for debugging purposes
+6. No type safety for approach objects
+
+### Solution
+
+We've implemented the following improvements:
+
+1. **Enhanced Validation**:
+   - Added validation for goal, domain, and complexity against lists of valid values
+   - Implemented type checking for all parameters including array elements
+   - Added specific error messages for each validation failure
+
+2. **Robust Formatting**:
+   - Added try/catch blocks around all operations
+   - Implemented truncation for long strings in problem descriptions and constraints
+   - Added error handling for recommendation generation
+   - Created fallback recommendations for error conditions
+
+3. **Improved Error Handling**:
+   - Added comprehensive error handling throughout the server
+   - Created fallback responses for error conditions
+   - Improved error message clarity
+   - Added safeguards against invalid data
+
+4. **Better Response Structure**:
+   - Limited the number of recommendations to prevent overly large responses
+   - Added proper type definitions for approach objects
+   - Standardized response format
+   - Improved consistency with other tools
+
+5. **Enhanced Recommendations**:
+   - Added more specific recommendations for different goals
+   - Improved domain detection for technical problems
+   - Added fallback recommendations for error conditions
+
+## Enhancing the Stochastic Algorithm Tool
+
+### Problem
+
+The `stochastic_algorithm` tool had several issues that needed to be addressed:
+
+1. Insufficient validation of algorithm names and parameters
+2. No type checking for algorithm-specific parameters
+3. No handling for long strings or special characters
+4. Lack of error handling during algorithm simulation
+5. No fallback for error conditions
+6. Minimal logging for debugging purposes
+7. No type safety for parameters and results
+8. Generic recommendations not tailored to specific algorithms
+
+### Solution
+
+We've implemented the following improvements:
+
+1. **Enhanced Validation**:
+   - Added validation for algorithm names against a list of valid algorithms
+   - Implemented type checking for all algorithm parameters
+   - Added specific error messages for each validation failure
+   - Added algorithm-specific parameter validation
+
+2. **Robust Formatting**:
+   - Added try/catch blocks around all operations
+   - Implemented truncation for long strings in problem descriptions
+   - Added error handling for algorithm simulation
+   - Created fallback results for error conditions
+
+3. **Improved Error Handling**:
+   - Added comprehensive error handling throughout the server
+   - Created fallback responses for error conditions
+   - Improved error message clarity
+   - Added safeguards against invalid data
+
+4. **Better Response Structure**:
+   - Added proper type definitions for parameters and results
+   - Standardized response format
+   - Improved consistency with other tools
+   - Added more detailed simulation results
+
+5. **Enhanced Recommendations**:
+   - Added algorithm-specific recommendations
+   - Improved recommendation relevance based on algorithm type
+   - Added fallback recommendations for error conditions
+
+6. **Dynamic Result Generation**:
+   - Implemented dynamic generation of results based on input parameters
+   - Added randomization for more realistic simulations
+   - Ensured results are consistent with input parameters
+
+## Testing
+
+Test scripts have been added to verify the functionality of these tools:
+
+```bash
+# Test the mental model tool
+npm run test:mental-model
+
+# Test the sequential thinking tool
+npm run test:sequential-thinking
+
+# Test the brainstorming tool
+npm run test:brainstorming
+
+# Test the debugging approach tool
+npm run test:debugging-approach
+
+# Test the first thought advisor tool
+npm run test:first-thought-advisor
+
+# Test the stochastic algorithm tool
+npm run test:stochastic-algorithm
+```
+
+These scripts test various scenarios including:
+- Valid inputs with different parameters
+- Invalid inputs with missing or incorrect data
+- Edge cases with special characters
+- Error handling mechanisms
+
+## Usage
+
+To use the mental model tool:
+
+```javascript
+{
+  "modelName": "first_principles",
+  "problem": "Our application is slow and users are complaining"
+}
+```
+
+Available models include:
+- first_principles
+- occams_razor
+- systems_thinking
+- rubber_duck
+- pareto_principle
+- and many more...
+
+To use the stochastic algorithm tool:
+
+```javascript
+{
+  "algorithm": "mdp",
+  "problem": "Find optimal route through city",
+  "parameters": {
+    "states": 10,
+    "actions": 4,
+    "gamma": 0.95
+  }
+}
+```
+
+Available algorithms include:
+- mdp (Markov Decision Process)
+- mcts (Monte Carlo Tree Search)
+- bandit (Multi-Armed Bandit)
+- bayesian (Bayesian Optimization)
+- hmm (Hidden Markov Model)
+
+## Development
+
+To build the server:
+
+```bash
+npm run build
+```
+
+To start the server:
+
+```bash
+npm start
+```
 
 ## Features
 
@@ -130,44 +464,6 @@ Or run with npx:
 
 ```bash
 npx @waldzellai/clear-thought
-```
-
-## Usage
-
-### Mental Models
-```typescript
-const response = await mcp.callTool("mentalmodel", {
-  modelName: "first_principles",
-  problem: "How to implement a new feature?",
-  steps: [
-    "Break down the problem",
-    "Analyze components",
-    "Build solution"
-  ]
-});
-```
-
-### Debugging Approaches
-```typescript
-const response = await mcp.callTool("debuggingapproach", {
-  approachName: "binary_search",
-  issue: "Performance degradation in the system",
-  steps: [
-    "Identify performance metrics",
-    "Locate bottleneck",
-    "Implement solution"
-  ]
-});
-```
-
-### Sequential Thinking
-```typescript
-const response = await mcp.callTool("sequentialthinking", {
-  thought: "Initial analysis of the problem",
-  thoughtNumber: 1,
-  totalThoughts: 3,
-  nextThoughtNeeded: true
-});
 ```
 
 ## Docker

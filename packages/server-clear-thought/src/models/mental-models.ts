@@ -19,10 +19,65 @@ export interface MentalModelsData {
   mental_models: MentalModel[];
 }
 
+// Кэширование моделей для избежания повторного чтения файла
+let cachedModels: MentalModelsData | null = null;
+
 export function loadMentalModels(): MentalModelsData {
-  const filePath = join(__dirname, 'mental-models.json');
-  const fileContent = readFileSync(filePath, 'utf-8');
-  return JSON.parse(fileContent) as MentalModelsData;
+  // Если модели уже загружены, используем кэш
+  if (cachedModels) {
+    return cachedModels;
+  }
+
+  try {
+    const filePath = join(__dirname, 'mental-models.json');
+    console.error(`Loading mental models from ${filePath}`);
+    const fileContent = readFileSync(filePath, 'utf-8');
+
+    try {
+      cachedModels = JSON.parse(fileContent) as MentalModelsData;
+
+      // Проверка на корректность данных
+      if (!cachedModels.mental_models || !Array.isArray(cachedModels.mental_models)) {
+        throw new Error('Invalid mental models format: missing mental_models array');
+      }
+
+      return cachedModels;
+    } catch (parseError) {
+      console.error('Error parsing mental models JSON:', parseError);
+
+      // Возвращаем минимальный валидный объект при ошибке парсинга
+      return {
+        mental_models: [
+          {
+            id: 'fallback_model',
+            name: 'Fallback Model (Error Loading)',
+            definition: 'This is a fallback model due to an error loading the mental models file.',
+            when_to_use: ['Emergency situations when other models fail to load'],
+            steps: ['Identify the problem', 'Use basic problem-solving techniques'],
+            example: 'Using simple troubleshooting when advanced tools are unavailable',
+            pitfalls: ['Limited functionality compared to regular models']
+          }
+        ]
+      };
+    }
+  } catch (fileError) {
+    console.error('Error reading mental models file:', fileError);
+
+    // Возвращаем минимальный валидный объект при ошибке чтения файла
+    return {
+      mental_models: [
+        {
+          id: 'fallback_model',
+          name: 'Fallback Model (File Error)',
+          definition: 'This is a fallback model due to an error reading the mental models file.',
+          when_to_use: ['Emergency situations when the models file is inaccessible'],
+          steps: ['Report the error', 'Check file permissions and paths'],
+          example: 'File not found or insufficient permissions',
+          pitfalls: ['Cannot access the full range of mental models']
+        }
+      ]
+    };
+  }
 }
 
 export function getMentalModelById(id: string): MentalModel | undefined {
@@ -36,12 +91,13 @@ export function getAllMentalModelIds(): string[] {
 }
 
 export function formatMentalModelOutput(model: MentalModel): string {
-  const border = '─'.repeat(Math.max(model.name.length + 20, model.definition.length + 4));
+  try {
+    const border = '─'.repeat(Math.max(model.name.length + 20, model.definition.length + 4));
 
-  const formatList = (items: string[]): string => 
-    items.map(item => `│ • ${item.padEnd(border.length - 4)} │`).join('\n');
+    const formatList = (items: string[]): string =>
+      items.map(item => `│ • ${item.padEnd(border.length - 4)} │`).join('\n');
 
-  return `
+    return `
 ┌${border}┐
 │ 🧠 Mental Model: ${model.name.padEnd(border.length - 16)} │
 ├${border}┤
@@ -58,4 +114,8 @@ ${formatList(model.steps)}
 │ Pitfalls:${' '.repeat(border.length - 10)} │
 ${formatList(model.pitfalls)}
 └${border}┘`;
+  } catch (error) {
+    console.error('Error formatting mental model output:', error);
+    return `[Error formatting mental model: ${model.name}]`;
+  }
 } 

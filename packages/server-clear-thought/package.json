@@ -23,7 +23,13 @@
         "prebuild": "npm run clean",
         "prepublishOnly": "npm run build",
         "start": "node dist/index.js",
-        "docker": "docker build -t chrisperfer/clear-thought ."
+        "docker": "docker build -t chrisperfer/clear-thought .",
+        "test:mental-model": "node --experimental-modules test-mental-model.js",
+        "test:sequential-thinking": "node --experimental-modules test-sequential-thinking.js",
+        "test:brainstorming": "node --experimental-modules test-brainstorming.js",
+        "test:debugging-approach": "node --experimental-modules test-debugging-approach.js",
+        "test:first-thought-advisor": "node --experimental-modules test-first-thought-advisor.js",
+        "test:stochastic-algorithm": "node --experimental-modules test-stochastic-algorithm.js"
     },
     "repository": {
         "type": "git",
