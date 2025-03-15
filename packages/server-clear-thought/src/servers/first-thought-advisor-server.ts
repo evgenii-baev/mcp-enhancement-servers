@@ -35,8 +35,13 @@ export class FirstThoughtAdvisorServer {
             throw new Error("Invalid problem: must be a string describing your problem");
         }
 
+        if (!data.goal || typeof data.goal !== "string") {
+            throw new Error("Invalid goal: must be a string describing your goal");
+        }
+
         const result: FirstThoughtAdvisorData = {
-            problem: data.problem
+            problem: data.problem,
+            goal: data.goal
         };
 
         // Validate optional fields
