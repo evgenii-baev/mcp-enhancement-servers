@@ -3,6 +3,7 @@
  */
 
 import { ToolDescription, ToolIntegrationDescription } from '../interfaces/tool-description.js';
+import * as parameterDescriptions from '../interfaces/parameter-descriptions.js';
 
 /**
  * Создает структурированное описание инструмента
@@ -25,6 +26,22 @@ export function createToolDescription(description: Partial<ToolDescription>): To
         examples: []
     };
 
+    // Автоматически получаем описания параметров из централизованного источника
+    let autoParamDescriptions = {};
+
+    // Преобразуем имя инструмента в формат для поиска в параметрах
+    // Например, "First Thought Advisor" -> "FIRST_THOUGHT_ADVISOR_PARAM_DESCRIPTIONS"
+    const toolNameForParams = description.name
+        .replace(/\s+/g, '_')
+        .toUpperCase() + '_PARAM_DESCRIPTIONS';
+
+    // Проверяем, существует ли соответствующий объект описаний параметров
+    if (parameterDescriptions[toolNameForParams]) {
+        autoParamDescriptions = parameterDescriptions[toolNameForParams];
+    } else {
+        console.warn(`Warning: No centralized parameter descriptions found for ${description.name}. Using provided descriptions.`);
+    }
+
     // Создание описания с дефолтными значениями
     return {
         name: description.name,
@@ -34,7 +51,9 @@ export function createToolDescription(description: Partial<ToolDescription>): To
         exampleScenarios: description.exampleScenarios || [],
         bestPractices: description.bestPractices || [],
         integration: description.integration || defaultIntegration,
-        parameterDescriptions: description.parameterDescriptions || {},
+        // Используем автоматически полученные описания параметров, если они есть,
+        // иначе используем предоставленные или пустой объект
+        parameterDescriptions: autoParamDescriptions || description.parameterDescriptions || {},
         exampleUsage: description.exampleUsage || {}
     };
 }

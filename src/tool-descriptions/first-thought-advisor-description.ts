@@ -43,14 +43,6 @@ export const FIRST_THOUGHT_ADVISOR_DESCRIPTION: ToolDescription = createToolDesc
             "For an optimization problem: 'Let me find the most appropriate way to think about optimizing your database queries.'"
         ]
     },
-    parameterDescriptions: {
-        "problem": "The problem to analyze. Provide a clear, concise description of the challenge or task that needs a solution.",
-        "goal": "The desired outcome or objective. What would a successful solution achieve?",
-        "domain": "The field or context of the problem (e.g., software development, data analysis, etc.)",
-        "complexity": "The estimated complexity level of the problem (e.g., simple, moderate, complex, very complex)",
-        "constraints": "Any limitations or requirements that restrict possible solutions",
-        "previousApproaches": "Methods that have already been tried, whether successful or not"
-    },
     exampleUsage: {
         "problem": "Need to find the shortest path between nodes in a sparse graph with millions of nodes",
         "domain": "Algorithm design",

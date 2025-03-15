@@ -22,8 +22,8 @@ export interface FirstThoughtAdvisorData {
     problem: string;
     /** Optional domain of the problem */
     domain?: string;
-    /** Optional goal of the problem-solving */
-    goal?: string;
+    /** The goal of the problem-solving */
+    goal: string;
     /** Optional constraints */
     constraints?: string[];
     /** Optional complexity level */
